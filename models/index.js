@@ -8,7 +8,15 @@ import Asistencia from "./Asistencia.js";
 import Rol from "./rol.js";
 
 
-// Relacion Rol(1) y InfoUsuario(M)
+// Relacion Rol(1) y Usuario(M)
+
+Rol.hasMany(Usuario, {
+    foreignKey: "idRol",
+})
+
+Usuario.belongsTo(Rol, {
+    foreignKey: "idRol",
+})
 
 
 // Relacion Coordinador(1) y infoContacto(1)

@@ -75,7 +75,7 @@ Usuario.init(
   },
   {
     sequelize: connection,
-    modelName: "InfoUsuario",
+    modelName: "Usuario",
     timestamps: false
   }
 );
