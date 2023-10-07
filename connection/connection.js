@@ -6,7 +6,7 @@ import {database,username,password,host,dialect,port} from "../config/config.js"
 
 const connection = new Sequelize(database, username, password,{
     host,
-    dialect,
+    dialect:"mysql",
     port,
 });
 
