@@ -1,7 +1,7 @@
 import { DataTypes as DT } from "sequelize";
 import connection from "../connection/connection.js";
 
-const Fecha = connection.define("Fecha", {
+const Profesor = connection.define("Profesor", {
 
     idProfesor: {
         type: DT.INTEGER,
@@ -19,4 +19,4 @@ const Fecha = connection.define("Fecha", {
     timestamps: false
 });
 
-export default Fecha;
+export default Profesor;
