@@ -1,36 +1,19 @@
 import { DataTypes as DT } from "sequelize";
 import connection from "../connection/connection.js";
 
-
 const Fecha = connection.define("Fecha", {
 
-    idFecha: {
+    idProfesor: {
         type: DT.INTEGER,
         primaryKey: true,
         autoIncrement: true,
     },
 
-    idCategoria: {
+    idUsuario: {
         type: DT.INTEGER,
-        foreingKey: true,
-    },
-
-    fechaCalendario: {
-        type: DT.DATEONLY,
+        foreignKey: true,
         allowNull: false,
     },
-
-    tipo: {
-        type: DT.CHAR,
-        allowNull: false,
-        validate: {
-            isIn: {
-                args: [['E', 'C']],
-                msg: "El tipo debe ser E o C"
-            }
-        }
-    },
-
 
 }, {
     timestamps: false

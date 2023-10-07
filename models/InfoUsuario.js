@@ -3,38 +3,37 @@ import connection from "../connection/connection.js";
 import bcrypt from "bcrypt";
 
 class InfoUsuario extends Model {
-  async validaClave(password){
+  async validaClave(password) {
     return await bcrypt.compare(password, this.clave);
   }
 }
 
 InfoUsuario.init(
   {
+    idUsuario: {
+      type: DT.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+
     nombre: {
       type: DT.STRING,
       allowNull: false,
     },
+
     apellido: {
       type: DT.STRING,
       allowNull: false,
     },
+
     fechaNacimiento: {
-      type: DT.STRING,
+      type: DT.DATEONLY,
       allowNull: false,
-      validate: {
-        len: [3,30]
-      }
+      validate: {}
     },
     dni: {
       type: DT.STRING(10),
       allowNull: false,
-    },
-    clave: {
-      type: DT.STRING,
-      allowNull: false,
-    },
-    salt: {
-      type: DT.STRING()
     },
     email: {
       type: DT.STRING,
@@ -43,34 +42,45 @@ InfoUsuario.init(
       validate: {
         isEmail: true,
       },
-    },  
+    },
+    clave: {
+      type: DT.STRING,
+      allowNull: false,
+    },
+    salt: {
+      type: DT.STRING()
+    },
     telefono: {
       type: DT.STRING,
       allowNull: false,
       validate: {
-        len: [3,30]
+        len: [3, 30]
       }
     },
-    activo: {
+    direccion: {
+      type: DT.STRING,
+      allowNull: true,
+      validate: {}
+    },
+    estado: {
       type: DT.BOOLEAN,
       allowNull: false,
-      validate: {
-        len: [3,30]
-      }
     },
     roleId: {
       type: DT.INTEGER(),
+      foreignKey: true,
+      allowNull: false,
       // defaultValue: 2,
     }
   },
   {
     sequelize: connection,
     modelName: "InfoUsuario",
-    timestamps:false
+    timestamps: false
   }
 );
 
-InfoUsuario.beforeCreate(async(user)=>{
+InfoUsuario.beforeCreate(async (user) => {
   const salt = await bcrypt.genSalt();
   user.salt = salt;
   const passwordHash = await bcrypt.hash(user.clave, salt);
