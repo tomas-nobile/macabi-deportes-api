@@ -33,8 +33,50 @@ Deporte.belongsToMany(Usuario, {
 })
 
 
-// Relacion Coordinador() y deporte()
+// Relacion deporte (N categorias) y categoria (1 deporte)
 
+
+Deporte.hasMany(Categoria, {
+    foreignKey: "idDeporte",
+})
+
+Categoria.belongsTo(Deporte, {
+    foreignKey: "idDeporte",
+})
+
+// Relacion usuario (N categorias) y categoria (1 usuario)
+
+
+Usuario.hasMany(Categoria, {
+    foreignKey: "idUsuario",
+})
+
+Categoria.belongsTo(Usuario, {
+    foreignKey: "idUsuario",
+})
+
+// Relacion categoria (N fechas) y fecha (1 categoria)
+
+
+Categoria.hasMany(Fecha, {
+    foreignKey: "idCategoria",
+})
+
+Fecha.belongsTo(Categoria, {
+    foreignKey: "idCategoria",
+})
+
+
+// Relacion socio (N infoSocio) y infoContacto (1 Socio)
+
+
+Socio.hasMany(infoContacto, {
+    foreignKey: "nroSocio",
+})
+
+infoContacto.belongsTo(Socio, {
+    foreignKey: "nroSocio",
+})
 
 
 
