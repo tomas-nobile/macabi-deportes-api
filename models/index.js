@@ -1,6 +1,9 @@
 import InfoUsuario from "./InfoUsuario.js";
+import Deporte from "./Deporte.js"
+import Categoria from "./Categoria.js"
 import infoContacto from "./infoContacto.js";
 import Socio from "./socio.js";
 import Coordinador from "./coordinador.js";
 
-export {InfoUsuario,infoContacto,Socio,Coordinador };
+
+export {InfoUsuario,infoContacto,Socio,Coordinador, Deporte,Categoria };
