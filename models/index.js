@@ -4,5 +4,7 @@ import Socio from "./socio.js";
 import Coordinador from "./coordinador.js";
 import Fecha from "./fecha.js";
 import Asistencia from "./Asistencia.js";
+import Deporte from "./Deporte.js"
+import Categoria from "./Categoria.js"
 
-export {InfoUsuario,infoContacto, Socio ,Coordinador, Fecha, Asistencia };
+export {InfoUsuario,infoContacto, Socio ,Coordinador, Fecha, Asistencia, Deporte};
