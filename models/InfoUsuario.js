@@ -66,7 +66,7 @@ InfoUsuario.init(
       type: DT.BOOLEAN,
       allowNull: false,
     },
-    roleId: {
+    idRol: {
       type: DT.INTEGER(),
       foreignKey: true,
       allowNull: false,
