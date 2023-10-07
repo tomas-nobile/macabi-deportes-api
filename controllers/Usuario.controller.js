@@ -1,6 +1,6 @@
-import { InfoUsuario} from "../models/index.js";
+import { Usuario} from "../models/index.js";
 
-class UserController {
+class UsuarioController {
     constructor() {}
 
   createUser = async (req, res, next) => {
@@ -13,9 +13,10 @@ class UserController {
         dni,
         fechaNacimiento,
         telefono,
-        activo
+        activo,
+        idRol
       } = req.body;
-      const result = await InfoUsuario.create({
+      const result = await Usuario.create({
         nombre,
         apellido,
         email,
@@ -24,7 +25,7 @@ class UserController {
         fechaNacimiento,
         telefono,
         activo,
-        roleId: 2,
+        idRol,
       });
       if (!result) throw new Error("El usuario no pudo ser creado");
       res
@@ -38,4 +39,4 @@ class UserController {
 }
 
 
-export default UserController;
+export default UsuarioController;

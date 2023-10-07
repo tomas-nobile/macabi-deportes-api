@@ -45,7 +45,7 @@ Socio.init(
 
     telefono: {
       type: DT.STRING,
-      allowNull: false,
+      allowNull: true,
       validate: {
         len: [3, 30]
       }

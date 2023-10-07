@@ -2,13 +2,13 @@ import { DataTypes as DT, Model } from "sequelize";
 import connection from "../connection/connection.js";
 import bcrypt from "bcrypt";
 
-class InfoUsuario extends Model {
+class Usuario extends Model {
   async validaClave(password) {
     return await bcrypt.compare(password, this.clave);
   }
 }
 
-InfoUsuario.init(
+Usuario.init(
   {
     idUsuario: {
       type: DT.INTEGER,
@@ -80,11 +80,11 @@ InfoUsuario.init(
   }
 );
 
-InfoUsuario.beforeCreate(async (user) => {
+Usuario.beforeCreate(async (user) => {
   const salt = await bcrypt.genSalt();
   user.salt = salt;
   const passwordHash = await bcrypt.hash(user.clave, salt);
   user.clave = passwordHash;
 })
 
-export default InfoUsuario;
+export default Usuario;

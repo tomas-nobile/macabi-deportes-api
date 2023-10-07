@@ -24,7 +24,7 @@ Categoria.init(
 
     },
 
-    idProfesor: {
+    idUsuario: {
       type: DT.INTEGER(),
       foreingKey: true,
       allowNull:true,

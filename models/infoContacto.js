@@ -8,7 +8,7 @@ class infoContacto extends Model {
 
 infoContacto.init(
     {
-        id: {
+        idInfoContacto: {
             type: DT.INTEGER,
             primaryKey: true,
             autoIncrement: true,

@@ -7,7 +7,7 @@ class Rol extends Model {
 
 Rol.init (
 {
-    id : {
+    idRol : {
         type: DT.INTEGER,
         primaryKey: true,
         autoIncrement: true,
