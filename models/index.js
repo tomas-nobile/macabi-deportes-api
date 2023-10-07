@@ -92,6 +92,19 @@ Categoria.belongsToMany(Socio, {
     foreignKey: "idCategoria"
 })
 
+// Relacion socios con fechas (N a N) -> Genera tabla intermedia.
+
+Socio.belongsToMany(Fecha, {
+    through:"Asistencia",
+    foreignKey: "nroSocio"
+})
+
+Fecha.belongsToMany(Socio, {
+    through:"Asistencia",
+    foreignKey: "idFecha"
+})
+
+
 
 
 
