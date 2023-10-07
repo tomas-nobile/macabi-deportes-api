@@ -6,6 +6,7 @@ import Socio from "./socio.js";
 import Fecha from "./fecha.js";
 import Asistencia from "./Asistencia.js";
 import Rol from "./rol.js";
+import DeportesXUsuario from "./DeportesXUsuario.js";
 
 
 // Relacion Rol(1) y Usuario(M)
@@ -19,8 +20,17 @@ Usuario.belongsTo(Rol, {
 })
 
 
-// Relacion Coordinador(1) y infoContacto(1)
+// Relacion usuarios con deportes (N a N) -> Genera tabla intermedia.
 
+Usuario.belongsToMany(Deporte, {
+    through:"DeportesXUsuario",
+    foreignKey: "idDeporte"
+})
+
+Deporte.belongsToMany(Usuario, {
+    through:"DeportesXUsuario",
+    foreignKey: "idUsuario"
+})
 
 
 // Relacion Coordinador() y deporte()
@@ -29,4 +39,4 @@ Usuario.belongsTo(Rol, {
 
 
 
-export {Usuario,infoContacto, Socio, Fecha, Asistencia, Deporte, Rol, Categoria};
+export {Usuario,infoContacto, Socio, Fecha, Asistencia, Deporte, Rol, Categoria,DeportesXUsuario};
