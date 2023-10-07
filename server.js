@@ -14,7 +14,7 @@ app.use((error, req, res, next) => {
   });
 //una vez que traigo indexRoutes, voy a empezar a ejecutar midlewares
 
-await connection.sync({force:false}).then(() => {
+await connection.sync({force:true}).then(() => {
     app.listen(serverPort, ()=>{
         console.log("Server ok: http://localhost:" + serverPort)
     });
