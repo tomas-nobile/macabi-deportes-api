@@ -6,10 +6,9 @@ import asistenciaRoutes from "./Asistencia.Routes.js";
 
 const indexRoutes=Router()
 
+//Ingresar acá la ruta para cada Route.
 indexRoutes.use("/usuario", usuarioRoutes);
-
 indexRoutes.use("/asistencia", asistenciaRoutes);
-
 indexRoutes.use("/fecha", fechaRoutes);
 
 
