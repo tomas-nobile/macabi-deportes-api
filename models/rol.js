@@ -17,8 +17,8 @@ Rol.init (
         allowNull: false,
         validate: {
             isIn: {
-                args: [['G','D','P']],
-                msg: "El tipo debe ser G, D o P"
+                args: [['A','C','P']],
+                msg: "El tipo debe ser A, C o P"
             }
         }
     }
