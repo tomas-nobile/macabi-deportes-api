@@ -11,14 +11,6 @@ Socio.init(
       autoIncrement: true
     },
 
-    dni: {
-      type: DT.STRING,
-      allowNull: false,
-      validate: {
-        len: [7, 9]
-      }
-    },
-
     nombre: {
       type: DT.STRING,
       allowNull: false,
@@ -29,9 +21,12 @@ Socio.init(
       allowNull: false,
     },
 
-    fechaNacimiento: {
-      type: DT.DATEONLY,
+    dni: {
+      type: DT.STRING,
       allowNull: false,
+      validate: {
+        len: [7, 9]
+      }
     },
 
     email: {
@@ -56,9 +51,14 @@ Socio.init(
       allowNull: false,
     },
 
+    fechaNacimiento: {
+      type: DT.DATEONLY,
+      allowNull: false,
+    },
+
     observaciones: {
       type: DT.STRING,
-      allowNull: false,
+      allowNull: true,
     }
   },
   {
