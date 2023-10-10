@@ -1,4 +1,5 @@
-import express from "express"
+import express from 'express'
+import cors from 'cors'
 
 import indexRoutes from "./routes/indexRoutes.js"
 import connection from "./connection/connection.js";
@@ -8,26 +9,42 @@ import seedRol from "./seed/seedRol.js";
 import seedUsuario from "./seed/seedUsuario.js";
 
 
-const app = express(); 
+const app = express();
+
+const corsOptions = { credentials: true, origin: 'http://localhost:5173' }
+
+//middleweres
+app.use(cors(corsOptions))
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
+
+
+//rutas
 app.use(indexRoutes);
 
+
+// Error Handler
 app.use((error, req, res, next) => {
-    res.status(error.status || 500).send({ success: false, message: error.message });
+  res
+    .status(error.status || 500)
+    .send({ success: false, message: error.message });
 });
-//una vez que traigo indexRoutes, voy a empezar a ejecutar midlewares
 
-let force = true
 
-await connection.sync({ force }).then(() => {
+let force = false
+
+connection.sync({ force })
+  .then(() => {
     app.listen(serverPort, () => {
-        console.log("Server ok: http://localhost:" + serverPort)
-    });
-}).then(async () => {
+      //console.clear()
+      console.log("server OK http://localhost:" + serverPort);
+    })
+  })
+  .then(async () => {
     if (force) {
-        await seedRol()
-        await seedUsuario()
+      await seedRol()
+      await seedUsuario()
     }
-});
+  });
+
