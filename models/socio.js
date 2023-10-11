@@ -80,7 +80,7 @@ Socio.init(
 
     telefono: {
       type: DT.STRING,
-      allowNull: true,
+      allowNull: false,
       validate: {
 
         isNumeric: {
