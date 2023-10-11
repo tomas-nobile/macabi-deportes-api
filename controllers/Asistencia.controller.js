@@ -7,9 +7,9 @@ class AsistenciaController {
     createAsistencia = async (req, res, next) => {
         try {
 
-            const { idFecha ,nroSocio, estado} = req.body;
+            const { idFecha ,idSocio, estado} = req.body;
 
-            const result = await Asistencia.create({idFecha ,nroSocio, estado});
+            const result = await Asistencia.create({idFecha ,idSocio, estado});
             if (!result) throw new Error("La asistencia no puede ser creada");
             res
                 .status(200)

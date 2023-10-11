@@ -73,18 +73,18 @@ Fecha.belongsTo(Categoria, {
 
 
 Socio.hasMany(infoContacto, {
-    foreignKey: "nroSocio",
+    foreignKey: "idSocio",
 })
 
 infoContacto.belongsTo(Socio, {
-    foreignKey: "nroSocio",
+    foreignKey: "idSocio",
 })
 
 // Relacion socios con categorias (N a N) -> Genera tabla intermedia.
 
 Socio.belongsToMany(Categoria, {
     through:"SociosXCategoria",
-    foreignKey: "nroSocio"
+    foreignKey: "idSocio"
 })
 
 Categoria.belongsToMany(Socio, {
@@ -96,7 +96,7 @@ Categoria.belongsToMany(Socio, {
 
 Socio.belongsToMany(Fecha, {
     through:"Asistencia",
-    foreignKey: "nroSocio"
+    foreignKey: "idSocio"
 })
 
 Fecha.belongsToMany(Socio, {

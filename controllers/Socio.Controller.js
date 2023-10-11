@@ -5,7 +5,17 @@ class SocioController {
 
     crearSocio = async (req, res, next) => {
         try {
-            const { nroSocio, nombre, apellido, dni, email, telefono, direccion, fechaNacimiento, observaciones } = req.body;
+            const {
+                nroSocio,
+                nombre,
+                apellido,
+                dni,
+                email,
+                telefono,
+                direccion,
+                fechaNacimiento,
+                observaciones,
+              } = req.body;
 
             const result = await Socio.create({
                 nroSocio,
@@ -23,10 +33,10 @@ class SocioController {
 
             res
                 .status(200)
-                .send({ success: true, message: "Socio creado con exito" });
+                .send({ success: true, message: "Socio creado con exito", result });
                 
         } catch (error) {
-            res.status(400).send({ success: false, message: error.message });
+            next(error)
         }
     }
 }

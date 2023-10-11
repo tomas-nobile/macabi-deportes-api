@@ -19,7 +19,7 @@ Usuario.init(
     nombre: {
       type: DT.STRING,
       allowNull: false,
-    },
+          },
 
     apellido: {
       type: DT.STRING,
@@ -62,7 +62,7 @@ Usuario.init(
       allowNull: true,
       validate: {}
     },
-    estado: {
+    activo: {
       type: DT.BOOLEAN,
       allowNull: false,
     },

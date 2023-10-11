@@ -1,40 +1,80 @@
 import { DataTypes as DT, Model } from "sequelize";
 import connection from "../connection/connection.js";
 
-class Socio extends Model {}
+class Socio extends Model { }
 
 Socio.init(
   {
-    nroSocio: {
+    idSocio: {
       type: DT.INTEGER,
       primaryKey: true,
-      autoIncrement: true
+      autoIncrement: true,
+
+    },
+    nroSocio: {
+      type: DT.INTEGER,
+      unique: {
+        msg: "El Numero de socio ingresado ya esta Registrado"
+      },
+      validate: {
+        isInt: {
+          msg: "El numero de socio debe ser un numero entero"
+        }
+      }
     },
 
     nombre: {
       type: DT.STRING,
       allowNull: false,
+      validate: {
+        isAlpha: {
+          msg: "El nombre solo debe contener letras"
+        },
+        len: {
+          args: [2, 24],
+          msg: "El nombre debe tener un minimo de 2 caracteres y un maximo de 24"
+        }
+      }
     },
 
     apellido: {
       type: DT.STRING,
       allowNull: false,
+      validate: {
+        isAlpha: {
+          msg: "El apellido solo debe contener letras"
+        },
+        len: {
+          args: [2, 24],
+          msg: "El apellido debe tener un minimo de 2 caracteres y un maximo de 24"
+        }
+      }
     },
 
     dni: {
       type: DT.STRING,
       allowNull: false,
       validate: {
-        len: [7, 9]
+        isNumeric: {
+          msg: "El DNI solo debe contener numeros"
+        },
+        len: {
+          args: [6, 10],
+          msg: "El DNI debe tener un largo minimo de 6 digitos y un maximo de 10"
+        }
       }
     },
 
     email: {
       type: DT.STRING,
       allowNull: false,
-      unique: true,
+      unique: {
+        msg: "El Email ingresado ya esta Registrado"
+      },
       validate: {
-        isEmail: true,
+        isEmail: {
+          msg: "EL formato del Email es Incorrecto"
+        },
       },
     },
 
@@ -42,18 +82,36 @@ Socio.init(
       type: DT.STRING,
       allowNull: true,
       validate: {
-        len: [3, 30]
+
+        isNumeric: {
+          msg: "El Telefono solo debe contener numeros"
+        },
+        len: {
+          args: [8, 15],
+          msg: "El telefono debe tener un minimo de 8 caracteres y un maximo de 15"
+        }
       }
     },
 
     direccion: {
       type: DT.STRING,
       allowNull: false,
+      validate: {
+        len: {
+          args: [5, 50],
+          msg: "La Direccion debe tener un minimo de 5 caracteres y un maximo de 50"
+        }
+      }
     },
 
     fechaNacimiento: {
       type: DT.DATEONLY,
       allowNull: false,
+      validate:{
+        isDate:{
+          msg: "Formato de Fecha Invalido"
+        }
+      }
     },
 
     observaciones: {

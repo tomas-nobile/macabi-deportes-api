@@ -9,7 +9,7 @@ const Asistencia = connection.define("Asistencia", {
         primaryKey: true,
     },
 
-    nroSocio: {
+    idSocio: {
         type: DT.INTEGER,
         primaryKey: true,
     },

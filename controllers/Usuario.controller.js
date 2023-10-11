@@ -30,9 +30,9 @@ class UsuarioController {
       if (!result) throw new Error("El usuario no pudo ser creado");
       res
         .status(200)
-        .send({ success: true, message: "Ususario creado con exito" });
+        .send({ success: true, message: "Usuario creado con exito" });
     } catch (error) {
-      res.status(400).send({ success: false, message: error.message });
+      next(error)
     }
   };
 
