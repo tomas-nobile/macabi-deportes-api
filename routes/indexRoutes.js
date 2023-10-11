@@ -3,7 +3,7 @@ import { Router } from "express";
 import usuarioRoutes from "./usuario.Routes.js";
 import fechaRoutes from "./Fecha.Routes.js";
 import asistenciaRoutes from "./Asistencia.Routes.js";
-import socioRoutes from "./socio.Routes.js";
+import deporteRoutes from "./deporteRoutes.js"
 
 const indexRoutes=Router()
 
@@ -11,8 +11,7 @@ const indexRoutes=Router()
 indexRoutes.use("/usuario", usuarioRoutes);
 indexRoutes.use("/asistencia", asistenciaRoutes);
 indexRoutes.use("/fecha", fechaRoutes);
-indexRoutes.use("/socio", socioRoutes);
-
+indexRoutes.use("/deporte", deporteRoutes);
 
 
 export default indexRoutes
