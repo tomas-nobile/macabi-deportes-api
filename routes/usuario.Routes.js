@@ -7,6 +7,6 @@ const usuarioRoutes = Router();
 
 
 usuarioRoutes.post("/", userController.createUser);
-
+usuarioRoutes.get("/profesores", userController.getUserProfesores)
 
 export default usuarioRoutes

@@ -6,14 +6,14 @@ class CategoriaController{
   createCategoria = async (req, res, next) => {
     try {
       const {
-        nombre,
-        nombreDeporte,
-        idProfesor
+        nombreCategoria,
+        idDeporte,
+        idUsuario
       } = req.body;
       const result = await Categoria.create({
-        nombre,
-        nombreDeporte,
-        idProfesor
+        nombreCategoria,
+        idDeporte,
+        idUsuario
       });
       if (!result) throw new Error("La categoria no pudo ser creado");
       res

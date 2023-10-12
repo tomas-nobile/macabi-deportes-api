@@ -24,7 +24,7 @@ class DeporteController {
   getAllDeportes = async (req, res, next) => {
     try {
       const result = await Deporte.findAll({
-        attributes: ["nombre", "id"],
+        attributes: ["idDeporte", "nombre"],
       });
       if (result.length === 0) {
         const error = new Error("No hay deportes");

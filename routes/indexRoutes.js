@@ -4,6 +4,7 @@ import usuarioRoutes from "./usuario.Routes.js";
 import fechaRoutes from "./Fecha.Routes.js";
 import asistenciaRoutes from "./Asistencia.Routes.js";
 import deporteRoutes from "./deporteRoutes.js"
+import categoriaRoutes from "./categoriaRoutes.js";
 
 const indexRoutes=Router()
 
@@ -12,6 +13,9 @@ indexRoutes.use("/usuario", usuarioRoutes);
 indexRoutes.use("/asistencia", asistenciaRoutes);
 indexRoutes.use("/fecha", fechaRoutes);
 indexRoutes.use("/deporte", deporteRoutes);
+indexRoutes.use("/profesores", usuarioRoutes);
+indexRoutes.use("/categoria", categoriaRoutes);
+
 
 
 export default indexRoutes

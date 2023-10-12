@@ -36,6 +36,18 @@ class UsuarioController {
     }
   };
 
+   getUserProfesores = async (req, res, next) => {
+    try {
+      const profesores = await Usuario.findAll({
+        where: { idRol: 3 }, 
+      });
+  
+      res.status(200).send({ success: true, message: "Profesores encontrados:", profesores });
+    } catch (error) {
+      next(error);
+    }
+  };
+
 }
 
 
