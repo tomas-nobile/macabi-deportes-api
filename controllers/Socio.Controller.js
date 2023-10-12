@@ -39,6 +39,9 @@ class SocioController {
             next(error)
         }
     }
+
+    
+
 }
 
 export default SocioController;

@@ -16,7 +16,7 @@ const Asistencia = connection.define("Asistencia", {
 
     estado: {
         type: DT.CHAR,
-        allowNull: false,
+        allowNull: true,
         validate: {
             isIn: {
                 args: [['P','A','J']],

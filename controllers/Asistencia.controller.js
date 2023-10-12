@@ -18,6 +18,21 @@ class AsistenciaController {
             res.status(400).send({ success: false, message: error.message });
         }
     };
+
+    
+
+    crearAsistencia2 = async (idFecha,idSocio,estado) => {
+        try {
+
+            const result = await Asistencia.create({idFecha ,idSocio, estado});
+            if (!result) throw new Error("La asistencia no puede ser creada");
+
+        }catch(e){
+            throw e;
+        }
+        
+    
+}
 }
 
 export default AsistenciaController
