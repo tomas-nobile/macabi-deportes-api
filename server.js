@@ -1,5 +1,6 @@
 import express from 'express'
 import cors from 'cors'
+import cookieParser from 'cookie-parser';
 
 import indexRoutes from "./routes/indexRoutes.js"
 import connection from "./connection/connection.js";
@@ -15,6 +16,8 @@ const corsOptions = { credentials: true, origin: 'http://localhost:5173' }
 
 //middleweres
 app.use(cors(corsOptions))
+
+app.use(cookieParser())
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
