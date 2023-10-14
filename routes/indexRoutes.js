@@ -3,6 +3,8 @@ import { Router } from "express";
 import usuarioRoutes from "./usuario.Routes.js";
 import fechaRoutes from "./Fecha.Routes.js";
 import asistenciaRoutes from "./Asistencia.Routes.js";
+import deporteRoutes from "./Deporte.Routes.js";
+import categoriaRoutes from "./Categoria.Routes.js";
 
 const indexRoutes=Router()
 
@@ -10,7 +12,7 @@ const indexRoutes=Router()
 indexRoutes.use("/usuario", usuarioRoutes);
 indexRoutes.use("/asistencia", asistenciaRoutes);
 indexRoutes.use("/fecha", fechaRoutes);
-
-
+indexRoutes.use("/deporte", deporteRoutes);
+indexRoutes.use("/categoria", categoriaRoutes);
 
 export default indexRoutes

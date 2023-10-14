@@ -2,7 +2,7 @@ import Usuario from "./Usuario.js";
 import Deporte from "./Deporte.js"
 import Categoria from "./Categoria.js"
 import infoContacto from "./infoContacto.js";
-import Socio from "./socio.js";
+import Socio from "./Socio.js";
 import Fecha from "./fecha.js";
 import Asistencia from "./Asistencia.js";
 import Rol from "./rol.js";
@@ -73,18 +73,18 @@ Fecha.belongsTo(Categoria, {
 
 
 Socio.hasMany(infoContacto, {
-    foreignKey: "nroSocio",
+    foreignKey: "idSocio",
 })
 
 infoContacto.belongsTo(Socio, {
-    foreignKey: "nroSocio",
+    foreignKey: "idSocio",
 })
 
 // Relacion socios con categorias (N a N) -> Genera tabla intermedia.
 
 Socio.belongsToMany(Categoria, {
     through:"SociosXCategoria",
-    foreignKey: "nroSocio"
+    foreignKey: "idSocio"
 })
 
 Categoria.belongsToMany(Socio, {
@@ -96,7 +96,7 @@ Categoria.belongsToMany(Socio, {
 
 Socio.belongsToMany(Fecha, {
     through:"Asistencia",
-    foreignKey: "nroSocio"
+    foreignKey: "idSocio"
 })
 
 Fecha.belongsToMany(Socio, {
