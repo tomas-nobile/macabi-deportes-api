@@ -1,12 +1,11 @@
 import { Router } from "express";
+const userioRoutes=Router();
 import UsuarioController from "../controllers/Usuario.controller.js";
 
-const userController = new UsuarioController()
-
-const usuarioRoutes = Router();
+const usuarioController = new UsuarioController()
 
 
-usuarioRoutes.post("/", userController.createUser);
+userioRoutes.post("/", usuarioController.createUser);
 
 
-export default usuarioRoutes
+export default userioRoutes;
