@@ -10,7 +10,7 @@ import deporteRoutes from "./deporte.Routes.js"
 const indexRoutes = Router()
 
 //Ingresar acá la ruta para cada Route.
-indexRoutes.use("/usuario", usuarioRoutes);
+indexRoutes.use("/usuarios", usuarioRoutes);
 indexRoutes.use("/asistencia", asistenciaRoutes);
 indexRoutes.use("/fecha", fechaRoutes);
 indexRoutes.use("/socio", socioRoutes);

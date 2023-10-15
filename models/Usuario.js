@@ -57,7 +57,7 @@ Usuario.init(
         len: [3, 30]
       }
     },
-    direccion: {
+    domicilio: {
       type: DT.STRING,
       allowNull: true,
       validate: {}
@@ -70,7 +70,6 @@ Usuario.init(
       type: DT.INTEGER(),
       foreignKey: true,
       allowNull: false,
-      // defaultValue: 2,
     }
   },
   {
