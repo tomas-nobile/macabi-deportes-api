@@ -5,7 +5,7 @@ class DeporteController {
 
   createDeporte = async (req, res, next) => {
     try {
-      const { nombre, idCoordinador } = req.body;
+      const {nombre} = req.body;
       const result = await Deporte.create({
         nombre,
         idCoordinador,

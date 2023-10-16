@@ -46,6 +46,7 @@ class UsuarioController {
     }
   };
 
+
   traerUsuarioPorId = async (req, res, next) => {
     try {
       const { idUsuario } = req.params;
@@ -74,10 +75,26 @@ class UsuarioController {
       res
         .status(200)
         .send({ success: true, message: "usuarios encontrados:", result });
+
+        
     } catch (error) {
       next(error);
     }
   };
+
+   getUserProfesores = async (req, res, next) => {
+    try {
+      const profesores = await Usuario.findAll({
+        where: { idRol: 3 }, 
+      });
+  
+      res.status(200).send({ success: true, message: "Profesores encontrados:", profesores });
+
+    } catch (error) {
+      next(error);
+    }
+  };
+
 
   logIn = async (req, res, next) => {
     try {
@@ -155,8 +172,6 @@ class UsuarioController {
 
     }
 };
-
-}
 
   traerTodosLosUsuarios = async (req, res, next) => {
     try {

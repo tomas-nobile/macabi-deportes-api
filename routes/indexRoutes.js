@@ -9,6 +9,8 @@ import socioRoutes from "./socio.Routes.js";
 import categoriaRoutes from "./Categoria.Routes.js";
 import SociosXCategoriaRoutes from "./SociosXCategoria.Routes.js";
 
+
+
 const indexRoutes = Router()
 
 //Ingresar acá la ruta para cada Route.
@@ -19,6 +21,9 @@ indexRoutes.use("/socio", socioRoutes);
 indexRoutes.use("/deporte", deporteRoutes);
 indexRoutes.use("/categoria",categoriaRoutes)
 indexRoutes.use("/sociosXCategoria", SociosXCategoriaRoutes)
+indexRoutes.use("/profesores", usuarioRoutes);
+
+
 
 
 export default indexRoutes

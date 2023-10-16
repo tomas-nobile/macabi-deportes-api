@@ -16,7 +16,7 @@ Deporte.init(
       type: DT.STRING,
       allowNull: false,
       unique: {
-        msg: "xd"
+        msg: "Error. Este deporte ya existe"
       },
     },
    
