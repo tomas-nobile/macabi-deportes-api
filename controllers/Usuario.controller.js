@@ -114,6 +114,49 @@ class UsuarioController {
     }
   };
 
+  traerTodosLosUsuariosXRol = async (req, res, next) => {
+    try {
+      const { idRol } = req.params;
+      const result = await Usuario.findAll({
+        where: {
+          idRol,
+        },
+        attributes: [
+          "idUsuario",
+          "nombre",
+          "apellido",
+          "fechaNacimiento",
+          "dni",
+          "email",
+          "clave",
+          "salt",
+          "telefono",
+          "direccion",
+          "estado",
+          "idRol",
+        ],
+        include: [
+          {
+            model: Rol,
+            attributes: ["tipo"],
+          },
+        ],
+      });
+
+      if (result.length == 0) {
+        const error = new Error(`no hay usuarios con ${idRol} aun`);
+        error.status = 400;
+        throw error;
+      }
+
+      res
+        .status(200)
+        .send({ success: true, message: "usuarios encontrados:", result });
+    } catch (error) {
+      next(error);
+    }
+  };
+
   obtenerCategoriasPorProfesor = async (req, res, next) => {
     try {
       const { idUsuario } = req.params;

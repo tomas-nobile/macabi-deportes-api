@@ -9,5 +9,6 @@ usuarioRoutes.get("/getUsers", userController.traerTodosLosUsuarios);
 usuarioRoutes.get("/:idUsuario", userController.traerUsuarioPorId);
 usuarioRoutes.get("/:idUsuario/deportes", userController.obtenerDeportesPorCoordinador);
 usuarioRoutes.get("/:idUsuario/categorias", userController.obtenerCategoriasPorProfesor);
+usuarioRoutes.get("/:idRol/rol", userController.traerTodosLosUsuariosXRol);
 
 export default usuarioRoutes
