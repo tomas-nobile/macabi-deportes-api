@@ -57,7 +57,7 @@ Usuario.init(
         len: [3, 30]
       }
     },
-    domicilio: {
+    direccion: {
       type: DT.STRING,
       allowNull: true,
       validate: {}
