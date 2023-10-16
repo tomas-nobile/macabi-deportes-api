@@ -27,8 +27,9 @@ Socio.init(
       type: DT.STRING,
       allowNull: false,
       validate: {
-        isAlpha: {
-          msg: "El nombre solo debe contener letras"
+        is: {
+          args: /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/g,
+          msg: 'El Nombre solo debe contener letras',
         },
         len: {
           args: [2, 24],
@@ -41,7 +42,8 @@ Socio.init(
       type: DT.STRING,
       allowNull: false,
       validate: {
-        isAlpha: {
+        is: {
+          args: /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/g,
           msg: "El apellido solo debe contener letras"
         },
         len: {
@@ -107,8 +109,8 @@ Socio.init(
     fechaNacimiento: {
       type: DT.DATEONLY,
       allowNull: false,
-      validate:{
-        isDate:{
+      validate: {
+        isDate: {
           msg: "Formato de Fecha Invalido"
         }
       }
