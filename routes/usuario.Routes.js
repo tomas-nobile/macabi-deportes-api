@@ -17,6 +17,13 @@ usuarioRoutes.get("/:idUsuario/categorias", userController.obtenerCategoriasPorP
 usuarioRoutes.get("/:idRol/rol", userController.traerTodosLosUsuariosXRol);
 usuarioRoutes.get("/profesores", userController.getUserProfesores)
 
+usuarioRoutes.get("/", userController.getAllUsers);
+usuarioRoutes.get("/:id", userController.getUserById);
+
+usuarioRoutes.patch("/:id", userController.patchUserById);
+
+usuarioRoutes.delete("/:id", userController.deleteUserById);
+
 
 export default usuarioRoutes;
 

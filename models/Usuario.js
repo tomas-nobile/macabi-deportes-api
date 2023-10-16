@@ -70,7 +70,6 @@ Usuario.init(
       type: DT.INTEGER(),
       foreignKey: true,
       allowNull: false,
-      // defaultValue: 2,
     }
   },
   {
