@@ -62,7 +62,7 @@ Usuario.init(
       allowNull: true,
       validate: {}
     },
-    estado: {
+    activo: {
       type: DT.BOOLEAN,
       allowNull: false,
     },
@@ -86,5 +86,20 @@ Usuario.beforeCreate(async (user) => {
   const passwordHash = await bcrypt.hash(user.clave, salt);
   user.clave = passwordHash;
 })
+
+Usuario.beforeBulkCreate(async (users) => {
+
+  for (let index = 0; index < users.length; index++) {
+    const user = users[index];
+
+    const salt = await bcrypt.genSalt();
+    user.salt = salt;
+
+    const claveHash = await bcrypt.hash(user.clave, salt);
+    user.clave = claveHash;
+
+  };
+
+});
 
 export default Usuario;

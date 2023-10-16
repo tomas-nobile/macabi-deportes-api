@@ -102,6 +102,7 @@ class DeporteController {
     }
   };
 
+
   updateDeporte = async (req, res, next) => {
     try {
       const { idDeporte } = req.params;

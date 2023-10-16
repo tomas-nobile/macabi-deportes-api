@@ -13,7 +13,7 @@ const seedUsuario = async () => {
                 clave: 'hola',
                 direccion: 'av falsa 123',
                 telefono:"12 3456 7891",
-                estado: true,
+                activo: true,
                 idRol: 1
             },
             {
@@ -25,7 +25,7 @@ const seedUsuario = async () => {
                 clave: 'hola2',
                 direccion: 'av falsa 123',
                 telefono:"12 3456 7891",
-                estado: true,
+                activo: true,
                 idRol: 2
             },
             {
@@ -37,7 +37,7 @@ const seedUsuario = async () => {
                 clave: 'hola3',
                 direccion: 'av falsa 123',
                 telefono:"12 3456 7891",
-                estado: true,
+                activo: true,
                 idRol: 3
             },
 

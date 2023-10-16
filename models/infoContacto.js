@@ -13,7 +13,7 @@ infoContacto.init(
             primaryKey: true,
             autoIncrement: true,
         },
-        nroSocio: {
+        idSocio: {
             type: DT.INTEGER,
             allowNull: false
         },
@@ -25,7 +25,7 @@ infoContacto.init(
             type: DT.STRING,
             allowNull: false
         },
-        mail: {
+        email: {
             type: DT.STRING,
             allowNull: false,
             unique: true,

@@ -9,6 +9,9 @@ categoriaRoutes.put("/:idCategoria", categoriaController.updateCategoria);
 categoriaRoutes.get("/getCategories", categoriaController.traerTodasLasCategorias);
 categoriaRoutes.get("/:idDeporte/deporte", categoriaController.traerTodasLasCategoriasXIdDeporte);
 categoriaRoutes.get("/:idCategoria", categoriaController.traerCategoriaPorId);
+categoriaRoutes.get("/:idCategoria",categoriaController.getNombreCategoria);
+categoriaRoutes.get("/:idCategoria/deporte", categoriaController.getNombreDeporte);
 
 
 export default categoriaRoutes
+

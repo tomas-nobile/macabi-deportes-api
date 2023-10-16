@@ -9,14 +9,14 @@ const Asistencia = connection.define("Asistencia", {
         primaryKey: true,
     },
 
-    nroSocio: {
+    idSocio: {
         type: DT.INTEGER,
         primaryKey: true,
     },
 
     estado: {
         type: DT.CHAR,
-        allowNull: false,
+        allowNull: true,
         validate: {
             isIn: {
                 args: [['P','A','J']],
