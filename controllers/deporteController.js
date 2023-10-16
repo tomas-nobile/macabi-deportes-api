@@ -1,15 +1,14 @@
-import {Deporte} from "../models/index.js"
+import { Deporte, DeportesXUsuario, Usuario } from "../models/index.js";
 
 class DeporteController {
-    constructor() {}
+  constructor() {}
 
   createDeporte = async (req, res, next) => {
     try {
-      const {idDeporte, nombre} = req.body;
+      const { nombre, idCoordinador } = req.body;
       const result = await Deporte.create({
         nombre,
-        
-        
+        idCoordinador,
       });
       if (!result) throw new Error("El Deporte no pudo ser creado");
       res
@@ -20,68 +19,177 @@ class DeporteController {
     }
   };
 
-
-  getAllDeportes = async (req, res, next) => {
+  traerDeportePorId = async (req, res, next) => {
     try {
-      const result = await Deporte.findAll({
-        attributes: ["nombre", "id"],
+      const { idDeporte } = req.params;
+
+      const result = await Deporte.findOne({
+        where: {
+          idDeporte,
+        },
+        attributes: ["idDeporte", "nombre"],
       });
-      if (result.length === 0) {
-        const error = new Error("No hay deportes");
+
+      if (!result) {
+        const error = new Error(
+          `el deporte con ID ${idDeporte} no se encuntra en la base de datos`
+        );
         error.status = 400;
         throw error;
       }
+
       res
         .status(200)
-        .send({ success: true, message: "deporte encontrado", result });
+        .send({ success: true, message: "deportes encontrados:", result });
     } catch (error) {
-      //res.status(400).send({ success: false, message: error.message });
+      next(error);
+    }
+  };
+
+  traerTodosLosDeportes = async (req, res, next) => {
+    try {
+      const result = await Deporte.findAll({
+        attributes: ["idDeporte", "nombre"],
+      });
+
+      if (result.length == 0) {
+        const error = new Error("no hay deportes cargados aun");
+        error.status = 400;
+        throw error;
+      }
+
+      res
+        .status(200)
+        .send({ success: true, message: "deportes encontrados:", result });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  traerCoordinadoresXDeporte = async (req, res, next) => {
+    try {
+      const { idDeporte } = req.params;
+      const coordinadores = await DeportesXUsuario.findAll({
+        where: {
+          idDeporte,
+        },
+      });
+
+      if (coordinadores.length === 0) {
+        const error = new Error(
+          `No se encontraron coordinadores para el deporte con ID ${idDeporte}`
+        );
+        error.status = 404;
+        throw error;
+      }
+
+      const usuarioIds = coordinadores.map(
+        (coordinador) => coordinador.idUsuario
+      );
+      const usuarios = await Usuario.findAll({
+        where: {
+          idUsuario: usuarioIds,
+        },
+      });
+
+      res.status(200).send({
+        success: true,
+        message: "Coordinadores encontrados:",
+        coordinadores: usuarios,
+      });
+    } catch (error) {
       next(error);
     }
   };
 
 
-  getDeporteById = async (req, res, next) => {
+  updateDeporte = async (req, res, next) => {
     try {
-      const { nombre } = req.params;
-      const result = await Deporte.findOne({
-        where: {
+      const { idDeporte } = req.params;
+      const { nombre } = req.body;
+      const result = await Deporte.update(
+        {
           nombre,
         },
-        attributes: ["nombre", "idCoordinador"],
-      });
-      if (!result) throw new Error("no se encontro el deporte");
+        {
+          where: {
+            idDeporte: idDeporte,
+          },
+        }
+      );
+      if (!result) throw new Error("El deporte no pudo ser modificado");
       res
         .status(200)
-        .send({ success: true, message: "deporte encontrado", result });
+        .send({ success: true, message: "Deporte modificado con exito" });
     } catch (error) {
       res.status(400).send({ success: false, message: error.message });
     }
   };
 
-  getNombreDeporteById = async (idDeporte) => {
+  async updateCoordinador(req, res, next) {
     try {
-      console.log("El idDeporte que llegí al metodo de nombre es el  " + idDeporte);
-      const result = await Deporte.findOne({
-        attributes:["nombre"],
+      const { idDeporte } = req.params;
+      const { idUsuario } = req.body;
+
+      // Primero, intenta buscar un registro existente
+      const [coordinador, created] = await DeportesXUsuario.findOrCreate({
         where: {
-          idDeporte,
+          idDeporte: idDeporte,
+          idUsuario: idUsuario,
         },
       });
-      if (!result) {
-        throw new Error("Deporte no encontrado");
+
+      if (!created) {
+        // El registro ya existía, por lo que simplemente actualizamos el idUsuario
+        coordinador.idUsuario = idUsuario;
       }
-      return result.dataValues.nombre
+
+      res
+        .status(200)
+        .send({ success: true, message: "Coordinador modificado con éxito" });
     } catch (error) {
-      console.error("Error en getNombreDeporteById:", error);
+      res.status(400).send({ success: false, message: error.message });
     }
-  };
+  }
 
+  async deleteCoordinadoresXDeporte(req, res, next) {
+    try {
+      const { idDeporte } = req.params;
+      const result = await DeportesXUsuario.destroy({
+        where: {
+          idDeporte: idDeporte,
+        },
+      })
+      res
+        .status(200)
+        .send({ success: true, message: "Coordinadores desasignados con éxito" });
+    } catch (error) {
+      res.status(400).send({ success: false, message: error.message });
+    }
+  }
+
+  async traerIdCoordinadorTablaIntermedia(req, res, next){
+    try {
+      const { idDeporte } = req.params;
+      const result = await DeportesXUsuario.findOne({
+        where: {
+          idDeporte: idDeporte,
+        },
+      })
+      if (!result) {
+        const error = new Error(
+          `el deporte con ID ${idDeporte} no se encuntra en la base de datos`
+        );
+        error.status = 400;
+        throw error;
+      }
+      res
+        .status(200)
+        .send({ success: true, result: result, message: "Coordinador obtenido con éxito" });
+    } catch (error) {
+      res.status(400).send({ success: false, message: error.message });
+    }
+  }
 }
-
-
-
-
-
 
 export default DeporteController;
