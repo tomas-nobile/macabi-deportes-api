@@ -179,7 +179,7 @@ class UsuarioController {
       res.status(400).send({ success: false, message: error.message });
     }
   };
-}
+
 
 
   traerUsuarioPorId = async (req, res, next) => {
@@ -494,5 +494,4 @@ class UsuarioController {
   };
   
 }
-
 export default UsuarioController;

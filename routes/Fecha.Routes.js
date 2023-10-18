@@ -7,7 +7,8 @@ const fechaRoutes = Router();
 const fechaController = new FechaController()
 
 
-fechaRoutes.post("/",fechaController.createFecha);
+fechaRoutes.post("/",fechaController.createFecha); 
+//Pasó testing
 
 
 

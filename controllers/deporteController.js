@@ -190,6 +190,27 @@ class DeporteController {
       res.status(400).send({ success: false, message: error.message });
     }
   }
+
+  getNombreDeporteById = async (idDeporte) => {
+    try {
+      console.log("El idDeporte que llegí al metodo de nombre es el  " + idDeporte);
+      const result = await Deporte.findOne({
+        attributes:["nombre"],
+        where: {
+          idDeporte,
+        },
+      });
+      if (!result) {
+        throw new Error("Deporte no encontrado");
+      }
+      return result.dataValues.nombre
+    } catch (error) {
+      console.error("Error en getNombreDeporteById:", error);
+    }
+  };
+
+
+
 }
 
 export default DeporteController;
