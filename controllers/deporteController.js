@@ -8,7 +8,7 @@ class DeporteController {
       const {nombre} = req.body;
       const result = await Deporte.create({
         nombre,
-        idCoordinador,
+        
       });
       if (!result) throw new Error("El Deporte no pudo ser creado");
       res

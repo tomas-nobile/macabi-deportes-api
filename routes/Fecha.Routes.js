@@ -8,7 +8,7 @@ const fechaController = new FechaController()
 
 
 fechaRoutes.post("/",fechaController.createFecha);
-
+fechaRoutes.get("/fechas", fechaController.getAllFechas)
 
 
 export default fechaRoutes;
