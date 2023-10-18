@@ -8,6 +8,10 @@ import { serverPort } from "./config/config.js"
 
 import seedRol from "./seed/seedRol.js";
 import seedUsuario from "./seed/seedUsuario.js";
+import seedSocio from './seed/seedSocio.js';
+import seedDeporte from './seed/seedDeporte.js'
+import seedDeportesXUsuario from './seed/seedDeportesXUsuario.js'
+import seedCategoria from './seed/seedCategorias.js';
 
 
 const app = express();
@@ -35,7 +39,7 @@ app.use((error, req, res, next) => {
 });
 
 
-let force = false
+let force = true
 
 connection.sync({ force })
   .then(() => {
@@ -48,6 +52,10 @@ connection.sync({ force })
     if (force) {
       await seedRol()
       await seedUsuario()
+      await seedSocio()
+      await seedDeporte()
+      await seedDeportesXUsuario()
+      await seedCategoria()
     }
   });
 

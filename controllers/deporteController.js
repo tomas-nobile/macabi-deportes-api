@@ -1,25 +1,30 @@
 import { Deporte, DeportesXUsuario, Usuario } from "../models/index.js";
 
 class DeporteController {
-  constructor() {}
+  constructor() { }
 
   createDeporte = async (req, res, next) => {
     try {
-      const {nombre} = req.body;
+
+      const { nombre } = req.body;
       const result = await Deporte.create({
         nombre,
-        idCoordinador,
       });
+
       if (!result) throw new Error("El Deporte no pudo ser creado");
+
       res
         .status(200)
         .send({ success: true, message: "Deporte creado con exito" });
+
     } catch (error) {
-      res.status(400).send({ success: false, message: error.message });
+
+      next(error);
+
     }
   };
 
-  traerDeportePorId = async (req, res, next) => {
+  getDeporteById = async (req, res, next) => {
     try {
       const { idDeporte } = req.params;
 
@@ -46,7 +51,7 @@ class DeporteController {
     }
   };
 
-  traerTodosLosDeportes = async (req, res, next) => {
+  getAllDeportes = async (req, res, next) => {
     try {
       const result = await Deporte.findAll({
         attributes: ["idDeporte", "nombre"],
@@ -66,42 +71,46 @@ class DeporteController {
     }
   };
 
-  traerCoordinadoresXDeporte = async (req, res, next) => {
+  getCoordinadoresXDeporte = async (req, res, next) => {
     try {
+
       const { idDeporte } = req.params;
-      const coordinadores = await DeportesXUsuario.findAll({
+
+      const deporte = await Deporte.findOne({
         where: {
           idDeporte,
         },
+        attributes:['nombre'],
+        include: {
+          model:Usuario,
+          as:'CoordinadoresAsignados',
+          attributes:['idUsuario','nombre','apellido','dni','email','idRol'],
+          through: {
+            attributes: []
+          }
+        }
       });
 
-      if (coordinadores.length === 0) {
+      if (!deporte) {
         const error = new Error(
-          `No se encontraron coordinadores para el deporte con ID ${idDeporte}`
+          `El deporte con ID ${idDeporte} no se encuntra en la base de datos`
         );
         error.status = 404;
         throw error;
       }
 
-      const usuarioIds = coordinadores.map(
-        (coordinador) => coordinador.idUsuario
-      );
-      const usuarios = await Usuario.findAll({
-        where: {
-          idUsuario: usuarioIds,
-        },
-      });
-
       res.status(200).send({
         success: true,
-        message: "Coordinadores encontrados:",
-        coordinadores: usuarios,
+        message: `Coordinadores encontrados`,
+        coordinadores: deporte,
       });
     } catch (error) {
-      next(error);
-    }
-  };
 
+      next(error);
+
+    }
+
+  };
 
   updateDeporte = async (req, res, next) => {
     try {
@@ -126,10 +135,51 @@ class DeporteController {
     }
   };
 
-  async updateCoordinador(req, res, next) {
+  updateCoordinador = async(req, res, next) => {
     try {
       const { idDeporte } = req.params;
       const { idUsuario } = req.body;
+
+      let message = "Coordinador Agregado con éxito"
+
+      const usuario = await Usuario.findOne({
+        where: {
+          idUsuario,
+        },
+        attributes: ['idUsuario','idRol']
+      });
+
+      if (!usuario) {
+        const error = new Error(
+          `El usuario con ID ${idUsuario} no se encuentra en la base de datos`
+        );
+        error.status = 400;
+        throw error;
+      }
+
+      if (usuario.dataValues.idRol != 2) {
+        console.log("sadd");
+        const error = new Error(
+          `El usuario con ID ${idUsuario} no es un Coordinador`
+        );
+        error.status = 400;
+        throw error;
+      }
+
+      const deporte = await Deporte.findOne({
+        where: {
+          idDeporte,
+        }
+      });
+
+      if (!deporte) {
+        const error = new Error(
+          `El deporte con ID ${idDeporte} no se encuentra en la base de datos`
+        );
+        error.status = 400;
+        throw error;
+      }
+
 
       // Primero, intenta buscar un registro existente
       const [coordinador, created] = await DeportesXUsuario.findOrCreate({
@@ -142,17 +192,18 @@ class DeporteController {
       if (!created) {
         // El registro ya existía, por lo que simplemente actualizamos el idUsuario
         coordinador.idUsuario = idUsuario;
+        message = "Coordinador Modificado con éxito"
       }
 
       res
         .status(200)
-        .send({ success: true, message: "Coordinador modificado con éxito" });
+        .send({ success: true, message });
     } catch (error) {
       res.status(400).send({ success: false, message: error.message });
     }
   }
 
-  async deleteCoordinadoresXDeporte(req, res, next) {
+  deleteCoordinadoresXDeporte = async(req, res, next) => {
     try {
       const { idDeporte } = req.params;
       const result = await DeportesXUsuario.destroy({
@@ -168,10 +219,10 @@ class DeporteController {
     }
   }
 
-  async traerIdCoordinadorTablaIntermedia(req, res, next){
+  traerIdCoordinadorTablaIntermedia = async(req, res, next) => {
     try {
       const { idDeporte } = req.params;
-      const result = await DeportesXUsuario.findOne({
+      const result = await DeportesXUsuario.findAll({
         where: {
           idDeporte: idDeporte,
         },
@@ -190,6 +241,8 @@ class DeporteController {
       res.status(400).send({ success: false, message: error.message });
     }
   }
+
+
 }
 
 export default DeporteController;

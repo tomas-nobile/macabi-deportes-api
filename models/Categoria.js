@@ -15,9 +15,9 @@ Categoria.init(
     nombreCategoria: {
       type: DT.STRING,
       allowNull: false,
-      unique: {
-        msg: "Error. Esta categoria ya existe"
-      },
+      // unique: {
+      //   msg: "Error. Esta categoria ya existe"
+      // },
     },
 
     idDeporte: {

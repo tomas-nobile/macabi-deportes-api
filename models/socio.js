@@ -14,7 +14,7 @@ Socio.init(
     nroSocio: {
       type: DT.INTEGER,
       unique: {
-        msg: "El Numero de socio ingresado ya esta Registrado"
+        msg: "El numero de socio ingresado ya esta Registrado"
       },
       validate: {
         isInt: {
@@ -29,7 +29,7 @@ Socio.init(
       validate: {
         is: {
           args: /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff\s]*)$/g,
-          msg: 'El Nombre solo debe contener letras',
+          msg: 'El nombre solo debe contener letras',
         },
         len: {
           args: [2, 24],

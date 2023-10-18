@@ -7,7 +7,7 @@ const seedUsuario = async () => {
             {
                 nombre: `marcos`,
                 apellido: `dias`,
-                fechaNacimiento: '2012-12-12',
+                fechaNacimiento: '2005-12-12',
                 dni: 42123321,
                 email: 'marcos@gmail.com',
                 clave: 'hola',
@@ -29,13 +29,37 @@ const seedUsuario = async () => {
                 idRol: 2
             },
             {
+                nombre: `carlos`,
+                apellido: `messi`,
+                fechaNacimiento: '1995-12-12',
+                dni: 42123321,
+                email: 'messirve@gmail.com',
+                clave: 'hola3',
+                direccion: 'av falsa 123',
+                telefono:"12 3456 7891",
+                activo: true,
+                idRol: 2
+            },
+            {
                 nombre: `damian`,
                 apellido: `rodriguez`,
                 fechaNacimiento: '2002-12-12',
                 dni: 42123321,
                 email: 'damian@gmail.com',
-                clave: 'hola3',
+                clave: 'hola4',
                 direccion: 'av falsa 123',
+                telefono:"12 3456 7891",
+                activo: true,
+                idRol: 3
+            },
+            {
+                nombre: `matias`,
+                apellido: `franco`,
+                fechaNacimiento: '2002-12-12',
+                dni: 42123321,
+                email: 'matias.f@gmail.com',
+                clave: 'hola5',
+                direccion: 'av falsa 1235',
                 telefono:"12 3456 7891",
                 activo: true,
                 idRol: 3

@@ -3,11 +3,7 @@ import { verifyToken } from "../utils/tokens.js";
 const validateAccess = (req, res, next) => {
     try {
 
-        
-
         const { tokenMacabi } = req.cookies;
-
-        console.log(tokenMacabi);
         
         if (!tokenMacabi) {
             const error = new Error("Acceso denegado, no hay cookie")

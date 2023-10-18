@@ -25,15 +25,15 @@ Usuario.belongsTo(Rol, {
 // Relacion usuarios con deportes (N a N) -> Genera tabla intermedia.
 
 Usuario.belongsToMany(Deporte, {
-    through:"DeportesXUsuario",
-    foreignKey: "idUsuario"
-})
+    as: 'DeportesAsignados',
+    through: "DeportesXUsuario", 
+    foreignKey: "idUsuario", })
 
 Deporte.belongsToMany(Usuario, {
-    through:"DeportesXUsuario",
-    foreignKey: "idDeporte"
-})
-
+    as: 'CoordinadoresAsignados',
+    through: "DeportesXUsuario",
+    foreignKey: "idDeporte", })
+    
 
 // Relacion deporte (N categorias) y categoria (1 deporte)
 
@@ -50,11 +50,17 @@ Categoria.belongsTo(Deporte, {
 
 
 Usuario.hasMany(Categoria, {
-    foreignKey: "idUsuario",
+    foreignKey: {
+        name: 'idUsuario',
+        allowNull: false
+    }
 })
 
 Categoria.belongsTo(Usuario, {
-    foreignKey: "idUsuario",
+    foreignKey: {
+        name: 'idUsuario',
+        allowNull: false
+    }
 })
 
 // Relacion categoria (N fechas) y fecha (1 categoria)
@@ -83,24 +89,24 @@ infoContacto.belongsTo(Socio, {
 // Relacion socios con categorias (N a N) -> Genera tabla intermedia.
 
 Socio.belongsToMany(Categoria, {
-    through:"SociosXCategoria",
+    through: "SociosXCategoria",
     foreignKey: "idSocio"
 })
 
 Categoria.belongsToMany(Socio, {
-    through:"SociosXCategoria",
+    through: "SociosXCategoria",
     foreignKey: "idCategoria"
 })
 
 // Relacion socios con fechas (N a N) -> Genera tabla intermedia.
 
 Socio.belongsToMany(Fecha, {
-    through:"Asistencia",
+    through: "Asistencia",
     foreignKey: "idSocio"
 })
 
 Fecha.belongsToMany(Socio, {
-    through:"Asistencia",
+    through: "Asistencia",
     foreignKey: "idFecha"
 })
 
@@ -108,4 +114,4 @@ Fecha.belongsToMany(Socio, {
 
 
 
-export {Usuario,infoContacto, Socio, Fecha, Asistencia, Deporte, Rol, Categoria,DeportesXUsuario,SociosXCategorias};
+export { Usuario, infoContacto, Socio, Fecha, Asistencia, Deporte, Rol, Categoria, DeportesXUsuario, SociosXCategorias };

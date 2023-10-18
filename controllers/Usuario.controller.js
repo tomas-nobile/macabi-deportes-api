@@ -1,235 +1,8 @@
-
-import {
-  Usuario,
-  DeportesXUsuario,
-  Deporte,
-  Categoria,
-  Rol
-} from "../models/index.js";
+import { Usuario, DeportesXUsuario, Deporte, Categoria, Rol } from "../models/index.js";
 import { generateToken } from "../utils/tokens.js";
 
 class UsuarioController {
-  constructor() {}
-
-
-
-  createUser = async (req, res, next) => {
-    try {
-      const {
-        nombre,
-        apellido,
-        email,
-        clave,
-        dni,
-        fechaNacimiento,
-        telefono,
-        direccion,
-        activo = true,
-        idRol
-      } = req.body;
-      const result = await Usuario.create({
-        nombre,
-        apellido,
-        email,
-        clave,
-        dni,
-        fechaNacimiento,
-        direccion,
-        telefono,
-        activo,
-        idRol
-      });
-      if (!result) throw new Error("El usuario no pudo ser creado");
-      res
-        .status(200)
-        .send({ success: true, message: "Usuario creado con exito" });
-    } catch (error) {
-      next(error)
-    }
-  };
-
-  getAllUsers = async (req, res, next) => {
-    try {
-      const result = await Usuario.findAll({
-        attributes: [
-          "nombre",
-          "apellido",
-          "email",
-          "direccion",
-          "clave",
-          "dni",
-          "fechaNacimiento",
-          "telefono",
-          "activo",
-          "idRol"
-        ],
-        // include: [
-        //   {
-        //     model: Role,
-        //     attributes: ["role"],
-        //     as: "role",
-        //   },
-        // ],
-      });
-      res
-        .status(200)
-        .send({ success: true, message: "Cantidad de usuarios: "+ result.length+" Usuarios encontrados:", result });
-    } catch (error) {
-      //res.status(400).send({ success: false, message: error.message });
-      next(error);
-    }
-  };
-
-  getUserById = async (req, res, next) => {
-    try {
-      const { id } = req.params;
-      const result = await Usuario.findOne({
-        where: {
-          idUsuario: id,
-        },
-        attributes: [
-          "idUsuario",
-          "nombre",
-          "apellido",
-          "email",
-          "direccion",
-          "dni",
-          "fechaNacimiento",
-          "telefono",
-          "activo",
-          "idRol"
-        ],
-        // include: [
-        //   {
-        //     model: Role,
-        //     attributes: ["role"],
-        //     as: "role",
-        //   },
-        // ],
-      });
-      if (!result) throw new Error("No se encontro usuario con ese id");
-      res
-        .status(200)
-        .send({ success: true, message: "Usuario encontrado:", result });
-    } catch (error) {
-      res.status(400).send({ success: false, message: error.message });
-    }
-  };
-
-
-  patchUserById = async (req, res, next) => {
-    console.log("🚀 ~ file: Usuario.controller.js:113 ~ UsuarioController ~ patchUserById= ~ req:", req.body)
-    try {
-      const { id } = req.params;
-      const {
-        nombre,
-        apellido,
-        email,
-        dni,
-        direccion,
-        fechaNacimiento,
-        telefono,
-        activo,
-        idRol
-      } = req.body;
-      const result = await Usuario.update(
-        {
-          nombre,
-          apellido,
-          email,
-          dni,
-          direccion,
-          fechaNacimiento,
-          telefono,
-          activo,
-          idRol
-        },
-        {
-          where: {
-            idUsuario: id,
-          },
-        }
-      );
-      if (!result) throw new Error("No se pudo modificar el usuario.");
-      res
-        .status(200)
-        .send({ success: true, message: "Usuario modificado con exito" });
-    } catch (error) {
-      res.status(400).send({ success: false, message: error });
-    }
-  };
-
-  deleteUserById = async (req, res, next) => {
-    try {
-      const { id } = req.params;
-      const result = await Usuario.destroy({
-        where: {
-          idUsuario: id,
-        },
-      });
-      if (!result) throw new Error("No se pudo eliminar el usuario.");
-      res
-        .status(200)
-        .send({
-          success: true,
-          message: "Usuario eliminado con exito.",
-          result,
-        });
-    } catch (error) {
-      res.status(400).send({ success: false, message: error.message });
-    }
-  };
-}
-
-
-  traerUsuarioPorId = async (req, res, next) => {
-    try {
-      const { idUsuario } = req.params;
-
-      const result = await Usuario.findOne({
-        where: {
-          idUsuario,
-        },
-        attributes: ["idUsuario", "nombre", "apellido", "email"],
-        include: [
-          {
-            model: Rol,
-            attributes: ["tipo"],
-          },
-        ],
-      });
-
-      if (!result) {
-        const error = new Error(
-          `el usuarion con ID ${idUsuario} no se encuntra en la base de datos`
-        );
-        error.status = 400;
-        throw error;
-      }
-
-      res
-        .status(200)
-        .send({ success: true, message: "usuarios encontrados:", result });
-
-        
-    } catch (error) {
-      next(error);
-    }
-  };
-
-   getUserProfesores = async (req, res, next) => {
-    try {
-      const profesores = await Usuario.findAll({
-        where: { idRol: 3 }, 
-      });
-  
-      res.status(200).send({ success: true, message: "Profesores encontrados:", profesores });
-
-    } catch (error) {
-      next(error);
-    }
-  };
-
+  constructor() { }
 
   logIn = async (req, res, next) => {
     try {
@@ -296,34 +69,100 @@ class UsuarioController {
 
   me = async (req, res, next) => {
 
-    try { 
-        const { user } = req
-        res
-            .status(200)
-            .send({ success: true, message: "Usuario", user });
+    try {
+      const { user } = req
+      res
+        .status(200)
+        .send({ success: true, message: "Usuario", user });
 
     } catch (error) {
-        next(error);
+      next(error);
 
     }
-};
+  };
 
-  traerTodosLosUsuarios = async (req, res, next) => {
+  createUser = async (req, res, next) => {
+    try {
+      const {
+        nombre,
+        apellido,
+        email,
+        clave,
+        dni,
+        fechaNacimiento,
+        telefono,
+        direccion,
+        activo = true,
+        idRol
+      } = req.body;
+      const result = await Usuario.create({
+        nombre,
+        apellido,
+        email,
+        clave,
+        dni,
+        fechaNacimiento,
+        direccion,
+        telefono,
+        activo,
+        idRol
+      });
+      if (!result) throw new Error("El usuario no pudo ser creado");
+      res
+        .status(200)
+        .send({ success: true, message: "Usuario creado con exito" });
+    } catch (error) {
+      next(error)
+    }
+  };
+
+  getAllUsers = async (req, res, next) => {
     try {
       const result = await Usuario.findAll({
         attributes: [
           "idUsuario",
           "nombre",
           "apellido",
-          "fechaNacimiento",
-          "dni",
           "email",
-          "clave",
-          "salt",
-          "telefono",
           "direccion",
-          "estado",
-          "idRol",
+          "dni",
+          "fechaNacimiento",
+          "telefono",
+          "activo",
+          "idRol"
+        ],
+        include: [
+          {
+            model: Rol,
+            attributes: ["tipo"],
+          },
+        ],
+      });
+      res
+        .status(200)
+        .send({ success: true, message: "Cantidad de usuarios: " + result.length + " Usuarios encontrados:", result });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  getUserById = async (req, res, next) => {
+    try {
+      const { idUsuario } = req.params;
+      const result = await Usuario.findOne({
+        where: {
+          idUsuario,
+        },
+        attributes: [
+          "nombre",
+          "apellido",
+          "email",
+          "direccion",
+          "dni",
+          "fechaNacimiento",
+          "telefono",
+          "activo",
+          "idRol"
         ],
         include: [
           {
@@ -333,21 +172,25 @@ class UsuarioController {
         ],
       });
 
-      if (result.length == 0) {
-        const error = new Error("no hay usuarios cargados aun");
+      if (!result) {
+        const error = new Error(
+          `el usuarion con ID ${idUsuario} no se encuntra en la base de datos`
+        );
         error.status = 400;
         throw error;
       }
 
       res
         .status(200)
-        .send({ success: true, message: "usuarios encontrados:", result });
+        .send({ success: true, message: "Usuario encontrado:", result });
+
     } catch (error) {
       next(error);
     }
   };
 
-  traerTodosLosUsuariosXRol = async (req, res, next) => {
+  getUsersByRol = async (req, res, next) => {
+
     try {
       const { idRol } = req.params;
       const result = await Usuario.findAll({
@@ -361,18 +204,9 @@ class UsuarioController {
           "fechaNacimiento",
           "dni",
           "email",
-          "clave",
-          "salt",
           "telefono",
           "direccion",
-          "estado",
-          "idRol",
-        ],
-        include: [
-          {
-            model: Rol,
-            attributes: ["tipo"],
-          },
+          "activo",
         ],
       });
 
@@ -390,7 +224,76 @@ class UsuarioController {
     }
   };
 
-  obtenerCategoriasPorProfesor = async (req, res, next) => {
+  patchUserById = async (req, res, next) => {
+
+    try {
+      const { idUsuario } = req.params;
+      const {
+        nombre,
+        apellido,
+        email,
+        dni,
+        direccion,
+        fechaNacimiento,
+        telefono,
+        activo,
+        idRol
+      } = req.body;
+
+      const result = await Usuario.update(
+        {
+          nombre,
+          apellido,
+          email,
+          dni,
+          direccion,
+          fechaNacimiento,
+          telefono,
+          activo,
+          idRol
+        },
+        {
+          where: {
+            idUsuario,
+          },
+        }
+      );
+
+      if (!result) throw new Error("No se pudo modificar el usuario.");
+
+      res
+        .status(200)
+        .send({ success: true, message: "Usuario modificado con exito" });
+    } catch (error) {
+
+      next(error)
+    }
+  };
+
+  deleteUserById = async (req, res, next) => {
+    try {
+
+      const { idUsuario } = req.params;
+
+      const result = await Usuario.destroy({
+        where: {
+          idUsuario,
+        },
+      });
+      if (!result) throw new Error("No se pudo eliminar el usuario.");
+      res
+        .status(200)
+        .send({
+          success: true,
+          message: "Usuario eliminado con exito.",
+          result,
+        });
+    } catch (error) {
+      res.status(400).send({ success: false, message: error.message });
+    }
+  };
+
+  getCategoriasPorProfesor = async (req, res, next) => {
     try {
       const { idUsuario } = req.params;
       let message = "Categorías encontradas:"
@@ -406,7 +309,7 @@ class UsuarioController {
           },
         ],
       });
-  
+
       if (!usuario) {
         const error = new Error(
           `El usuario con ID ${idUsuario} no se encuentra en la base de datos`
@@ -416,20 +319,25 @@ class UsuarioController {
       }
 
       if (usuario.Rol.tipo === "P") {
+
         const categorias = await Categoria.findAll({
           where: {
             idUsuario,
           },
-          attributes: ["idCategoria", "nombreCategoria", "idDeporte"],
+          attributes: ["idCategoria", "nombreCategoria"],
+          include:{ model: Deporte, attributes: ["nombre"]}
         });
-  
+
         if (!categorias || categorias.length === 0) {
           message = "No hay categorías asociadas a este profesor.";
-          
+
         }
-  
-        res.status(200).send({ success: true, message, categorias });
+        res
+          .status(200)
+          .send({ success: true, message, categorias });
+
       } else {
+
         const error = new Error("El usuario no es de tipo Profesor");
         error.status = 400;
         throw error;
@@ -438,8 +346,8 @@ class UsuarioController {
       next(error);
     }
   };
-  
-  obtenerDeportesPorCoordinador = async (req, res, next) => {
+
+  getDeportesPorCoordinador = async (req, res, next) => {
     try {
       const { idUsuario } = req.params;
       let message = "Deportes encontrados:"
@@ -455,7 +363,7 @@ class UsuarioController {
           },
         ],
       });
-  
+
       if (!usuario) {
         const error = new Error(
           `El usuario con ID ${idUsuario} no se encuentra en la base de datos`
@@ -463,7 +371,7 @@ class UsuarioController {
         error.status = 400;
         throw error;
       }
-  
+
       if (usuario.Rol.tipo === "C") {
         const idDeportes = await DeportesXUsuario.findAll({
           where: {
@@ -477,11 +385,11 @@ class UsuarioController {
             idDeporte: idDeportes.map((idDeporte) => idDeporte.idDeporte),
           },
         });
-  
+
         if (!deportes || deportes.length === 0) {
           message = "No hay deportes asociados a este coordinador.";
         }
-  
+
         res.status(200).send({ success: true, message, deportes });
       } else {
         const error = new Error("El usuario no es de tipo Coordinador");
@@ -492,7 +400,8 @@ class UsuarioController {
       next(error);
     }
   };
-  
+
 }
 
 export default UsuarioController;
+

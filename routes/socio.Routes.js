@@ -5,7 +5,7 @@ const socioController = new SocioController();
 
 const socioRoutes = Router();
 
-socioRoutes.post("/", socioController.crearSocio )
+socioRoutes.post("/", socioController.createSocio)
 
 
 export default socioRoutes

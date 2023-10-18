@@ -4,10 +4,10 @@ import 'dotenv/config'
 import {database,username,password,host,dialect,port} from "../config/config.js";
 
 
-const connection = new Sequelize(database, "root", "",{
-    host:"localhost",
-    dialect:"mysql",
-    port:"3306",
+const connection = new Sequelize(database, username, password,{
+    host,
+    dialect,
+    port,
 });
 
 try {

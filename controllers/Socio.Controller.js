@@ -3,7 +3,7 @@ import Socio from "../models/Socio.js";
 class SocioController {
     constructor() { }
 
-    crearSocio = async (req, res, next) => {
+    createSocio = async (req, res, next) => {
 
         try {
             const {
