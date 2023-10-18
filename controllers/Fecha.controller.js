@@ -36,7 +36,7 @@ class FechaController {
                         const socios = await sociosXCategoriasController.getSociosByIdCategoria(idCategoria);
                         if (socios) {
                             socios.forEach(socio => {
-                                asistenciaController.crearAsistencia2(result.dataValues.idFecha, socio.dataValues.idSocio, null)
+                                asistenciaController.crearAsistenciaAuxiliar(result.dataValues.idFecha,socio.dataValues.idSocio,null)
                             });
                         }
                     } catch (e) {
@@ -47,7 +47,7 @@ class FechaController {
                 } else {
                     try {
                         idSocios.forEach(socio => {
-                            asistenciaController.crearAsistencia2(result.dataValues.idFecha, socio.idSocio, null)
+                            asistenciaController.crearAsistenciaAuxiliar(result.dataValues.idFecha,socio.idSocio,null)
                         });
                     } catch (e) {
                         console.log("Hubo un error con las citaciones:", error);

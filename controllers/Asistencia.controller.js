@@ -21,7 +21,7 @@ class AsistenciaController {
 
     
 
-    crearAsistencia2 = async (idFecha,idSocio,estado) => {
+    crearAsistenciaAuxiliar = async (idFecha,idSocio,estado) => {
         try {
 
             const result = await Asistencia.create({idFecha ,idSocio, estado});

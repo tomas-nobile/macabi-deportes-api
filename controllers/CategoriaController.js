@@ -70,7 +70,8 @@ class CategoriaController{
         error.status = 400;
         throw error;
       }
-      result
+      //estaba "result cambio a res"
+      res
             .status(200)
             .json({ succes: true, message: "Categorias encontradas:" , result});
           }catch(e){
@@ -115,16 +116,16 @@ class CategoriaController{
     
           throw new Error("Error en la búsqueda del idDeporte de la categoría");
         }
-        console.log("El id del deporte es el " + result.dataValues.idDeporte);
         let deporte1 = new DeporteController();
         const nombreDeporte = await deporte1.getNombreDeporteById(result.dataValues.idDeporte)
-        console.log("El nombre del deporte es: " +nombreDeporte);
-        res.status(200).json({ nombreCategoria: nombreDeporte});
+        res.status(200).json({ nombreDeporte: nombreDeporte});
       } catch (e) {
         console.error("Error en getNombreDeporte:", e);
         res.status(400).json({ success: false, message: e.message });
       }
     }
+
+    
     
     
     

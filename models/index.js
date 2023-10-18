@@ -39,7 +39,7 @@ Deporte.belongsToMany(Usuario, {
 
 
 Deporte.hasMany(Categoria, {
-    foreignKey: "idDeporte",
+    foreignKey:  "idDeporte",
 })
 
 Categoria.belongsTo(Deporte, {
@@ -50,17 +50,12 @@ Categoria.belongsTo(Deporte, {
 
 
 Usuario.hasMany(Categoria, {
-    foreignKey: {
-        name: 'idUsuario',
-        allowNull: false
-    }
+    foreignKey: {name:"idUsuario", allowNull:true},
+    
 })
 
 Categoria.belongsTo(Usuario, {
-    foreignKey: {
-        name: 'idUsuario',
-        allowNull: false
-    }
+    foreignKey: {name:"idUsuario", allowNull:true},
 })
 
 // Relacion categoria (N fechas) y fecha (1 categoria)
