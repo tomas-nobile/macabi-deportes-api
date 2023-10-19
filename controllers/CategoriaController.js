@@ -1,7 +1,7 @@
-import {Categoria} from "../models/index.js"
+import { Categoria } from "../models/index.js"
 import DeporteController from "./deporteController.js";
-class CategoriaController{
-    constructor() {}
+class CategoriaController {
+  constructor() { }
 
   createCategoria = async (req, res, next) => {
     try {
@@ -20,7 +20,34 @@ class CategoriaController{
     }
   };
 
-  traerCategoriaPorId = async (req, res, next) => {
+  getAllCategorias = async (req, res, next) => {
+    try {
+      const result = await Categoria.findAll({
+        attributes: [
+          "idCategoria",
+          "nombreCategoria",
+          "idDeporte",
+          "idUsuario",
+        ],
+      });
+
+      if (result.length == 0) {
+        const error = new Error(
+          "no hay categorias con el idDeporte:" + idDeporte
+        );
+        error.status = 400;
+        throw error;
+      }
+      //estaba "result cambio a res"
+      res
+        .status(200)
+        .json({ succes: true, message: "Categorias encontradas:", result });
+    } catch (e) {
+      result.status(400).send({ success: false, message: e.message });
+    }
+  };
+
+  getCategoriaById = async (req, res, next) => {
     try {
       const { idCategoria } = req.params;
 
@@ -52,93 +79,61 @@ class CategoriaController{
     }
   };
 
-  traerTodasLasCategorias = async (req, res, next) => {
+  getNombreCategoria = async (req, res, next) => {
     try {
-      const result = await Categoria.findAll({
-        attributes: [
-          "idCategoria",
-          "nombreCategoria",
-          "idDeporte",
-          "idUsuario",
-        ],
+      const {
+        idCategoria
+      } = req.params;
+      const result = await Categoria.findOne({
+        attributes: ["nombreCategoria"],
+        where: {
+          idCategoria
+        },
       });
-
-      if (result.length == 0) {
-        const error = new Error(
-          "no hay categorias con el idDeporte:" + idDeporte
-        );
-        error.status = 400;
-        throw error;
-      }
-      //estaba "result cambio a res"
+      if (!result) throw new Error("Error en la busqueda de categoria");
       res
-            .status(200)
-            .json({ succes: true, message: "Categorias encontradas:" , result});
-          }catch(e){
-          result.status(400).send({ success: false, message: e.message });
+        .status(200)
+        .json({ nombreCategoria: result.nombreCategoria });
+    } catch (e) {
+      res.status(400).send({ success: false, message: e.message });
+
+    }
+
   }
-};
-      getNombreCategoria = async (req, res, next) => {
-        try {
-          const {
-            idCategoria
-          } = req.params;
-          const result = await Categoria.findOne({
-            attributes:["nombreCategoria"],
-            where:{
-              idCategoria
-            },
-          });
-          if (!result) throw new Error("Error en la busqueda de categoria");
-          res
-            .status(200)
-            .json({ nombreCategoria: result.nombreCategoria });
-          }catch(e){
-        res.status(400).send({ success: false, message: e.message });
-    
-      }
-    
-    }
-    
-    getNombreDeporte = async (req, res, next) => {
-      try {
-        const { idCategoria } = req.params;
-        console.log("El id categoria que llega es el: " + idCategoria);
-        const result = await Categoria.findOne({
-          attributes: ["idDeporte"],
-          where: {
-            idCategoria
-          },
-        });
-        console.log("Termino la consulta");
-        if (!result) {
-          console.log("No encontró ningun idDeporte");
-    
-          throw new Error("Error en la búsqueda del idDeporte de la categoría");
-        }
-        let deporte1 = new DeporteController();
-        const nombreDeporte = await deporte1.getNombreDeporteById(result.dataValues.idDeporte)
-        res.status(200).json({ nombreDeporte: nombreDeporte});
-      } catch (e) {
-        console.error("Error en getNombreDeporte:", e);
-        res.status(400).json({ success: false, message: e.message });
-      }
-    }
 
-    
-    
-    
-    
-          
+  getNombreDeporte = async (req, res, next) => {
+    try {
+      const { idCategoria } = req.params;
+      console.log("El id categoria que llega es el: " + idCategoria);
+      const result = await Categoria.findOne({
+        attributes: ["idDeporte"],
+        where: {
+          idCategoria
+        },
+      });
+      console.log("Termino la consulta");
+      if (!result) {
+        console.log("No encontró ningun idDeporte");
 
-  traerTodasLasCategoriasXIdDeporte = async (req, res, next) => {
+        throw new Error("Error en la búsqueda del idDeporte de la categoría");
+      }
+      let deporte1 = new DeporteController();
+      const nombreDeporte = await deporte1.getNombreDeporteById(result.dataValues.idDeporte)
+      res.status(200).json({ nombreDeporte: nombreDeporte });
+    } catch (e) {
+      console.error("Error en getNombreDeporte:", e);
+      res.status(400).json({ success: false, message: e.message });
+    }
+  }
+
+  getCategoriasByIdDeporte = async (req, res, next) => {
     try {
       const { idDeporte } = req.params;
+
       const result = await Categoria.findAll({
         attributes: [
           "idCategoria",
           "nombreCategoria",
-          "idDeporte",
           "idUsuario",
         ],
         where: {

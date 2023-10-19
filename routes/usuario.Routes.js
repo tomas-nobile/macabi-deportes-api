@@ -14,14 +14,14 @@ usuarioRoutes.post("/login", userController.logIn);
 usuarioRoutes.use(validateAccess);
 
 usuarioRoutes.get("/me", userController.me);
-usuarioRoutes.get("/getUsers", userController.getAllUsers);
+usuarioRoutes.get("/getAll", userController.getAllUsers);
 usuarioRoutes.get("/:idUsuario", userController.getUserById);
 usuarioRoutes.get("/:idUsuario/deportes", userController.getDeportesPorCoordinador);
 usuarioRoutes.get("/:idUsuario/categorias", userController.getCategoriasPorProfesor);
 usuarioRoutes.get("/:idRol/rol", userController.getUsersByRol);
 
 
-usuarioRoutes.post("/", userController.createUser);
+usuarioRoutes.post("/", userController.createUser);  //Comprobar msj de error
 usuarioRoutes.post("/logout", userController.logout);
 
 usuarioRoutes.put("/:idUsuario", userController.patchUserById);

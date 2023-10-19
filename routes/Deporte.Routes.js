@@ -4,7 +4,7 @@ import DeporteController from "../controllers/deporteController.js";
 
 const deporteController = new DeporteController()
 
-deporteRoutes.get("/getSports", deporteController.getAllDeportes);
+deporteRoutes.get("/getAll", deporteController.getAllDeportes);
 deporteRoutes.get("/:idDeporte", deporteController.getDeporteById);
 deporteRoutes.get("/:idDeporte/coordinadores", deporteController.getCoordinadoresXDeporte);
 deporteRoutes.get("/tablaIntermedia/:idDeporte", deporteController.traerIdCoordinadorTablaIntermedia);
