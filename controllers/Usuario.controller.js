@@ -15,7 +15,7 @@ class UsuarioController {
       });
 
       if (!result) {
-        const error = new Error("El Email es incorrecto");
+        const error = new Error("Mail o clave incorrecta");
         error.status = 400;
         throw error;
       };
@@ -23,7 +23,7 @@ class UsuarioController {
       const claveCorrecta = await result.validaClave(clave);
 
       if (!claveCorrecta) {
-        const error = new Error("La clave es incorrecta");
+        const error = new Error("Mail o clave incorrecta");
         error.status = 400;
         throw error;
       };

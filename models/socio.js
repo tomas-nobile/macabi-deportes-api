@@ -56,6 +56,9 @@ Socio.init(
     dni: {
       type: DT.STRING,
       allowNull: false,
+      unique: {
+        msg: "El numero de dni ingresado ya esta Registrado"
+      },
       validate: {
         isNumeric: {
           msg: "El DNI solo debe contener numeros"

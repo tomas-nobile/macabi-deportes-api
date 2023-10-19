@@ -12,8 +12,8 @@ deporteRoutes.get("/tablaIntermedia/:idDeporte", deporteController.traerIdCoordi
 deporteRoutes.post("/", deporteController.createDeporte);
 
 deporteRoutes.put("/:idDeporte", deporteController.updateDeporte);
-deporteRoutes.put("/:idDeporte/", deporteController.updateCoordinador);
+deporteRoutes.put("/:idDeporte/coordinador", deporteController.updateCoordinador);
 
 deporteRoutes.delete("/:idDeporte", deporteController.deleteCoordinadoresXDeporte);
-
+//Hay q arreglar para eliminar a uno solo de los coordinadores?
 export default deporteRoutes

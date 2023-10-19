@@ -24,6 +24,8 @@ Categoria.init(
       type: DT.INTEGER,
       foreingKey: true,
       allowNull:false,
+       msg: "Error. Este deporte ya existe"
+      
 
     },
 
