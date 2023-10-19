@@ -52,6 +52,58 @@ class SocioController {
         }
     }
 
+    getSocioPorDni = async (req, res, next) => {
+        try{
+            const {dni} = req.body;
+
+            const result = await Socio.findOne({
+                where: {
+                    dni,
+                },
+                attributes:["idSocio","nroSocio","nombre","apellido","dni"],
+            });
+            if(!result){
+                const error = new Error("No existe socio con el dni " + dni + " en la base de datos")
+                error.status = 400;
+                throw error;
+            }
+            res
+            .status(200)
+            .json({ success: true, message: "Socio encontrado:", result });
+
+        }catch(e){
+            next(e);
+        }
+
+    }
+//En vez de hacerlo tdo en uno lo divido para poder reutilizarlos.
+    getSocioPorNroSocio = async (req, res, next) => {
+        try{
+            const {nroSocio} = req.body;
+
+            const result = await Socio.findOne({
+                where: {
+                    nroSocio,
+                },
+                attributes:["idSocio","nroSocio","nombre","apellido","dni"],
+            });
+            if(!result){
+                const error = new Error("No existe socio con el nroSocio " + nroSocio + " en la base de datos")
+                error.status = 400;
+                throw error;
+            }
+            res
+            .status(200)
+            .json({ success: true, message: "Socio encontrado:", result });
+
+        }catch(e){
+            next(e);
+        }
+
+    }
+
+
+
     
 
 }

@@ -3,6 +3,7 @@ import Socio from "../models/Socio.js";
 
 class SociosXCategoriasController {
         constructor() {}
+        
 
     getSociosByIdCategoria = async (idCategoria) =>  {
         try {
@@ -58,6 +59,44 @@ class SociosXCategoriasController {
 
         }
     }
+ 
+    agregarSociosACategorias = async (req,res,next) => {
+        try {
+            const {idCategoria} = req.params;
+            const {nuevosSocios} = req.body;
+
+            console.log(nuevosSocios);
+
+            const socios = nuevosSocios.map(socio => ({
+                idSocio: socio,
+                idCategoria: idCategoria
+              }));
+            console.log(socios);
+            
+            const result = await SociosXCategorias.bulkCreate(
+                socios
+            , { validate: true })
+
+            if (!result) throw new Error("Error con alguna de la inserciones");
+
+            res
+            .status(200)
+            .send({ success: true, message: "Socios agregados con éxito" });
+
+        }catch(e){
+            console.log(e);
+            next(e)
+        }
+        
+
+
+    }
+
+
+    //Puedo hacerlo de varias formas:
+    /*
+Un bullCreat pero no me voy a enterar xq tuvo error en alguno de los socios
+    */
 
 
 }
