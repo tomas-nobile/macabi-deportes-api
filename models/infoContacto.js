@@ -2,9 +2,7 @@ import { DataTypes as DT, Model } from "sequelize";
 import connection from "../connection/connection.js";
 
 
-class infoContacto extends Model {
-
-}
+class infoContacto extends Model { }
 
 infoContacto.init(
     {

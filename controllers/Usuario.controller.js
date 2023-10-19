@@ -10,9 +10,6 @@ import { generateToken } from "../utils/tokens.js";
 
 class UsuarioController {
   constructor() {}
-
-
-
   createUser = async (req, res, next) => {
     try {
       const {
@@ -179,8 +176,6 @@ class UsuarioController {
       res.status(400).send({ success: false, message: error.message });
     }
   };
-}
-
 
   traerUsuarioPorId = async (req, res, next) => {
     try {
