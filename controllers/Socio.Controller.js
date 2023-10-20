@@ -102,6 +102,33 @@ class SocioController {
 
     }
 
+    async getSocioPorId (idSocio) {
+        try{
+
+            const result = await Socio.findOne({
+                where: {
+                    idSocio,
+                },
+                attributes:["idSocio","nombre"],
+            });
+            if(!result){
+                console.log("No existe el socio con el idSocio" + idSocio);
+
+                return null
+            }else {
+                console.log("existe el socio con el idSocio" + idSocio);
+
+                return result
+            }
+
+
+
+        }catch(e){
+            next(e);
+        }
+
+    }
+
 
 
     

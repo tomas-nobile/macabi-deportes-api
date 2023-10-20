@@ -1,5 +1,6 @@
 import { SociosXCategorias } from "../models/index.js"
 import Socio from "../models/Socio.js";
+import SocioController from "./Socio.Controller.js";
 
 class SociosXCategoriasController {
         constructor() {}
@@ -90,6 +91,90 @@ class SociosXCategoriasController {
         
 
 
+    }
+
+    agregarSociosACategoriasB = async (req,res,next) => {
+        try {
+           const  {socios} = req.body //Aca se recibe [{idSocio:..;nroSocio:..}]
+           const {idCategoria} = req.params
+           console.log("El param que llega:" + idCategoria);
+           console.log(socios);
+            const nuevosSocios = [];
+            const sociosExistentes = [];
+            const SociosInexistentes = [];
+
+
+            for (const socio of socios) {
+                let socioController = new SocioController();
+                if(await socioController.getSocioPorId(socio.idSocio) != null) {
+
+                    if(await this.existeSocioEnCategoria(socio.idSocio,idCategoria)) {
+                        sociosExistentes.push(socio.nombre)
+                    }else {
+                        nuevosSocios.push({idSocio:socio.idSocio, idCategoria:idCategoria})
+
+                    }
+
+
+                }else {
+                    SociosInexistentes.push(socio.idSocio)
+                }
+            }
+
+            if(nuevosSocios.length > 0){
+                try {
+                    const result = await SociosXCategorias.bulkCreate(
+                        nuevosSocios
+                    , { validate: true })
+
+                    if (!result) throw new Error("Error con alguna de la inserciones");
+
+                    
+
+                    res
+                    .status(200)
+                    .send({ success: true, message: "Se agregaron socios a la BD", SociosExistentes:sociosExistentes, nrosSociosConError:SociosInexistentes });
+
+
+                    
+
+                }catch(e){
+                    console.error("Error en la inserción:", e);
+                }
+            }else {
+                res.status(200).send({
+                    success: false,
+                    message: "No hay nuevos socios para asignar a la categoria"
+                });
+            }
+
+
+        }catch(e){
+            console.log(e);
+            next(e)
+        }
+    }
+
+    async existeSocioEnCategoria (idSocio,idCategoria){
+       
+        try {
+            
+            console.log("eEstoy analizando si existe a " + idSocio);
+            let existe = false
+            const result = await SociosXCategorias.findOne({
+                 where: {
+                    idSocio:idSocio,idCategoria:idCategoria
+                 },
+            })
+            if(result){
+                existe = true
+            }
+
+            console.log("Existe el socio " + idSocio + " : " + existe) ;
+
+            return existe
+        }catch(e){
+            throw new Error('Error al verificar la existencia del socio en la categoría'); }
     }
 
 

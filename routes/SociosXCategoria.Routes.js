@@ -6,6 +6,8 @@ const sociosXCategoriasController = new SociosXCategoriasController()
 
 SociosXCategoriaRoutes.get("/:idCategoria",sociosXCategoriasController.getDatosSociosCategoria);
 SociosXCategoriaRoutes.post("/:idCategoria",sociosXCategoriasController.agregarSociosACategorias)
+SociosXCategoriaRoutes.post("/:idCategoria/agregar",sociosXCategoriasController.agregarSociosACategoriasB)
+
 
 
 
