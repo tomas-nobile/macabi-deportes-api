@@ -109,7 +109,7 @@ class SociosXCategoriasController {
                 if(await socioController.getSocioPorId(socio.idSocio) != null) {
 
                     if(await this.existeSocioEnCategoria(socio.idSocio,idCategoria)) {
-                        sociosExistentes.push(socio.nombre)
+                        sociosExistentes.push(socio.idSocio)
                     }else {
                         nuevosSocios.push({idSocio:socio.idSocio, idCategoria:idCategoria})
 
@@ -133,7 +133,7 @@ class SociosXCategoriasController {
 
                     res
                     .status(200)
-                    .send({ success: true, message: "Se agregaron socios a la BD", SociosExistentes:sociosExistentes, nrosSociosConError:SociosInexistentes });
+                    .send({ success: true, message: "Se agregaron socios a la BD", idSociosYaExistentes:sociosExistentes, idSociosInexistentes:SociosInexistentes });
 
 
                     
