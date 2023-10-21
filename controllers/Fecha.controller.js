@@ -125,6 +125,7 @@ class FechaController {
             throw new Error("Error en el formato que se enviaron los socios")
         }
     }
+    
   }
 
  
