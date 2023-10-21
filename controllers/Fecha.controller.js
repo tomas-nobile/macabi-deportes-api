@@ -21,6 +21,7 @@ class FechaController {
 
         const fechaFormateada =`${año}-${mes}-${dia}`;
         try {
+        const sociosXCategoriasController = new SociosXCategoriasController();
           await  this.valiadorDeParametrosCreate(idCategoria,fechaCalendario,tipo,idSocios);
           console.log("id Socios:...idSocios");
 
@@ -32,7 +33,7 @@ class FechaController {
             if(result){
 
                 if(tipo === "E") {
-                    const sociosXCategoriasController = new SociosXCategoriasController();
+                    
                     try {
                         const socios = await sociosXCategoriasController.getSociosByIdCategoria(idCategoria);
                         if (socios.length > 0) {
@@ -111,7 +112,7 @@ class FechaController {
                 this.validarIdSocioCompleto(idSocios)
             }
         }else {
-
+            await this.exitenSociosEnLaCategoria(idCategoria)
         }
         
     }
@@ -138,6 +139,20 @@ class FechaController {
         }
     }
     
+  }
+
+  async exitenSociosEnLaCategoria(idCategoria) {
+   const sociosXCategoriasController2 = new SociosXCategoriasController();
+
+   try{
+    let existe = await sociosXCategoriasController2.existeAlMenos1Socio(idCategoria)
+
+    if(!existe) {
+        throw new Error("Error. Primero se deben tener cargados socios en la categoria.")
+    }
+   }catch(e){
+    throw e
+   }
   }
 
  
