@@ -45,7 +45,7 @@ class SociosXCategoriasController {
                 res.status(200).json({ sociosDatos });
                   
             }catch(e){
-                throw "Error con sociosDatos"
+                next(e)
             }
 
             
@@ -159,7 +159,6 @@ class SociosXCategoriasController {
        
         try {
             
-            console.log("eEstoy analizando si existe a " + idSocio);
             let existe = false
             const result = await SociosXCategorias.findOne({
                  where: {
@@ -176,6 +175,25 @@ class SociosXCategoriasController {
         }catch(e){
             throw new Error('Error al verificar la existencia del socio en la categoría'); }
     }
+
+    async existeAlMenos1Socio(idCategoria){
+        try {
+            
+            let existe = false
+            const result = await SociosXCategorias.findOne({
+                 where: {
+                    idCategoria:idCategoria
+                 },
+            })
+            if(result){
+                existe = true
+            }
+            return existe
+    }catch(e){
+        throw new Error('Error al verificar la existencia de socios en la categoria'); 
+    }
+}
+
 
 
     //Puedo hacerlo de varias formas:

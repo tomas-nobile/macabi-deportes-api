@@ -2,19 +2,29 @@ import { Fecha } from "../models/index.js";
 import AsistenciaController from "./Asistencia.controller.js";
 import CategoriaController from "./CategoriaController.js";
 import SociosXCategoriasController from "./SociosXCategoriasController.js";
+
+
 class FechaController {
 
     constructor() { }
 
     createFecha = async (req, res, next) => {
+        console.log("--------Se llama al post---------------");
         const {idCategoria, fechaCalendario ,tipo, idSocios} = req.body;
         console.log("La fecha es : " + fechaCalendario + " el id categoria: " + idCategoria + " y el tipo: " + tipo);
 
 
+        const date = new Date(fechaCalendario)
+        const año = date.getUTCFullYear(); // Obtener el año en formato AAAA
+        const mes = (date.getUTCMonth() + 1).toString().padStart(2, '0'); // Obtener el mes en formato MM
+        const dia = date.getUTCDate().toString().padStart(2, '0'); // Obtener el día en formato DD
+
+        const fechaFormateada =`${año}-${mes}-${dia}`;
         try {
           await  this.valiadorDeParametrosCreate(idCategoria,fechaCalendario,tipo,idSocios);
           console.log("id Socios:...idSocios");
-            const result = await Fecha.create({ idCategoria, fechaCalendario , tipo });
+
+            const result = await Fecha.create({ idCategoria, fechaCalendario:fechaFormateada , tipo });
 
             if (!result) throw new Error("La fecha no puede ser creada");
             const asistenciaController = new AsistenciaController()
@@ -25,7 +35,7 @@ class FechaController {
                     const sociosXCategoriasController = new SociosXCategoriasController();
                     try {
                         const socios = await sociosXCategoriasController.getSociosByIdCategoria(idCategoria);
-                        if (socios) {
+                        if (socios.length > 0) {
                             socios.forEach(socio => {
                                 asistenciaController.crearAsistenciaAuxiliar(result.dataValues.idFecha,socio.dataValues.idSocio,null)
                             });
@@ -100,6 +110,8 @@ class FechaController {
                 console.log(idSocios.length);
                 this.validarIdSocioCompleto(idSocios)
             }
+        }else {
+
         }
         
     }
