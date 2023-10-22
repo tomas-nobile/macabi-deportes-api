@@ -6,8 +6,8 @@ const socioController = new SocioController();
 const socioRoutes = Router();
 
 socioRoutes.post("/", socioController.crearSocio )
-socioRoutes.get("/getSocioPorDni", socioController.getSocioPorDni)
-socioRoutes.get("/getSocioPorNroSocio", socioController.getSocioPorNroSocio)
+socioRoutes.get("/getSocioPorDni/:dni", socioController.getSocioPorDni)
+socioRoutes.get("/getSocioPorNroSocio/:nroSocio", socioController.getSocioPorNroSocio)
 
 
 

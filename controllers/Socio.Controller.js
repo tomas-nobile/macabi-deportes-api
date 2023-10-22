@@ -54,7 +54,8 @@ class SocioController {
 
     getSocioPorDni = async (req, res, next) => {
         try{
-            const {dni} = req.body;
+            const {dni} = req.params;
+            console.log("Che, esta llegando aca" + dni);
 
             const result = await Socio.findOne({
                 where: {
@@ -67,6 +68,8 @@ class SocioController {
                 error.status = 400;
                 throw error;
             }
+
+            console.log("Se llego bien.." + result);
             res
             .status(200)
             .json({ success: true, message: "Socio encontrado:", result });
@@ -79,8 +82,8 @@ class SocioController {
 //En vez de hacerlo tdo en uno lo divido para poder reutilizarlos.
     getSocioPorNroSocio = async (req, res, next) => {
         try{
-            const {nroSocio} = req.body;
-
+            const {nroSocio} = req.params;
+            console.log("Che, esta llegando aca");
             const result = await Socio.findOne({
                 where: {
                     nroSocio,

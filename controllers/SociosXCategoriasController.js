@@ -142,7 +142,7 @@ class SociosXCategoriasController {
                     console.error("Error en la inserción:", e);
                 }
             }else {
-                res.status(200).send({
+                res.status(400).send({
                     success: false,
                     message: "No hay nuevos socios para asignar a la categoria"
                 });
@@ -193,6 +193,8 @@ class SociosXCategoriasController {
         throw new Error('Error al verificar la existencia de socios en la categoria'); 
     }
 }
+
+
 
 
 
