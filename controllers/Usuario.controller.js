@@ -154,6 +154,7 @@ class UsuarioController {
           idUsuario,
         },
         attributes: [
+          "idUsuario",
           "nombre",
           "apellido",
           "email",
