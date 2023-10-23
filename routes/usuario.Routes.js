@@ -5,6 +5,7 @@ import validateAccess from "../middleware/validateAccess.js"
 
 const userController = new UsuarioController()
 usuarioRoutes.post("/login", userController.logIn);
+usuarioRoutes.get("/profesores", userController.getUserProfesores)
 
 usuarioRoutes.use(validateAccess);
 usuarioRoutes.get("/me", userController.me);
@@ -15,7 +16,6 @@ usuarioRoutes.get("/:idUsuario", userController.traerUsuarioPorId);
 usuarioRoutes.get("/:idUsuario/deportes", userController.obtenerDeportesPorCoordinador);
 usuarioRoutes.get("/:idUsuario/categorias", userController.obtenerCategoriasPorProfesor);
 usuarioRoutes.get("/:idRol/rol", userController.traerTodosLosUsuariosXRol);
-usuarioRoutes.get("/profesores", userController.getUserProfesores)
 
 
 export default usuarioRoutes;

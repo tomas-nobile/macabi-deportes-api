@@ -10,7 +10,7 @@ categoriaRoutes.get("/getCategories", categoriaController.traerTodasLasCategoria
 categoriaRoutes.get("/:idDeporte/deporte", categoriaController.traerTodasLasCategoriasXIdDeporte);
 categoriaRoutes.get("/:idCategoria", categoriaController.traerCategoriaPorId);
 categoriaRoutes.get("/:idCategoria",categoriaController.getNombreCategoria);
-categoriaRoutes.get("/:idCategoria/deporte", categoriaController.getNombreDeporte);
+categoriaRoutes.get("/:idCategoria/nombreDeporte", categoriaController.getNombreDeporte);
 
 
 export default categoriaRoutes

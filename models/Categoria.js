@@ -15,9 +15,7 @@ Categoria.init(
     nombreCategoria: {
       type: DT.STRING,
       allowNull: false,
-      unique: {
-        msg: "Error. Esta categoria ya existe"
-      },
+  
     },
 
     idDeporte: {
@@ -36,8 +34,24 @@ Categoria.init(
   {
     sequelize: connection,
     modelName: "Categoria",
-    timestamps: false
+    timestamps: false,
+    validate: {
+      async uniqueCategoryForSport() {
+        console.log("Validación llamada con nombreCategoria:", this.nombreCategoria, "idDeporte:", this.idDeporte);
+        const existingCategory = await Categoria.findOne({
+          where: {
+            nombreCategoria: this.nombreCategoria,
+            idDeporte: this.idDeporte,
+          },
+        });
+    
+        if (existingCategory && existingCategory.idCategoria !== this.idCategoria) {
+          throw new Error("Esta categoría ya existe para este deporte.");
+        }
+      },
+    }
   }
+    
 );
 
 export default Categoria;

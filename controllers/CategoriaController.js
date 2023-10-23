@@ -117,7 +117,7 @@ class CategoriaController{
         }
         console.log("El id del deporte es el " + result.dataValues.idDeporte);
         let deporte1 = new DeporteController();
-        const nombreDeporte = await deporte1.getNombreDeporteById(result.dataValues.idDeporte)
+        const nombreDeporte = await deporte1.traerDeportePorId(result.dataValues.idDeporte)
         console.log("El nombre del deporte es: " +nombreDeporte);
         res.status(200).json({ nombreCategoria: nombreDeporte});
       } catch (e) {
