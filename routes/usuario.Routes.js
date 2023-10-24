@@ -15,6 +15,7 @@ usuarioRoutes.get("/profesores", userController.getUserProfesores)
 usuarioRoutes.use(validateAccess);
 
 usuarioRoutes.get("/me", userController.me);
+usuarioRoutes.get("/", userController.getAllUsers);
 usuarioRoutes.get("/getAll", userController.getAllUsers);
 usuarioRoutes.get("/:idUsuario", userController.getUserById);
 usuarioRoutes.get("/:idUsuario/deportes", userController.getDeportesPorCoordinador);
@@ -22,7 +23,7 @@ usuarioRoutes.get("/:idUsuario/categorias", userController.getCategoriasPorProfe
 usuarioRoutes.get("/:idRol/rol", userController.getUsersByRol);
 usuarioRoutes.post("/", userController.createUser);  //Comprobar msj de error
 usuarioRoutes.post("/logout", userController.logout);
-usuarioRoutes.put("/:idUsuario", userController.patchUserById);
+usuarioRoutes.patch("/:idUsuario", userController.patchUserById);
 usuarioRoutes.delete("/:idUsuario", userController.deleteUserById);  
 
 
