@@ -45,11 +45,9 @@ class SociosXCategoriasController {
         throw "Error con sociosDatos";
       }
     } catch (e) {
-      res
-        .status(500)
-        .json({
-          error: "Hubo un error al obtener los datos de socios por categoría.",
-        });
+      res.status(500).json({
+        error: "Hubo un error al obtener los datos de socios por categoría.",
+      });
     }
   };
 
@@ -60,11 +58,12 @@ class SociosXCategoriasController {
         where: { idSocio: idSocio },
         attributes: ["idCategoria"],
       });
-
       try {
         const categorias = await Categoria.findAll({
           where: {
-            idCategoria: idsCategorias.map((Categoria) => Categoria.idCategoria),
+            idCategoria: idsCategorias.map(
+              (Categoria) => Categoria.idCategoria
+            ),
           },
         });
 
@@ -74,15 +73,17 @@ class SociosXCategoriasController {
             .json({ error: "Categorias por socio no encontrado" });
         }
         res.status(200).json({ categorias });
-      } catch (e) {
-        throw "Error con sociosDatos";
-      }
-    } catch (e) {
-      res
-        .status(500)
-        .json({
-          error: "Hubo un error al obtener los datos de categoria por socios.",
+      } catch (error) {
+        console.error("Error en la obtención de categorías:", error);
+        res.status(500).json({
+          error: "Hubo un error al obtener los datos de categorías por socios.",
         });
+      }
+    } catch (error) {
+      console.error("Error en la obtención de IDs de categorías:", error);
+      res.status(500).json({
+        error: "Hubo un error al obtener los IDs de categorías por socios.",
+      });
     }
   };
 }

@@ -1,7 +1,7 @@
-import {Categoria} from "../models/index.js"
+import { Categoria } from "../models/index.js";
 import DeporteController from "./deporteController.js";
-class CategoriaController{
-    constructor() {}
+class CategoriaController {
+  constructor() {}
 
   createCategoria = async (req, res, next) => {
     try {
@@ -65,70 +65,63 @@ class CategoriaController{
 
       if (result.length == 0) {
         const error = new Error(
-          "no hay categorias con el idDeporte:" + idDeporte
+          "no hay categorias cargadas"
         );
         error.status = 400;
         throw error;
       }
-      result
-            .status(200)
-            .json({ succes: true, message: "Categorias encontradas:" , result});
-          }catch(e){
-          result.status(400).send({ success: false, message: e.message });
-  }
-};
-      getNombreCategoria = async (req, res, next) => {
-        try {
-          const {
-            idCategoria
-          } = req.params;
-          const result = await Categoria.findOne({
-            attributes:["nombreCategoria"],
-            where:{
-              idCategoria
-            },
-          });
-          if (!result) throw new Error("Error en la busqueda de categoria");
-          res
-            .status(200)
-            .json({ nombreCategoria: result.nombreCategoria });
-          }catch(e){
-        res.status(400).send({ success: false, message: e.message });
-    
-      }
-    
+      res
+        .status(200)
+        .json({ succes: true, message: "Categorias encontradas:", result });
+    } catch (e) {
+      res.status(400).send({ success: false, message: e.message });
     }
-    
-    getNombreDeporte = async (req, res, next) => {
-      try {
-        const { idCategoria } = req.params;
-        console.log("El id categoria que llega es el: " + idCategoria);
-        const result = await Categoria.findOne({
-          attributes: ["idDeporte"],
-          where: {
-            idCategoria
-          },
-        });
-        console.log("Termino la consulta");
-        if (!result) {
-          console.log("No encontró ningun idDeporte");
-    
-          throw new Error("Error en la búsqueda del idDeporte de la categoría");
-        }
-        console.log("El id del deporte es el " + result.dataValues.idDeporte);
-        let deporte1 = new DeporteController();
-        const nombreDeporte = await deporte1.getNombreDeporteById(result.dataValues.idDeporte)
-        console.log("El nombre del deporte es: " +nombreDeporte);
-        res.status(200).json({ nombreCategoria: nombreDeporte});
-      } catch (e) {
-        console.error("Error en getNombreDeporte:", e);
-        res.status(400).json({ success: false, message: e.message });
-      }
+  };
+
+  getNombreCategoria = async (req, res, next) => {
+    try {
+      const { idCategoria } = req.params;
+      const result = await Categoria.findOne({
+        attributes: ["nombreCategoria"],
+        where: {
+          idCategoria,
+        },
+      });
+      if (!result) throw new Error("Error en la busqueda de categoria");
+      res.status(200).json({ nombreCategoria: result.nombreCategoria });
+    } catch (e) {
+      res.status(400).send({ success: false, message: e.message });
     }
-    
-    
-    
-          
+  };
+
+  getNombreDeporte = async (req, res, next) => {
+    try {
+      const { idCategoria } = req.params;
+      console.log("El id categoria que llega es el: " + idCategoria);
+      const result = await Categoria.findOne({
+        attributes: ["idDeporte"],
+        where: {
+          idCategoria,
+        },
+      });
+      console.log("Termino la consulta");
+      if (!result) {
+        console.log("No encontró ningun idDeporte");
+
+        throw new Error("Error en la búsqueda del idDeporte de la categoría");
+      }
+      console.log("El id del deporte es el " + result.dataValues.idDeporte);
+      let deporte1 = new DeporteController();
+      const nombreDeporte = await deporte1.getNombreDeporteById(
+        result.dataValues.idDeporte
+      );
+      console.log("El nombre del deporte es: " + nombreDeporte);
+      res.status(200).json({ nombreCategoria: nombreDeporte });
+    } catch (e) {
+      console.error("Error en getNombreDeporte:", e);
+      res.status(400).json({ success: false, message: e.message });
+    }
+  };
 
   traerTodasLasCategoriasXIdDeporte = async (req, res, next) => {
     try {
@@ -146,7 +139,9 @@ class CategoriaController{
       });
 
       if (result.length === 0) {
-        const error = new Error("No hay categorías con el idDeporte:" + idDeporte);
+        const error = new Error(
+          "No hay categorías con el idDeporte:" + idDeporte
+        );
         error.status = 400;
         throw error;
       }

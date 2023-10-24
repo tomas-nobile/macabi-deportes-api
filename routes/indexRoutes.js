@@ -8,6 +8,7 @@ import deporteRoutes from "./Deporte.Routes.js";
 import socioRoutes from "./socio.routes.js";
 import categoriaRoutes from "./Categoria.Routes.js";
 import SociosXCategoriaRoutes from "./SociosXCategoria.Routes.js";
+import infoContactoRoutes from "./infoContacto.routes.js";
 
 const indexRoutes = Router()
 
@@ -19,5 +20,6 @@ indexRoutes.use("/deporte", deporteRoutes);
 indexRoutes.use("/categoria",categoriaRoutes)
 indexRoutes.use("/sociosXCategoria", SociosXCategoriaRoutes)
 indexRoutes.use("/profesores", usuarioRoutes);
+indexRoutes.use("/contacto", infoContactoRoutes)
 
 export default indexRoutes

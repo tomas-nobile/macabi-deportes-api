@@ -6,7 +6,7 @@ import validateAccess from "../middleware/validateAccess.js"
 const userController = new UsuarioController()
 usuarioRoutes.post("/login", userController.logIn);
 
-usuarioRoutes.use(validateAccess);
+//usuarioRoutes.use(validateAccess);
 usuarioRoutes.get("/me", userController.me);
 usuarioRoutes.post("/logout", userController.logout);
 usuarioRoutes.post("/", userController.createUser);

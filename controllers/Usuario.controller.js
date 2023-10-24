@@ -53,7 +53,6 @@ class UsuarioController {
           "apellido",
           "email",
           "direccion",
-          "clave",
           "dni",
           "fechaNacimiento",
           "telefono",
@@ -313,11 +312,9 @@ class UsuarioController {
           "fechaNacimiento",
           "dni",
           "email",
-          "clave",
-          "salt",
           "telefono",
           "direccion",
-          "estado",
+          "activo",
           "idRol",
         ],
         include: [
@@ -356,12 +353,9 @@ class UsuarioController {
           "fechaNacimiento",
           "dni",
           "email",
-          "clave",
-          "salt",
           "telefono",
           "direccion",
-          "estado",
-          "idRol",
+          "activo",
         ],
         include: [
           {
@@ -372,14 +366,14 @@ class UsuarioController {
       });
 
       if (result.length == 0) {
-        const error = new Error(`no hay usuarios con ${idRol} aun`);
+        const error = new Error(`no hay usuarios con idRol: ${idRol} aun`);
         error.status = 400;
         throw error;
       }
 
       res
         .status(200)
-        .send({ success: true, message: "usuarios encontrados:", result });
+        .send({ success: true, message: `usuarios con idRol: ${idRol} encontrados:`, result });
     } catch (error) {
       next(error);
     }
