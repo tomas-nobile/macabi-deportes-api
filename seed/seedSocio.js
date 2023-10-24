@@ -59,6 +59,28 @@ const seedSocio = async () => {
                 fechaNacimiento: '2005-12-12',
                 observaciones: "Primer Usuario Generado Automaticamente",
             },
+            {
+                nroSocio: 6,
+                nombre: `agustina`,
+                apellido: 'papasidero',
+                dni: 41001002,
+                email: 'agustina@gmail.com',
+                telefono: 123183122,
+                direccion: 'av falsa 123',
+                fechaNacimiento: '2005-12-12',
+                observaciones: "Primer Usuario Generado Automaticamente",
+            },
+            {
+                nroSocio: 7,
+                nombre: `Luciana`,
+                apellido: 'Rodriguez',
+                dni: 41006002,
+                email: 'Luciana@gmail.com',
+                telefono: 123163121,
+                direccion: 'av falsa 123',
+                fechaNacimiento: '2005-12-12',
+                observaciones: "Primer Usuario Generado Automaticamente",
+            },
 
         ]);
     } catch (error) {

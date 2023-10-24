@@ -12,7 +12,7 @@ const seedCategoria = async () => {
             {
                 nombreCategoria: "2004",
                 idDeporte:2,
-                idUsuario:3,
+                idUsuario:5,
             },
             {
                 nombreCategoria: "2004",
@@ -22,7 +22,7 @@ const seedCategoria = async () => {
             {
                 nombreCategoria: "2004",
                 idDeporte:4,
-                idUsuario:3,
+                idUsuario:5,
             },
 
         ]);
