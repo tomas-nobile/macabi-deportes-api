@@ -8,8 +8,9 @@ const usuarioRoutes = Router();
 
 // Rutas
 
-usuarioRoutes.post("/login", userController.logIn);
 usuarioRoutes.get("/profesores", userController.getUserProfesores)
+
+usuarioRoutes.post("/login", userController.logIn);
 
 //con necesidad de logueo
 usuarioRoutes.use(validateAccess);
