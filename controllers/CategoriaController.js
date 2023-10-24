@@ -122,7 +122,7 @@ class CategoriaController {
       res.status(200).json({ nombreDeporte: nombreDeporte });
     } catch (e) {
       console.error("Error en getNombreDeporte:", e);
-      res.status(400).json({ success: false, message: e.message });
+      next(e)
     }
   }
 
@@ -142,7 +142,9 @@ class CategoriaController {
       });
 
       if (result.length === 0) {
-        const error = new Error("No hay categorías con el idDeporte:" + idDeporte);
+        const error = new Error(
+          "No hay categorías con el idDeporte:" + idDeporte
+        );
         error.status = 400;
         throw error;
       }

@@ -33,7 +33,13 @@ Categoria.init(
       type: DT.INTEGER(),
       foreingKey: true,
       allowNull:true,
-    }
+    },
+    //agrego estado
+    activo: {
+      type: DT.BOOLEAN,
+      allowNull: false,
+      defaultValue: true
+    },
   },
   {
     sequelize: connection,

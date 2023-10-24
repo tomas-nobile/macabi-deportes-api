@@ -10,9 +10,13 @@ const usuarioRoutes = Router();
 
 usuarioRoutes.post("/login", userController.logIn);
 
+<<<<<<< HEAD
 //con necesidad de logueo
 usuarioRoutes.use(validateAccess);
 
+=======
+//usuarioRoutes.use(validateAccess);
+>>>>>>> origin/JuampiSrint2
 usuarioRoutes.get("/me", userController.me);
 usuarioRoutes.get("/getAll", userController.getAllUsers);
 usuarioRoutes.get("/:idUsuario", userController.getUserById);
