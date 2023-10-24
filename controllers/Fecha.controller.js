@@ -1,4 +1,4 @@
-import { Fecha } from "../models/index.js";
+import { Fecha , Categoria} from "../models/index.js";
 import AsistenciaController from "./Asistencia.controller.js";
 import SociosXCategoriasController from "./SociosXCategoriasController.js";
 class FechaController {
@@ -87,7 +87,57 @@ class FechaController {
             console.log(e);
         }
 
+ }
+ getFechasDeCategoria = async (req, res) => {
+  const { idCategoria } = req.params;
+  try {
+    const result = await Fecha.findAll({
+      where: { idCategoria }, // Filtra por idCategoria
+      attributes: ['idFecha', 'idCategoria', 'fechaCalendario', 'tipo'],
+      include: [
+        {
+          model: Categoria,
+          attributes: ['nombreCategoria'],
+        },
+      ],
+    });
+
+    if (result.length == 0) {
+      res.status(200).send({ success: true, message: `No hay fechas en la base de datos para esta categoría`, result: [] });
+    } else {
+      res.status(200).send({ success: true, message: 'Fechas encontradas:', result });
     }
+  } catch (error) {
+    console.error('Error al obtener las fechas:', error);
+    res.status(500).json({ error: 'Error al obtener las fechas' });
+  }
+};
+ 
+
+  getAllFechas = async (req, res) => {
+    try {
+      const result = await Fecha.findAll({
+        attributes: ['idFecha', 'idCategoria', 'fechaCalendario', 'tipo'],
+        include: [
+          {
+            model: Categoria,
+            attributes: ['nombreCategoria'],
+          },
+        ],
+      });
+  
+      if (result.length == 0) {
+        const error = new Error('No hay fechas en la base de datos');
+        error.status = 400;
+        throw error;
+      }
+  
+      res.status(200).send({ success: true, message: 'Fechas encontradas:', result });
+    } catch (error) {
+      console.error('Error al obtener las fechas:', error);
+      res.status(500).json({ error: 'Error al obtener las fechas' });
+    }
+  };
 
 }
 

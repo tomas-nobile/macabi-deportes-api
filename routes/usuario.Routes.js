@@ -9,27 +9,20 @@ const usuarioRoutes = Router();
 // Rutas
 
 usuarioRoutes.post("/login", userController.logIn);
+usuarioRoutes.get("/profesores", userController.getUserProfesores)
 
-<<<<<<< HEAD
 //con necesidad de logueo
 usuarioRoutes.use(validateAccess);
 
-=======
-//usuarioRoutes.use(validateAccess);
->>>>>>> origin/JuampiSrint2
 usuarioRoutes.get("/me", userController.me);
 usuarioRoutes.get("/getAll", userController.getAllUsers);
 usuarioRoutes.get("/:idUsuario", userController.getUserById);
 usuarioRoutes.get("/:idUsuario/deportes", userController.getDeportesPorCoordinador);
 usuarioRoutes.get("/:idUsuario/categorias", userController.getCategoriasPorProfesor);
 usuarioRoutes.get("/:idRol/rol", userController.getUsersByRol);
-
-
 usuarioRoutes.post("/", userController.createUser);  //Comprobar msj de error
 usuarioRoutes.post("/logout", userController.logout);
-
 usuarioRoutes.put("/:idUsuario", userController.patchUserById);
-
 usuarioRoutes.delete("/:idUsuario", userController.deleteUserById);  
 
 

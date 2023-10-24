@@ -10,9 +10,7 @@ categoriaRoutes.get("/:idCategoria", categoriaController.getCategoriaById);
 categoriaRoutes.get("/:idDeporte/deporte", categoriaController.getCategoriasByIdDeporte);
 categoriaRoutes.get("/:idCategoria/nombreCategoria",categoriaController.getNombreCategoria); //Arreglar ruta en el front.
 categoriaRoutes.get("/:idCategoria/nombreDeporte", categoriaController.getNombreDeporte); //Arrgeglar la ruta en el front.
-
 categoriaRoutes.post("/", categoriaController.createCategoria);
-
 categoriaRoutes.put("/:idCategoria", categoriaController.updateCategoria);
 
 //Todos los routers pasaron testing.
