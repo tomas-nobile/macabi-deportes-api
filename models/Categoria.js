@@ -45,16 +45,18 @@ Categoria.init(
     timestamps: false,
     validate: {
       async uniqueCategoryForSport() {
-        console.log("Validación llamada con nombreCategoria:", this.nombreCategoria, "idDeporte:", this.idDeporte);
-        const existingCategory = await Categoria.findOne({
-          where: {
-            nombreCategoria: this.nombreCategoria,
-            idDeporte: this.idDeporte,
-          },
-        });
+        if (this.changed('nombreCategoria') || this.isNewRecord) {
+          console.log("Validación llamada con nombreCategoria:", this.nombreCategoria, "idDeporte:", this.idDeporte);
+          const existingCategory = await Categoria.findOne({
+            where: {
+              nombreCategoria: this.nombreCategoria,
+              idDeporte: this.idDeporte,
+            },
+          });
     
-        if (existingCategory && existingCategory.idCategoria !== this.idCategoria) {
-          throw new Error("Esta categoría ya existe para este deporte.");
+          if (existingCategory && existingCategory.idCategoria !== this.idCategoria) {
+            throw new Error("Esta categoría ya existe para este deporte.");
+          }
         }
       },
     }

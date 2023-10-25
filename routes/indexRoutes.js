@@ -20,6 +20,7 @@ indexRoutes.use("/socio", socioRoutes);
 indexRoutes.use("/deporte", deporteRoutes);
 indexRoutes.use("/categoria",categoriaRoutes)
 indexRoutes.use("/sociosXCategoria", SociosXCategoriaRoutes)
+indexRoutes.use("/contacto", infoContactoRoutes)
 
 
 
