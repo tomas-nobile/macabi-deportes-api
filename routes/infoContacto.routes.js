@@ -8,4 +8,6 @@ const infoContactoRoutes = Router();
 infoContactoRoutes.post("/", infoContactoController.crearContacto);
 infoContactoRoutes.get("/getAllContactos", infoContactoController.traerTodosLosContactos);
 
+infoContactoRoutes.put("/:idInfoContacto", infoContactoController.updateContacto);
+
 export default infoContactoRoutes
