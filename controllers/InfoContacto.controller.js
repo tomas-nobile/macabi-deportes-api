@@ -47,6 +47,41 @@ class InfoContactoController {
       next(error);
     }
   };
+
+  updateContacto = async (req, res, next) => {
+
+    try {
+      const { idInfoContacto } = req.params;
+      const {
+        nombre,
+        apellido,
+        email,
+        telefono,
+      } = req.body;
+
+      const result = await infoContacto.update(
+        {
+          nombre,
+          apellido,
+          email,
+          telefono,
+        },
+        {
+          where: {
+            idInfoContacto,
+          },
+        }
+      );
+
+      if (!result) throw new Error("No se pudo modificar el contacto.");
+
+      res
+        .status(200)
+        .send({ success: true, message: "Contacto modificado con exito" });
+    } catch (error) {
+      next(error)
+    }
+  };
 }
 
 export default InfoContactoController;
