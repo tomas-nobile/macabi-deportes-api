@@ -161,8 +161,10 @@ class CategoriaController {
     try {
       const { idCategoria } = req.params;
       const { nombreCategoria, idDeporte, idUsuario } = req.body;
+
       const result = await Categoria.update(
         {
+          idCategoria,
           nombreCategoria,
           idDeporte,
           idUsuario,
