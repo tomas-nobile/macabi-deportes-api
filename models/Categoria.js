@@ -23,8 +23,6 @@ Categoria.init(
       foreingKey: true,
       allowNull:false,
        msg: "Error. Este deporte ya existe"
-      
-
     },
 
     idUsuario: {
@@ -44,8 +42,7 @@ Categoria.init(
     modelName: "Categoria",
     timestamps: false,
     validate: {
-      async uniqueCategoryForSport() {
-        console.log("Validación llamada con nombreCategoria:", this.nombreCategoria, "idDeporte:", this.idDeporte);
+      async uniqueCategoryForSport() {      
         const existingCategory = await Categoria.findOne({
           where: {
             nombreCategoria: this.nombreCategoria,
@@ -53,8 +50,8 @@ Categoria.init(
           },
         });
     
-        if (existingCategory && existingCategory.idCategoria !== this.idCategoria) {
-          throw new Error("Esta categoría ya existe para este deporte.");
+        if (existingCategory && existingCategory.idCategoria != this.idCategoria) {
+          throw new Error(`la categoria '${this.nombreCategoria}' ya existe en el deporte con id ${this.idDeporte}`);
         }
       },
     }
