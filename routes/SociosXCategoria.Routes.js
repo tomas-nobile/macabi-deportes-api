@@ -15,4 +15,8 @@ SociosXCategoriaRoutes.post("/:idCategoria/agregar",sociosXCategoriasController.
 
 
 
+
+
+
+
 export default SociosXCategoriaRoutes;
