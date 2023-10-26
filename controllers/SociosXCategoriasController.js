@@ -1,5 +1,6 @@
 import { Categoria, SociosXCategorias } from "../models/index.js";
 import Socio from "../models/Socio.js";
+import SocioController from "./Socio.Controller.js";
 
 class SociosXCategoriasController {
   constructor() {}
@@ -50,6 +51,148 @@ class SociosXCategoriasController {
       });
     }
   };
+ 
+    agregarSociosACategorias = async (req,res,next) => {
+        try {
+            const {idCategoria} = req.params;
+            const {nuevosSocios} = req.body;
+
+            console.log(nuevosSocios);
+
+            const socios = nuevosSocios.map(socio => ({
+                idSocio: socio,
+                idCategoria: idCategoria
+              }));
+            console.log(socios);
+            
+            const result = await SociosXCategorias.bulkCreate(
+                socios
+            , { validate: true })
+
+            if (!result) throw new Error("Error con alguna de la inserciones");
+
+            res
+            .status(200)
+            .send({ success: true, message: "Socios agregados con éxito" });
+
+        }catch(e){
+            console.log(e);
+            next(e)
+        }
+        
+
+
+    }
+
+    agregarSociosACategoriasB = async (req,res,next) => {
+        try {
+           const  {socios} = req.body //Aca se recibe [{idSocio:..;nroSocio:..}]
+           const {idCategoria} = req.params
+           console.log("El param que llega:" + idCategoria);
+           console.log(socios);
+            const nuevosSocios = [];
+            const sociosExistentes = [];
+            const SociosInexistentes = [];
+
+
+            for (const socio of socios) {
+                let socioController = new SocioController();
+                if(await socioController.getSocioPorId(socio.idSocio) != null) {
+
+                    if(await this.existeSocioEnCategoria(socio.idSocio,idCategoria)) {
+                        sociosExistentes.push(socio.idSocio)
+                    }else {
+                        nuevosSocios.push({idSocio:socio.idSocio, idCategoria:idCategoria})
+
+                    }
+
+
+                }else {
+                    SociosInexistentes.push(socio.idSocio)
+                }
+            }
+
+            if(nuevosSocios.length > 0){
+                try {
+                    const result = await SociosXCategorias.bulkCreate(
+                        nuevosSocios
+                    , { validate: true })
+
+                    if (!result) throw new Error("Error con alguna de la inserciones");
+
+                    
+
+                    res
+                    .status(200)
+                    .send({ success: true, message: "Se agregaron socios a la BD", idSociosYaExistentes:sociosExistentes, idSociosInexistentes:SociosInexistentes });
+
+
+                    
+
+                }catch(e){
+                    console.error("Error en la inserción:", e);
+                }
+            }else {
+                res.status(400).send({
+                    success: false,
+                    message: "No hay nuevos socios para asignar a la categoria"
+                });
+            }
+
+
+        }catch(e){
+            console.log(e);
+            next(e)
+        }
+    }
+
+    async existeSocioEnCategoria (idSocio,idCategoria){
+       
+        try {
+            
+            let existe = false
+            const result = await SociosXCategorias.findOne({
+                 where: {
+                    idSocio:idSocio,idCategoria:idCategoria
+                 },
+            })
+            if(result){
+                existe = true
+            }
+
+            console.log("Existe el socio " + idSocio + " : " + existe) ;
+
+            return existe
+        }catch(e){
+            throw new Error('Error al verificar la existencia del socio en la categoría'); }
+    }
+
+    async existeAlMenos1Socio(idCategoria){
+        try {
+            
+            let existe = false
+            const result = await SociosXCategorias.findOne({
+                 where: {
+                    idCategoria:idCategoria
+                 },
+            })
+            if(result){
+                existe = true
+            }
+            return existe
+    }catch(e){
+        throw new Error('Error al verificar la existencia de socios en la categoria'); 
+    }
+}
+
+
+
+
+
+    //Puedo hacerlo de varias formas:
+    /*
+Un bullCreat pero no me voy a enterar xq tuvo error en alguno de los socios
+    */
 
   getCategoriasByIdSocio = async (req, res, next) => {
     try {

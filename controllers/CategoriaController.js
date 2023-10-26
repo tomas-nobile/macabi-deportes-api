@@ -183,5 +183,26 @@ class CategoriaController {
       res.status(400).send({ success: false, message: error.message });
     }
   };
+
+  async existeCategoria(idCategoria){
+    let existe = false
+    try {
+      const result = await Categoria.findOne({
+        where: {
+          idCategoria: idCategoria,
+        },
+      })
+      if(result){
+        existe = true
+      }
+
+      return existe
+    }catch(e){
+      throw new Error("Error validando la categoria")
+    }
+  }
+
+
+
 }
 export default CategoriaController;

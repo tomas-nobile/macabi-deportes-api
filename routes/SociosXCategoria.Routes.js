@@ -9,6 +9,10 @@ const sociosXCategoriasController = new SociosXCategoriasController()
 
 SociosXCategoriaRoutes.get("/:idCategoria",sociosXCategoriasController.getDatosSociosCategoria);
 SociosXCategoriaRoutes.get("/categorias/:idSocio",sociosXCategoriasController.getCategoriasByIdSocio);
+SociosXCategoriaRoutes.post("/:idCategoria",sociosXCategoriasController.agregarSociosACategorias)//No lo usariamos
+SociosXCategoriaRoutes.post("/:idCategoria/agregar",sociosXCategoriasController.agregarSociosACategoriasB)
+
+
 
 
 export default SociosXCategoriaRoutes;
