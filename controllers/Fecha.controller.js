@@ -139,6 +139,38 @@ class FechaController {
     }
   };
 
+  getDatosFecha = async (req, res) => {
+  const { idFecha } = req.params;
+  try {
+    const fecha = await Fecha.findOne({
+      where: { idFecha },
+      attributes: ['idCategoria', 'fechaCalendario', 'tipo'],
+    });
+
+    if (!fecha) {
+      res.status(404).send({ success: false, message: 'Fecha no encontrada' });
+    } else {
+      const idCategoria = fecha.idCategoria;
+
+      const result = await Fecha.findAll({
+        where: { idCategoria, fechaCalendario: fecha.fechaCalendario, tipo: fecha.tipo },
+        attributes: ['idFecha', 'idCategoria', 'fechaCalendario', 'tipo'],
+        include: [
+          {
+            model: Categoria,
+            attributes: ['nombreCategoria'],
+          },
+        ],
+      });
+
+      res.status(200).send({ success: true, message: 'Datos de la fecha encontrados:', result });
+    }
+  } catch (error) {
+    console.error('Error al obtener los datos de la fecha:', error);
+    res.status(500).json({ error: 'Error al obtener los datos de la fecha' });
+  }
+};
+
 }
 
 export default FechaController

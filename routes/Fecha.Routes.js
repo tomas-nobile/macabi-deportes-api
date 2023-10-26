@@ -10,6 +10,7 @@ const fechaController = new FechaController()
 fechaRoutes.post("/",fechaController.createFecha);
 fechaRoutes.get("/fechas", fechaController.getAllFechas)
 fechaRoutes.get("/:idCategoria/mostrarFechas", fechaController.getFechasDeCategoria)
+fechaRoutes.get("/fechas/:idFecha", fechaController.getDatosFecha)
 
 
 export default fechaRoutes;
