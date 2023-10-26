@@ -11,7 +11,7 @@ const usuarioRoutes = Router();
 usuarioRoutes.post("/login", userController.logIn);
 
 //con necesidad de logueo
-usuarioRoutes.use(validateAccess);
+//usuarioRoutes.use(validateAccess);
 
 usuarioRoutes.get("/me", userController.me);
 usuarioRoutes.get("/getAll", userController.getAllUsers);
