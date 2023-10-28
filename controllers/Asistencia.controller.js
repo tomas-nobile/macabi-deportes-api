@@ -68,11 +68,22 @@ getAsistenciaFecha = async (req, res) => {
         res.status(200).send({ success: true, message: 'Asistencias encontradas:', result: asistenciasConNombres });
       }
     } catch (error) {
-      console.error('Error al obtener las asistencias:', error);
-      res.status(500).json({ error: 'Error al obtener las asistencias' });
+
     }
   };
 
+
+  async deleteSocioFecha(){
+    try {
+      const { idFecha,idSocio } = req.params;
+      await Asistencia.destroy({where: {idSocio,idFecha}});
+      res.status(200).send({ success: true, message: `Socio: "${socioFecha.idSocio} fue borrado de la fecha ${socioFecha.idFecha}"` });
+    } catch (error) {
+      console.error('Error al obtener las asistencias:', error);
+      res.status(500).json({ error: `Error al borrar socio "${socioFecha.idSocio}"  de la fecha "${socioFecha.idFecha}"` });
+    }
+
+  }
     
 }
 
