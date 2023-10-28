@@ -12,7 +12,9 @@ const Fecha = connection.define("Fecha", {
 
     idCategoria: {
         type: DT.INTEGER,
-        foreingKey: true,
+        foreignKey: true,
+         
+        
     },
 
     fechaCalendario: {
