@@ -229,18 +229,24 @@ class UsuarioController {
       });
 
       if (!result) {
-        const error = new Error("Mail o clave incorrecta");
+        console.log("---No se encontró el usuario--");
+        const error = new Error("------------------Mail o clave incorrecta::::" + result.da);
         error.status = 400;
         throw error;
       };
+
+      console.log("---Se encontró el usuario----");
+
 
       const claveCorrecta = await result.validaClave(clave);
 
       if (!claveCorrecta) {
+        console.log("---La clave era incorrecta----");
         const error = new Error("Mail o clave incorrecta");
         error.status = 400;
         throw error;
       };
+      console.log("La clave era correcta");
 
       //tomamos los datos del usuario que necesitamos para generar el token
       const payload = {
@@ -262,6 +268,7 @@ class UsuarioController {
         .send({ success: true, message: "Usuario Logeado Exitosamente", payload });
 
     } catch (error) {
+      console.log("---Error directamente en la consulta ---");
       next(error)
     }
 

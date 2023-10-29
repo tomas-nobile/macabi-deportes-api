@@ -1,13 +1,14 @@
 //Me voy a conectar a sequelize 
 import { Sequelize } from "sequelize";
 import 'dotenv/config'
-import {database,username,password,host,dialect,port} from "../config/config.js";
+import {database,username,password,host,dialect,port,database_url} from "../config/config.js";
 
 
-const connection = new Sequelize(database, username, password,{
-    host,
-    dialect,
-    port,
+const connection = new Sequelize(database_url,{
+    dialect: 'postgres',
+    dialectOptions: {
+        ssl: true,
+    },
 });
 
 try {
