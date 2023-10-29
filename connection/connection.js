@@ -4,7 +4,7 @@ import 'dotenv/config'
 import {database,username,password,host,dialect,port,database_url} from "../config/config.js";
 
 
-const connection = new Sequelize(database_url,{
+const connection = new Sequelize("postgres://macabi_asistencias_bd_user:qYNDCYJUyEuqpRN5Lc8oa5kxRtjCXmSv@dpg-ckunivbamefc73bhltd0-a.oregon-postgres.render.com/macabi_asistencias_bd",{
     dialect: 'postgres',
     dialectOptions: {
         ssl: true,
