@@ -3,8 +3,8 @@ import Deporte from "./Deporte.js"
 import Categoria from "./Categoria.js"
 import infoContacto from "./infoContacto.js";
 
-import Socio from "./Socio.js";
-import Fecha from "./fecha.js";
+import Socio from "./socio.js";
+import Fecha from "./Fecha.js";
 import Asistencia from "./Asistencia.js";
 import Rol from "./rol.js";
 import DeportesXUsuario from "./DeportesXUsuario.js";
