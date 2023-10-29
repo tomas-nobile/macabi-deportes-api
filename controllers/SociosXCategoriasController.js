@@ -1,5 +1,5 @@
 import { Categoria, SociosXCategorias } from "../models/index.js";
-import Socio from "../models/Socio.js";
+import Socio from "../models/socio.js";
 import SocioController from "./Socio.Controller.js";
 
 class SociosXCategoriasController {
