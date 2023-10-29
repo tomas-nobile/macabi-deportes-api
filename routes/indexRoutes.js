@@ -5,7 +5,7 @@ import usuarioRoutes from "./usuario.Routes.js";
 import asistenciaRoutes from "./Asistencia.Routes.js";
 import fechaRoutes from "./Fecha.Routes.js";
 import socioRoutes from "./socio.Routes.js";
-import deporteRoutes from "./deporte.Routes.js";
+import deporteRoutes from "./Deporte.Routes.js";
 import categoriaRoutes from "./Categoria.Routes.js";
 import SociosXCategoriaRoutes from "./SociosXCategoria.Routes.js";
 import infoContactoRoutes from "./infoContacto.routes.js";
