@@ -2,6 +2,7 @@ import Usuario from "./Usuario.js";
 import Deporte from "./Deporte.js"
 import Categoria from "./Categoria.js"
 import infoContacto from "./infoContacto.js";
+
 import Socio from "./Socio.js";
 import Fecha from "./fecha.js";
 import Asistencia from "./Asistencia.js";
