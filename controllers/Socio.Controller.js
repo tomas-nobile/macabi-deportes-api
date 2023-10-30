@@ -1,4 +1,5 @@
 import { Socio, infoContacto } from "../models/index.js";
+import { formatEmail } from "../utils/formaters.js";
 
 class SocioController {
   constructor() {}
@@ -18,17 +19,52 @@ class SocioController {
         observaciones,
       } = req.body;
 
-      let emailFormated;
-
-      if (email.includes("@")) {
-        const emailSplited = email.split("@");
-        emailFormated = emailSplited[0] + "@" + emailSplited[1].toLowerCase();
-      } else {
-        emailFormated = email;
-      }
+      let emailFormated = formatEmail(email);
 
       const result = await Socio.create({
         nroSocio,
+        nombre: nombre.charAt(0).toUpperCase() + nombre.slice(1).toLowerCase(),
+        apellido:
+          apellido.charAt(0).toUpperCase() + apellido.slice(1).toLowerCase(),
+        dni,
+        email: emailFormated,
+        telefono,
+        direccion,
+        fechaNacimiento,
+        observaciones,
+      });
+
+      if (!result) throw new Error("El socio no pudo ser creado");
+
+      res
+        .status(200)
+        .send({ success: true, message: "Socio creado con exito", result });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  createSocioAutoNroSocio = async (req, res, next) => {
+    try {
+      const {
+        nombre,
+        apellido,
+        dni,
+        email,
+        telefono,
+        direccion,
+        fechaNacimiento,
+        observaciones,
+      } = req.body;
+
+      let emailFormated = formatEmail(email);
+
+      const maxNroSocio = await Socio.max('nroSocio');
+
+      const nuevoNroSocio = maxNroSocio !== null ? maxNroSocio + 1 : 1;
+
+      const result = await Socio.create({
+        nroSocio: nuevoNroSocio,
         nombre: nombre.charAt(0).toUpperCase() + nombre.slice(1).toLowerCase(),
         apellido:
           apellido.charAt(0).toUpperCase() + apellido.slice(1).toLowerCase(),
