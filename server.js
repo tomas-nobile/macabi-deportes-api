@@ -12,6 +12,7 @@ import seedSocio from './seed/seedSocio.js';
 import seedDeporte from './seed/seedDeporte.js'
 import seedDeportesXUsuario from './seed/seedDeportesXUsuario.js'
 import seedCategoria from './seed/seedCategorias.js';
+import seedContactoEmergencia from './seed/seedContactoEmergencia.js';
 
 
 const app = express();
@@ -56,6 +57,7 @@ connection.sync({ force })
       await seedDeporte()
       await seedDeportesXUsuario()
       await seedCategoria()
+      await seedContactoEmergencia()
     }
   });
 
