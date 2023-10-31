@@ -10,4 +10,6 @@ infoContactoRoutes.get("/getAllContactos", infoContactoController.traerTodosLosC
 
 infoContactoRoutes.put("/:idInfoContacto", infoContactoController.updateContacto);
 
+infoContactoRoutes.delete("/:idInfoContacto", infoContactoController.eliminarContacto);
+
 export default infoContactoRoutes

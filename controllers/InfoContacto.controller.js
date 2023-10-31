@@ -82,6 +82,36 @@ class InfoContactoController {
       next(error)
     }
   };
+
+  eliminarContacto = async (req, res, next) => {
+    try {
+      const { idInfoContacto } = req.params;
+
+      const resultado = await infoContacto.destroy({
+        where: {
+          idInfoContacto: idInfoContacto,
+        },
+      });
+
+      if (resultado === 1) {
+        res
+          .status(200)
+          .send({
+            success: true,
+            message: "Contacto eliminado exitosamente",
+          });
+      } else {
+        res
+          .status(404)
+          .send({
+            success: false,
+            message: "No se encontró el contacto para eliminar",
+          });
+      }
+    } catch (error) {
+      res.status(500).send({ success: false, message: error.message });
+    }
+  };
 }
 
 export default InfoContactoController;
