@@ -19,8 +19,8 @@ const Asistencia = connection.define("Asistencia", {
         allowNull: true,
         validate: {
             isIn: {
-                args: [['P','A','L']],
-                msg: "El tipo debe ser P, A o L"
+                args: [['P','A','J']],
+                msg: "El tipo debe ser P, A o J"
             }
         }
     },
