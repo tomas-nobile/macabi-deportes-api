@@ -7,6 +7,7 @@ const asistenciaController = new AsistenciaController()
 
 asistenciaRoutes.post("/",asistenciaController.createAsistencia);
 asistenciaRoutes.get("/:idFecha",asistenciaController.getAsistenciaFecha);
+asistenciaRoutes.put('/asistenciaAlumno/:idFecha', asistenciaController.modificarAsistencia);
 
 
 export default asistenciaRoutes;
