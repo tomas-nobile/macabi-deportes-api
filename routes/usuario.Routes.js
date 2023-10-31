@@ -10,7 +10,7 @@ const usuarioRoutes = Router();
 
 usuarioRoutes.post("/login", userController.logIn);
 
-//usuarioRoutes.use(validateAccess);
+usuarioRoutes.use(validateAccess);
 
 usuarioRoutes.get("/me", userController.me);
 usuarioRoutes.get("/getAll", userController.getAllUsers);
