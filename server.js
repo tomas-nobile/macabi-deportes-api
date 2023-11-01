@@ -12,6 +12,9 @@ import seedSocio from './seed/seedSocio.js';
 import seedDeporte from './seed/seedDeporte.js'
 import seedDeportesXUsuario from './seed/seedDeportesXUsuario.js'
 import seedCategoria from './seed/seedCategorias.js';
+import seedSocioXCategorias from './seed/seedSocioXCategorias.js';
+import seedFecha from './seed/seedFecha.js';
+import seedAsistencia from './seed/seedAsistencia.js';
 import seedContactoEmergencia from './seed/seedContactoEmergencia.js';
 
 
@@ -55,8 +58,11 @@ connection.sync({ force })
       await seedUsuario()
       await seedSocio()
       await seedDeporte()
-      await seedDeportesXUsuario()
+      await seedDeportesXUsuario()  
       await seedCategoria()
+      await seedSocioXCategorias()
+      await seedFecha()
+      await seedAsistencia()
       await seedContactoEmergencia()
     }
   });

@@ -72,10 +72,22 @@ class AsistenciaController {
           });
       }
     } catch (error) {
+
       console.error("Error al obtener las asistencias:", error);
       res.status(500).json({ error: "Error al obtener las asistencias" });
     }
   };
+  
+ deleteSocioFecha = async (req, res) => {
+    try {
+      const { idFecha, idSocio } = req.params;
+      await Asistencia.destroy({ where: { idSocio, idFecha } });
+      res.status(200).send({ success: true, message: `Socio: "${idSocio}" fue borrado de la fecha ${idFecha}` });
+    } catch (error) {
+      console.error('Error al borrar socio de la fecha:', error);
+      res.status(500).json({ error: `Error al borrar socio "${idSocio}" de la fecha "${idFecha}"` });
+    }
+  }
 
   modificarAsistencia = async (req, res) => {
     const { idFecha } = req.params;
@@ -107,5 +119,6 @@ class AsistenciaController {
     }
   };
 }
+  
 
 export default AsistenciaController;

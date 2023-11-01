@@ -171,6 +171,47 @@ class FechaController {
   }
 };
 
+
+patchFechaById = async (req, res, next) => {
+  try {
+    const { idFecha } = req.params;
+    const {
+      fechaCalendario,
+      idCategoria
+    } = req.body;
+
+    await this.existeFechaModificar(idCategoria,fechaCalendario,idFecha)
+    const result = await Fecha.update(
+      {
+        fechaCalendario
+      },
+      {
+        where: {
+          idFecha
+        },
+      }
+    );
+
+    if(!result) throw "Fallo al editar la fecha"
+    res
+      .status(200)
+      .send({ success: true, message: "Fecha modificada con exito" });
+  } catch (e) {
+    res.status(400).send({ success: false, message: e.message })
+  }
+};
+
+
+existeFechaModificar = async (idCategoria, fechaCalendario,idFecha) => {
+    const result = await Fecha.findOne({
+        attributes: [ 'fechaCalendario','idFecha'], where: { idCategoria: idCategoria, fechaCalendario: fechaCalendario },
+    })
+    
+
+  if(result && result.dataValues.idFecha != idFecha) throw "La fecha seleccionada ya esta siendo utilizada"
+
+}
+
 }
 
 export default FechaController
