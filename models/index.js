@@ -8,6 +8,7 @@ import Asistencia from "./Asistencia.js";
 import Rol from "./rol.js";
 import DeportesXUsuario from "./DeportesXUsuario.js";
 import SociosXCategorias from "./SociosXCategorias.js";
+import ContactoEmergencia from "./ContactoEmergencia.js";
 
 
 
@@ -109,4 +110,4 @@ Fecha.belongsToMany(Socio, {
 
 
 
-export { Usuario, infoContacto, Socio, Fecha, Asistencia, Deporte, Rol, Categoria, DeportesXUsuario, SociosXCategorias };
+export { Usuario, infoContacto, Socio, Fecha, Asistencia, Deporte, Rol, Categoria, DeportesXUsuario, SociosXCategorias, ContactoEmergencia };
