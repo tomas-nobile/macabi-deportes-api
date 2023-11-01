@@ -7,7 +7,7 @@ const asistenciaController = new AsistenciaController()
 
 asistenciaRoutes.post("/",asistenciaController.createAsistencia);
 asistenciaRoutes.get("/:idFecha",asistenciaController.getAsistenciaFecha);
-asistenciaRoutes.delete("/:idFecha",asistenciaController.borrarSocioFecha);
+asistenciaRoutes.delete("/:idFecha/:idSocio",asistenciaController.deleteSocioFecha);
 
 
 export default asistenciaRoutes;

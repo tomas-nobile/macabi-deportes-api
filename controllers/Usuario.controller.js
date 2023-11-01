@@ -107,7 +107,6 @@ class UsuarioController {
 
 
   patchUserById = async (req, res, next) => {
-    console.log("🚀 ~ file: Usuario.controller.js:113 ~ UsuarioController ~ patchUserById= ~ req:", req.body)
     try {
       const { id } = req.params;
       const {

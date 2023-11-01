@@ -73,18 +73,18 @@ getAsistenciaFecha = async (req, res) => {
   };
 
 
-  async deleteSocioFecha(){
+  deleteSocioFecha = async (req, res) => {
     try {
-      const { idFecha,idSocio } = req.params;
-      await Asistencia.destroy({where: {idSocio,idFecha}});
-      res.status(200).send({ success: true, message: `Socio: "${socioFecha.idSocio} fue borrado de la fecha ${socioFecha.idFecha}"` });
+      const { idFecha, idSocio } = req.params;
+      await Asistencia.destroy({ where: { idSocio, idFecha } });
+      res.status(200).send({ success: true, message: `Socio: "${idSocio}" fue borrado de la fecha ${idFecha}` });
     } catch (error) {
-      console.error('Error al obtener las asistencias:', error);
-      res.status(500).json({ error: `Error al borrar socio "${socioFecha.idSocio}"  de la fecha "${socioFecha.idFecha}"` });
+      console.error('Error al borrar socio de la fecha:', error);
+      res.status(500).json({ error: `Error al borrar socio "${idSocio}" de la fecha "${idFecha}"` });
     }
-
   }
-    
+  
 }
+  
 
 export default AsistenciaController
