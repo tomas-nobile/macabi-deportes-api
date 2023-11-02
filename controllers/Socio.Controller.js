@@ -288,8 +288,8 @@ getSociosPorApellido = async (req, res, next) => {
           },
           attributes:["idSocio","nroSocio","nombre","apellido","dni"],
       });
-      if(!result){
-          const error = new Error("No existen socios con el apellido " + apellido + " en la base de datos")
+      if(!result || result.length == 0){
+          const error = new Error("No existen socios con el apellido similar a " + apellido + " en la base de datos")
           error.status = 400;
           throw error;
       }
