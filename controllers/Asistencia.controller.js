@@ -102,12 +102,10 @@ class AsistenciaController {
           where: { idFecha, idSocio },
         });
 
-        if (!asistencia) {
-          asistencia = await Asistencia.create({ idFecha, idSocio, estado });
-        } else {
+       
           asistencia.estado = estado;
           await asistencia.save();
-        }
+        
       }
 
       res
