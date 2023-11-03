@@ -1,6 +1,6 @@
 import { Socio, infoContacto } from "../models/index.js";
 import { formatEmail } from "../utils/formaters.js";
-
+import { Op } from "sequelize";
 class SocioController {
   constructor() {}
 
@@ -272,6 +272,34 @@ getSocioPorNroSocio = async (req, res, next) => {
     }catch(e){
         next(e);
     }
+
+}
+
+
+getSociosPorApellido = async (req, res, next) => {
+  try{
+      const {apellido} = req.params;
+      console.log("Llego a la busqueda por apellido");
+      const result = await Socio.findAll({
+          where: {
+              apellido: {
+                [Op.substring]: `%${apellido}%`
+              },
+          },
+          attributes:["idSocio","nroSocio","nombre","apellido","dni"],
+      });
+      if(!result || result.length == 0){
+          const error = new Error("No existen socios con el apellido similar a " + apellido + " en la base de datos")
+          error.status = 400;
+          throw error;
+      }
+      res
+      .status(200)
+      .json({ success: true, message: "Socios encontrados:", result });
+
+  }catch(e){
+      next(e);
+  }
 
 }
 
