@@ -102,7 +102,7 @@ class DeporteController {
         include: {
           model:Usuario,
           as:'CoordinadoresAsignados',
-          attributes:['idUsuario','nombre','apellido','dni','email','idRol'],
+          attributes:['idUsuario','nombre','apellido','dni','email','activo','idRol'],
           through: {
             attributes: []
           }
@@ -120,7 +120,7 @@ class DeporteController {
       res.status(200).send({
         success: true,
         message: `Coordinadores encontrados`,
-        coordinadores: deporte,
+        result: deporte,
       });
     } catch (error) {
 
