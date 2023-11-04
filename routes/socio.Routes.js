@@ -9,6 +9,8 @@ socioRoutes.get("/getSocios", socioController.traerTodosLosSocios);
 socioRoutes.get("/:idSocio", socioController.traerSocioPorId);
 socioRoutes.get("/getSocioPorDni/:dni", socioController.getSocioPorDni)
 socioRoutes.get("/getSocioPorNroSocio/:nroSocio", socioController.getSocioPorNroSocio)
+socioRoutes.get("/getSociosPorApellido/:apellido", socioController.getSociosPorApellido)
+
 
 socioRoutes.post("/", socioController.crearSocio);
 socioRoutes.post("/noNroSocio", socioController.createSocioAutoNroSocio);

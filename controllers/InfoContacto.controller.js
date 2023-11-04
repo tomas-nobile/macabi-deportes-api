@@ -97,16 +97,16 @@ class InfoContactoController {
         res
           .status(200)
           .send({
-            success: true,
-            message: "Contacto eliminado exitosamente",
-          });
+          success: true,
+          message: "Contacto eliminado exitosamente",
+        });
       } else {
         res
           .status(404)
           .send({
-            success: false,
-            message: "No se encontró el contacto para eliminar",
-          });
+          success: false,
+          message: "No se encontró el contacto para eliminar",
+        });
       }
     } catch (error) {
       res.status(500).send({ success: false, message: error.message });

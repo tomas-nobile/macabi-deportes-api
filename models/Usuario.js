@@ -47,14 +47,20 @@ Usuario.init(
     },
 
     fechaNacimiento: {
-      type: DT.DATEONLY,
-      allowNull: false,
-      validate: {
-        isDate: {
-          msg: "Formato de Fecha Invalido"
-        }
-      }
-    },
+			type: DT.DATEONLY,
+			allowNull: false,
+			validate: {
+				isDate: {
+					msg: "7Formato de Fecha Invalido"
+				},
+				isAntesDeHoy: function (value) {
+					if (new Date(value) >= new Date()) {
+						throw new Error('7La fecha debe ser anterior al día de hoy.');
+					}
+				},
+
+			}
+		},
 
     dni: {
       type: DT.STRING,

@@ -6,7 +6,8 @@ const infoContactoController = new InfoContactoController();
 const infoContactoRoutes = Router();
 
 infoContactoRoutes.post("/", infoContactoController.crearContacto);
-infoContactoRoutes.get("/getAllContactos", infoContactoController.traerTodosLosContactos);
+
+infoContactoRoutes.get("/getAllContactos", infoContactoController.traerTodosLosContactos); // creo q no se usa ya
 
 infoContactoRoutes.put("/:idInfoContacto", infoContactoController.updateContacto);
 
