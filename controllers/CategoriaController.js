@@ -5,11 +5,11 @@ class CategoriaController {
 
   createCategoria = async (req, res, next) => {
     try {
-      const { nombreCategoria, idDeporte, idUsuario } = req.body;
+      const { nombreCategoria, idDeporte/*, idUsuario */} = req.body;
       const result = await Categoria.create({
         nombreCategoria,
         idDeporte,
-        idUsuario,
+       /* idUsuario,*/
       });
       if (!result) throw new Error("La categoria no pudo ser creada");
       res
@@ -27,7 +27,7 @@ class CategoriaController {
           "idCategoria",
           "nombreCategoria",
           "idDeporte",
-          "idUsuario",
+        /*  "idUsuario",*/
         ],
       });
 
@@ -59,7 +59,7 @@ class CategoriaController {
           "idCategoria",
           "nombreCategoria",
           "idDeporte",
-          "idUsuario",
+        /*  "idUsuario", */
         ],
       });
 
@@ -134,7 +134,7 @@ class CategoriaController {
         attributes: [
           "idCategoria",
           "nombreCategoria",
-          "idUsuario",
+         /* "idUsuario",*/
         ],
         where: {
           idDeporte: idDeporte,
@@ -160,14 +160,14 @@ class CategoriaController {
   updateCategoria = async (req, res, next) => {
     try {
       const { idCategoria } = req.params;
-      const { nombreCategoria, idDeporte, idUsuario } = req.body;
+      const { nombreCategoria, idDeporte /*, idUsuario */} = req.body;
 
       const result = await Categoria.update(
         {
           idCategoria,
           nombreCategoria,
           idDeporte,
-          idUsuario,
+         /* idUsuario,*/
         },
         {
           where: {

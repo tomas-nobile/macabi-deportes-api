@@ -24,12 +24,12 @@ Categoria.init(
       allowNull:false,
        msg: "Error. Este deporte ya existe"
     },
-
+/* ->Quedó como la versión vieja.
     idUsuario: {
       type: DT.INTEGER(),
       foreingKey: true,
       allowNull:true,
-    },
+    },*/ 
     //agrego estado
     activo: {
       type: DT.BOOLEAN,
