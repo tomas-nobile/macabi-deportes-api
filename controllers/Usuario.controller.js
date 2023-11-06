@@ -678,6 +678,35 @@ class UsuarioController {
 
   }
 
+   async validarTipoProfesor(idUsuario){
+    let esTipoProfesor = false;
+
+    try {
+
+      const usuarioResult = await Usuario.findOne({
+        where: {
+          idUsuario,
+        },
+        include: [
+          {
+            model: Rol,
+            attributes: ["tipo"],
+          },
+        ],
+      });
+
+      if (usuarioResult && usuarioResult.Rol.tipo === "P") {
+        esTipoProfesor = true;
+      }
+
+      return esTipoProfesor;
+      
+    }catch(e){
+      throw e
+    }
+    
+   }
+
 }
 export default UsuarioController;
 

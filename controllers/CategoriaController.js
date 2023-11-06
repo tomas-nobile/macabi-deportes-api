@@ -27,7 +27,7 @@ class CategoriaController {
       }else {
         res
         .status(200)
-        .send({ success: true, message: "Categoria creada con exito. No se agrgaron los profesores. Los profesores ingresados no existen en la bd o no se ingresaron profesores" });
+        .send({ success: true, message: "Categoria creada con exito. No se agrgaron los profesores. No se ingresaron profesores, no existen o ingresaste usuarios con un rol distinto a profesor" });
       }
 
       
@@ -224,11 +224,12 @@ class CategoriaController {
 
     let profesExistentes = [] 
     for (const profe of idProfesores) {
-      if (await usuarioController.existeProfesorPorId(profe)) {
+      if (await usuarioController.existeProfesorPorId(profe) && await usuarioController.validarTipoProfesor(profe)) {
         profesExistentes.push(profe);
       }
     }
 
+    console.log("Profes existentes y tipo profe: " + profesExistentes.length[0]);
 
     if(profesExistentes.length > 0){
 console.log("Entre al if");
@@ -237,9 +238,6 @@ console.log("Entre al if");
         idCategoria: idCategoria
       }));
   
-      idProfes.forEach(profe => {
-        console.log(profe.idUsuario + " y " + profe.idCategoria);
-      });
 
       try {
         const result = await CategoriasXUsuario.bulkCreate(
@@ -257,14 +255,34 @@ console.log("Entre al if");
 
     }
 
-      return agregados
-   
-
-
-
+      return agregados 
     
+  }
 
+  agregarProfesACategoriaExistente = async (req, res, next) => {
     
+    const {idUsuarios} = req.body;
+    const {idCategoria} = req.params;
+
+    try {
+      let prueba = await this.agregarProfesCategoriaNueva(idUsuarios,idCategoria)
+      console.log("se agregaron: " + prueba);
+     if(!prueba) {
+      throw new Error ("No se pasaron profesores o ninguno es de tipo profesor");
+     }
+
+            res
+            .status(200)
+            .send({ success: true, message: "Profesores agregados con éxito" });
+
+    }catch(e){
+
+      next(e)
+
+    }
+
+
+
   }
 
   getAllProfesoresCategoria = async (req, res, next) => {
@@ -308,6 +326,32 @@ console.log("Entre al if");
       res.status(400).send({ success: false, message: e.message });
     }
   };
+
+   eliminarProfesoresCategoria = async (req, res, next) => {
+    const {idCategoria} = req.params;
+    try {
+      
+      const result = await CategoriasXUsuario.destroy({
+        where: {
+          idCategoria
+        },
+      });
+
+      if(!result){
+      
+      throw new Error("No existen profesores para borrar");
+      }
+
+      res
+        .status(200)
+        .send({ success: true, message: "Profesores borrados con éxito" });
+
+    }catch(e){
+      next(e)
+    }
+   }
+
+   
 
 }
 export default CategoriaController;
