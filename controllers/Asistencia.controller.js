@@ -57,8 +57,8 @@ class AsistenciaController {
           const socio = socios.find((s) => s.idSocio === asistencia.idSocio);
           return {
             idSocio: asistencia.idSocio,
-            nombreSocio: socio ? socio.nombre : "Socio no encontrado",
-            apellidoSocio: socio ? socio.apellido : "Socio no encontrado",
+            nombre: socio ? socio.nombre : "Socio no encontrado",
+            apellido: socio ? socio.apellido : "Socio no encontrado",
             estado: asistencia.estado,
           };
         });
