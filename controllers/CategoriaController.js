@@ -308,9 +308,6 @@ console.log("Entre al if");
       res.status(400).send({ success: false, message: e.message });
     }
   };
-  
-
-
 
 }
 export default CategoriaController;
