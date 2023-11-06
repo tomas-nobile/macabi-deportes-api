@@ -1,5 +1,5 @@
 import CategoriasXUsuario from "../models/CategoriasXUsuario.js";
-import { Categoria } from "../models/index.js"
+import { Categoria, Usuario } from "../models/index.js"
 import DeporteController from "./deporteController.js";
 import UsuarioController from "./Usuario.controller.js";
 class CategoriaController {
@@ -337,11 +337,6 @@ console.log("Entre al if");
         },
       });
 
-      if(!result){
-      
-      throw new Error("No existen profesores para borrar");
-      }
-
       res
         .status(200)
         .send({ success: true, message: "Profesores borrados con éxito" });
@@ -351,7 +346,73 @@ console.log("Entre al if");
     }
    }
 
-   
+   updateProfesor = async(req, res, next) => {
+    try {
+      const { idCategoria } = req.params;
+      const { idUsuario } = req.body;
+
+      let message = "Profesor Agregado con éxito"
+
+      const usuario = await Usuario.findOne({
+        where: {
+          idUsuario,
+        },
+        attributes: ['idUsuario','idRol']
+      });
+
+      if (!usuario) {
+        const error = new Error(
+          `El usuario con ID ${idUsuario} no se encuentra en la base de datos`
+        );
+        error.status = 400;
+        throw error;
+      }
+
+      if (usuario.dataValues.idRol != 3) {
+        console.log("sadd");
+        const error = new Error(
+          `El usuario con ID ${idUsuario} no es un Profesor`
+        );
+        error.status = 400;
+        throw error;
+      }
+
+      const categoria = await Categoria.findOne({
+        where: {
+          idCategoria,
+        }
+      });
+
+      if (!categoria) {
+        const error = new Error(
+          `La categoria con ID ${idCategoria} no se encuentra en la base de datos`
+        );
+        error.status = 400;
+        throw error;
+      }
+
+
+      // Primero, intenta buscar un registro existente
+      const [profesor, created] = await CategoriasXUsuario.findOrCreate({
+        where: {
+          idCategoria: idCategoria,
+          idUsuario: idUsuario,
+        },
+      });
+
+      if (!created) {
+        // El registro ya existía, por lo que simplemente actualizamos el idUsuario
+        profesor.idUsuario = idUsuario;
+        message = "Coordinador Modificado con éxito"
+      }
+
+      res
+        .status(200)
+        .send({ success: true, message });
+    } catch (error) {
+      res.status(400).send({ success: false, message: error.message });
+    }
+  }
 
 }
 export default CategoriaController;
