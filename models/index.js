@@ -9,6 +9,7 @@ import Rol from "./rol.js";
 import DeportesXUsuario from "./DeportesXUsuario.js";
 import SociosXCategorias from "./SociosXCategorias.js";
 import ContactoEmergencia from "./ContactoEmergencia.js";
+import CategoriasXUsuario from "./CategoriasXUsuario.js";
 
 
 
@@ -34,6 +35,18 @@ Deporte.belongsToMany(Usuario, {
     as: 'CoordinadoresAsignados',
     through: "DeportesXUsuario",
     foreignKey: "idDeporte", })
+
+    // Relacion usuarios con categorias (N a N) -> Genera tabla intermedia. ->Versión nueva
+Usuario.belongsToMany(Categoria, {
+    as: 'CategoriasAsignadas',
+    through: "CategoriasXUsuario", 
+    foreignKey: "idUsuario", })
+
+Categoria.belongsToMany(Usuario, {
+    as: 'ProfesoresAsignados',
+    through: "CategoriasXUsuario",
+    foreignKey: "idCategoria", })
+    
     
 
 // Relacion deporte (N categorias) y categoria (1 deporte)
@@ -47,6 +60,7 @@ Categoria.belongsTo(Deporte, {
     foreignKey: "idDeporte",
 })
 
+/* -> Versión vieja
 // Relacion usuario (N categorias) y categoria (1 usuario)
 
 
@@ -58,7 +72,7 @@ Usuario.hasMany(Categoria, {
 Categoria.belongsTo(Usuario, {
     foreignKey: {name:"idUsuario", allowNull:true},
 })
-
+*/
 // Relacion categoria (N fechas) y fecha (1 categoria)
 
 

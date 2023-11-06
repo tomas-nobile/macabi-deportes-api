@@ -1,4 +1,6 @@
+import CategoriasXUsuario from "../models/CategoriasXUsuario.js";
 import { Usuario, DeportesXUsuario, Deporte, Categoria, Rol } from "../models/index.js";
+import categoriaRoutes from "../routes/Categoria.Routes.js";
 import { generateToken } from "../utils/tokens.js";
 
 class UsuarioController {
@@ -540,21 +542,24 @@ class UsuarioController {
 
       if (usuario.Rol.tipo === "P") {
 
-        const categorias = await Categoria.findAll({
+        let categorias = await Usuario.findOne({
           where: {
             idUsuario,
           },
-          attributes: ["idCategoria", "nombreCategoria"],
-          include:{ model: Deporte, attributes: ["nombre"]}
+          attributes: [],
+          include:{ model: Categoria, attributes: ["idCategoria", "nombreCategoria"],as: "CategoriasAsignadas", through:{attributes:[]}}
         });
 
-        if (!categorias || categorias.length === 0) {
+        if (!categorias.categoriasAsignadas || categorias.categoriasAsignadas.length == 0) {
           message = "No hay categorías asociadas a este profesor.";
 
         }
+
+        
+
         res
           .status(200)
-          .send({ success: true, message, categorias });
+          .send({ success: true, message, categorias:categorias.CategoriasAsignadas });
 
       } else {
 
@@ -620,6 +625,87 @@ class UsuarioController {
       next(error);
     }
   };
+
+
+  async existeProfesorPorId(idUsuario){
+    let existe = false;
+    
+    try {
+
+      const result = await Usuario.findOne({
+        where: {
+          idUsuario,
+        },
+
+      })
+      console.log("-------------- LLEGUE ACA-----------");
+      if(result) {
+        console.log("El usuario encontrado es: " + result.idUsuario);
+        existe = true;
+      }
+
+      console.log("--------------EXISTE PROFE?:   " + existe + "-----------");
+
+      return existe;
+
+    }catch(e){
+
+      throw new Error("Error en la validacion de la existencia de profesor")
+
+    }
+  }
+
+  async getUsuarioPorId(idUsuario){
+
+    try {
+
+      const result = await Usuario.findOne({
+        where:{
+          idUsuario
+        },
+        attributes: [
+          "idUsuario","nombre"
+        ],
+      })
+
+      if (!result) throw new Error("No se encontro usuario con ese id");
+
+      return result
+
+    }catch(e){
+      throw e
+    }
+
+  }
+
+   async validarTipoProfesor(idUsuario){
+    let esTipoProfesor = false;
+
+    try {
+
+      const usuarioResult = await Usuario.findOne({
+        where: {
+          idUsuario,
+        },
+        include: [
+          {
+            model: Rol,
+            attributes: ["tipo"],
+          },
+        ],
+      });
+
+      if (usuarioResult && usuarioResult.Rol.tipo === "P") {
+        esTipoProfesor = true;
+      }
+
+      return esTipoProfesor;
+      
+    }catch(e){
+      throw e
+    }
+    
+   }
 
 }
 export default UsuarioController;

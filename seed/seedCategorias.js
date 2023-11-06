@@ -7,22 +7,18 @@ const seedCategoria = async () => {
             {
                 nombreCategoria: "2004",
                 idDeporte:1,
-                idUsuario:4,
             },
             {
                 nombreCategoria: "2004",
                 idDeporte:2,
-                idUsuario:5,
             },
             {
                 nombreCategoria: "2004",
                 idDeporte:3,
-                idUsuario:4,
             },
             {
                 nombreCategoria: "2004",
                 idDeporte:4,
-                idUsuario:5,
             },
 
         ]);
