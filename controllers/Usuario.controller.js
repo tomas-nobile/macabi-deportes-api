@@ -678,7 +678,7 @@ class UsuarioController {
 
   }
 
-   async validarTipoProfesor(idUsuario){
+   async validarTipo(idUsuario, rol){
     let esTipoProfesor = false;
 
     try {
@@ -695,7 +695,7 @@ class UsuarioController {
         ],
       });
 
-      if (usuarioResult && usuarioResult.Rol.tipo === "P") {
+      if (usuarioResult && usuarioResult.Rol.tipo === rol) {
         esTipoProfesor = true;
       }
 

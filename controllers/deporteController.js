@@ -1,4 +1,5 @@
 import { Deporte, DeportesXUsuario, Usuario } from "../models/index.js";
+import UsuarioController from "./Usuario.controller.js";
 
 class DeporteController {
   constructor() { }
@@ -153,74 +154,6 @@ class DeporteController {
     }
   };
 
-  updateCoordinador = async(req, res, next) => {
-    try {
-      const { idDeporte } = req.params;
-      const { idUsuario } = req.body;
-
-      let message = "Coordinador Agregado con éxito"
-
-      const usuario = await Usuario.findOne({
-        where: {
-          idUsuario,
-        },
-        attributes: ['idUsuario','idRol']
-      });
-
-      if (!usuario) {
-        const error = new Error(
-          `El usuario con ID ${idUsuario} no se encuentra en la base de datos`
-        );
-        error.status = 400;
-        throw error;
-      }
-
-      if (usuario.dataValues.idRol != 2) {
-        console.log("sadd");
-        const error = new Error(
-          `El usuario con ID ${idUsuario} no es un Coordinador`
-        );
-        error.status = 400;
-        throw error;
-      }
-
-      const deporte = await Deporte.findOne({
-        where: {
-          idDeporte,
-        }
-      });
-
-      if (!deporte) {
-        const error = new Error(
-          `El deporte con ID ${idDeporte} no se encuentra en la base de datos`
-        );
-        error.status = 400;
-        throw error;
-      }
-
-
-      // Primero, intenta buscar un registro existente
-      const [coordinador, created] = await DeportesXUsuario.findOrCreate({
-        where: {
-          idDeporte: idDeporte,
-          idUsuario: idUsuario,
-        },
-      });
-
-      if (!created) {
-        // El registro ya existía, por lo que simplemente actualizamos el idUsuario
-        coordinador.idUsuario = idUsuario;
-        message = "Coordinador Modificado con éxito"
-      }
-
-      res
-        .status(200)
-        .send({ success: true, message });
-    } catch (error) {
-      res.status(400).send({ success: false, message: error.message });
-    }
-  }
-
   deleteCoordinadoresXDeporte = async(req, res, next) => {
     try {
       const { idDeporte } = req.params;
@@ -260,7 +193,74 @@ class DeporteController {
     }
   }
 
+  agregarCoordinadoresADeporteExistente = async (req, res, next) => {
+    
+    const {idUsuarios} = req.body;
+    const {idDeporte} = req.params;
 
+    console.log(idUsuarios);
+
+    try {
+      let prueba = await this.agregarCoordinadoresDeporteNuevo(idUsuarios,idDeporte)
+      console.log("se agregaron: " + prueba);
+     if(!prueba) {
+      throw new Error ("No se pasaron coordinadores o ninguno es de tipo coordinadore");
+     }
+
+            res
+            .status(200)
+            .send({ success: true, message: "Coordinadores agregados con éxito" });
+
+    }catch(e){
+
+      next(e)
+
+    }
+
+
+
+  }
+
+  async agregarCoordinadoresDeporteNuevo(idCoordinadores,idDeporte){
+    let agregados = false;
+    const usuarioController = new UsuarioController();
+
+    let coordinadoresExistentes = [] 
+    for (const coordinador of idCoordinadores) {
+      if (await usuarioController.existeProfesorPorId(coordinador) && await usuarioController.validarTipo(coordinador, 'C')) {
+        coordinadoresExistentes.push(coordinador);
+      }
+    }
+
+    console.log("Coordinadores existentes y tipo C: " + coordinadoresExistentes.length[0]);
+
+    if(coordinadoresExistentes.length > 0){
+console.log("Entre al if");
+      const idsCoordinador = coordinadoresExistentes.map(profe => ({
+        idUsuario: profe,
+        idDeporte: idDeporte
+      }));
+  
+
+      try {
+        const result = await DeportesXUsuario.bulkCreate(
+          idsCoordinador
+        )
+        if (!result) throw new Error("Error con alguna de la inserciones");
+  
+        agregados = true
+
+      
+      }catch(e){
+        throw (e)
+  
+      }
+
+    }
+
+      return agregados 
+    
+  }
 }
 
 export default DeporteController;
