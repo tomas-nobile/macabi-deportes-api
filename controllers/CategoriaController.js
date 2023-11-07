@@ -264,6 +264,8 @@ console.log("Entre al if");
     const {idUsuarios} = req.body;
     const {idCategoria} = req.params;
 
+    console.log(idUsuarios);
+
     try {
       let prueba = await this.agregarProfesCategoriaNueva(idUsuarios,idCategoria)
       console.log("se agregaron: " + prueba);
@@ -297,7 +299,7 @@ console.log("Entre al if");
           idCategoria
         },
         attributes: [
-          "idUsuario"
+          "idUsuario",
         ],
       });
 

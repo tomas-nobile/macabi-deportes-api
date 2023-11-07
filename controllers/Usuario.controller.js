@@ -664,7 +664,7 @@ class UsuarioController {
           idUsuario
         },
         attributes: [
-          "idUsuario","nombre"
+          "idUsuario","nombre","apellido","dni","email"
         ],
       })
 
