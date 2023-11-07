@@ -112,11 +112,13 @@ Categoria.belongsToMany(Socio, {
 
 Socio.belongsToMany(Fecha, {
     through: "Asistencia",
+    onDelete: 'CASCADE', //Si elimina socio, elimina todas sus fechas asocioadas ()
     foreignKey: "idSocio"
 })
 
 Fecha.belongsToMany(Socio, {
     through: "Asistencia",
+    onDelete: 'CASCADE',
     foreignKey: "idFecha"
 })
 
