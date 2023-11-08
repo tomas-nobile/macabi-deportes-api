@@ -68,6 +68,30 @@ class FechaController {
         }
     };
 
+    eliminarFecha = async (req, res,next) => {
+      const {idFecha} = req.params;
+
+      try {
+
+        let result =  await Fecha.destroy({
+          where: {
+            idFecha
+          },
+        });
+
+        if(!result){
+          throw new Error("No existe fecha seleccionada")
+        }
+
+        res
+                .status(200)
+                .send({ success: true, message: "Fecha eliminada con éxito" });
+
+      }catch(e){
+        next(e)
+      }
+    }
+
     existeFecha = async (idCategoria, fechaCalendario) => {
         let existe = false
         try {
