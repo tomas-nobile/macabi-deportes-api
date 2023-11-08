@@ -19,6 +19,9 @@ categoriaRoutes.post("/", categoriaController.createCategoria);
 
 categoriaRoutes.put("/:idCategoria", categoriaController.updateCategoria);
 
+categoriaRoutes.delete("/:idCategoria/eliminarCategoria", categoriaController.eliminarCategoria)
+
+
 //Todos los routers pasaron testing.
 
 

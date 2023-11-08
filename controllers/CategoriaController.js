@@ -347,5 +347,28 @@ console.log("Entre al if");
       next(e)
     }
    }
+
+   eliminarCategoria = async (req, res,next) => {
+    const {idCategoria} = req.params;
+    try {
+
+      let result =  await Categoria.destroy({
+        where: {
+          idCategoria
+        },
+      });
+
+      if(!result){
+        throw new Error("No existe la categoria seleccionada")
+      }
+
+      res
+              .status(200)
+              .send({ success: true, message: "Categoria eliminada con éxito" });
+
+    }catch(e){
+      next(e)
+    }
+  }
 }
 export default CategoriaController;

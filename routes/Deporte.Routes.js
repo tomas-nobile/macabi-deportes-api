@@ -15,5 +15,6 @@ deporteRoutes.put("/:idDeporte", deporteController.updateDeporte);
 deporteRoutes.post("/:idDeporte/agregarCoordinadores",deporteController.agregarCoordinadoresADeporteExistente)
 
 deporteRoutes.delete("/:idDeporte", deporteController.deleteCoordinadoresXDeporte);
+deporteRoutes.delete("/:idDeporte/eliminarDeporte", deporteController.eliminarDeporte)
 
 export default deporteRoutes
