@@ -4,7 +4,7 @@ import cookieParser from 'cookie-parser';
 
 import indexRoutes from "./routes/indexRoutes.js"
 import connection from "./connection/connection.js";
-import { serverPort } from "./config/config.js"
+import { serverPort,corsOrigin } from "./config/config.js"
 
 import seedRol from "./seed/seedRol.js";
 import seedUsuario from "./seed/seedUsuario.js";
@@ -20,7 +20,7 @@ import seedContactoEmergencia from './seed/seedContactoEmergencia.js';
 
 const app = express();
 
-const corsOptions = { credentials: true, origin: 'http://localhost:5173' }
+const corsOptions = { credentials: true, origin: corsOrigin }
 
 //middleweres
 app.use(cors(corsOptions))
@@ -44,7 +44,7 @@ app.use((error, req, res, next) => {
 
 
 let force = false
-const port = parseInt(process.env.PORT) || 8080;
+const port = parseInt(serverPort) || 8080;
 connection.sync({ force })
   .then(() => {
     app.listen(port, () => {
