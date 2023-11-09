@@ -26,7 +26,6 @@
     "jsonwebtoken": "^9.0.0",
     "moment": "^2.29.4",
     "mysql2": "^3.3.5",
-    "path": "^0.12.7",
     "sequelize": "^6.32.0"
   }
 }
