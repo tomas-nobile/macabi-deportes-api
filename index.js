@@ -44,12 +44,12 @@ app.use((error, req, res, next) => {
 
 
 let force = false
-
+const port = parseInt(process.env.PORT) || 8080;
 connection.sync({ force })
   .then(() => {
-    app.listen(serverPort, () => {
+    app.listen(port, () => {
       //console.clear()
-      console.log("server OK http://localhost:" + serverPort);
+      console.log("server OK http://localhost:" + port);
     })
   })
   .then(async () => {

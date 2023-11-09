@@ -2,12 +2,17 @@
   "name": "macabi-deportes-api",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node .",
-    "dev": "node --watch .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "SET NODE_ENV=production&&node index.js",
+    "start:local": "SET NODE_ENV=development&&node index.js",
+    "dev": "SET NODE_ENV=development&&node --watch .",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "gcloud run deploy"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   },
   "keywords": [],
   "author": "",

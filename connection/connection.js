@@ -3,12 +3,15 @@ import { Sequelize } from "sequelize";
 import 'dotenv/config'
 import {database,username,password,host,dialect,port} from "../config/config.js";
 
+console.log("gdfgf",dialect )
 
 const connection = new Sequelize(database, username, password,{
     host,
     dialect,
     port,
 });
+
+
 
 try {
     await connection.authenticate();
