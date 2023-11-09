@@ -237,7 +237,7 @@ class UsuarioController {
       };
 
       if(!result.activo) {
-        const error = new Error("Error. El usuario se encuentra inactivo. Por favor comunicado con administración.");
+        const error = new Error("Error. El usuario se encuentra inactivo. Por favor comunicate con administración.");
         error.status = 400;
         throw error;
       }
