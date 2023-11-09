@@ -24,7 +24,7 @@ class SociosXCategoriasController {
       console.log("Antes de la consulta");
       const idSociosDatos = await SociosXCategorias.findAll({
         where: { idCategoria: idCategoria },
-        attributes: ["idSocio"],
+        attributes: ["idSocio","fechaRegistro"],
       });
       console.log("Llega aca");
 
@@ -41,6 +41,31 @@ class SociosXCategoriasController {
             .status(404)
             .json({ error: "Socios de la categoría no encontrados" });
         }
+
+        
+        //Metodo para agregar las fechas de regristro a la devolución.
+        sociosDatos.forEach(item => {
+
+          let pos = 0;
+          let encontrado = false;
+          while(pos < idSociosDatos.length && !encontrado) {
+            if(item.idSocio == idSociosDatos[pos].idSocio) {
+              encontrado = true;
+            }else {
+              pos++
+            }
+          }
+
+          if(encontrado){
+            item.dataValues.fechaRegistro = idSociosDatos[pos].fechaRegistro //Agrego al item que devuelvo su fecha de registro
+
+          }
+        });
+
+
+       
+
+
         res.status(200).json({ sociosDatos });
       } catch (e) {
         throw "Error con sociosDatos";
@@ -102,7 +127,7 @@ class SociosXCategoriasController {
                     if(await this.existeSocioEnCategoria(socio.idSocio,idCategoria)) {
                         sociosExistentes.push(socio.idSocio)
                     }else {
-                        nuevosSocios.push({idSocio:socio.idSocio, idCategoria:idCategoria})
+                        nuevosSocios.push({idSocio:socio.idSocio, idCategoria:idCategoria,fechaRegistro: new Date()})
 
                     }
 

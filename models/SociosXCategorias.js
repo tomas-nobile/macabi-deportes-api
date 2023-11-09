@@ -13,7 +13,11 @@ SociosXCategorias.init({
   idCategoria: {
     type: DT.INTEGER,
     primaryKey: true,
-  }
+  },
+  fechaRegistro: {
+    type: DT.DATEONLY,
+    allowNull: false,
+}
 
 },
   {
