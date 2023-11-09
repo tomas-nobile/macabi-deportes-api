@@ -225,8 +225,9 @@ class UsuarioController {
 
       const result = await Usuario.findOne({
         where: {
-          email
-        }
+          email,
+        },
+        
       });
 
       if (!result) {
@@ -234,6 +235,12 @@ class UsuarioController {
         error.status = 400;
         throw error;
       };
+
+      if(!result.activo) {
+        const error = new Error("Error. El usuario se encuentra inactivo. Por favor comunicado con administración.");
+        error.status = 400;
+        throw error;
+      }
 
       const claveCorrecta = await result.validaClave(clave);
 
