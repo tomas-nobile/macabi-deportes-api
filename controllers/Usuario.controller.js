@@ -1,10 +1,9 @@
-import CategoriasXUsuario from "../models/CategoriasXUsuario.js";
 import { Usuario, DeportesXUsuario, Deporte, Categoria, Rol } from "../models/index.js";
-import categoriaRoutes from "../routes/Categoria.Routes.js";
 import { generateToken } from "../utils/tokens.js";
 
 class UsuarioController {
-  constructor() {}
+  constructor() { }
+
   createUser = async (req, res, next) => {
     try {
       const {
@@ -64,9 +63,8 @@ class UsuarioController {
       });
       res
         .status(200)
-        .send({ success: true, message: "Cantidad de usuarios: "+ result.length+" Usuarios encontrados:", result });
+        .send({ success: true, message: "Cantidad de usuarios: " + result.length + " Usuarios encontrados:", result });
     } catch (error) {
-      //res.status(400).send({ success: false, message: error.message });
       next(error);
     }
   };
@@ -103,10 +101,9 @@ class UsuarioController {
         .status(200)
         .send({ success: true, message: "Usuario encontrado:", result });
     } catch (error) {
-      res.status(400).send({ success: false, message: error.message });
+      next(error)
     }
   };
-
 
   patchUserById = async (req, res, next) => {
     try {
@@ -145,7 +142,7 @@ class UsuarioController {
         .status(200)
         .send({ success: true, message: "Usuario modificado con exito" });
     } catch (error) {
-      res.status(400).send({ success: false, message: error });
+      next(error)
     }
   };
 
@@ -166,7 +163,7 @@ class UsuarioController {
           result,
         });
     } catch (error) {
-      res.status(400).send({ success: false, message: error.message });
+      next(error)
     }
   };
 
@@ -199,25 +196,24 @@ class UsuarioController {
         .status(200)
         .send({ success: true, message: "usuarios encontrados:", result });
 
-        
+
     } catch (error) {
       next(error);
     }
   };
 
-   getUserProfesores = async (req, res, next) => {
+  getUserProfesores = async (req, res, next) => {
     try {
       const profesores = await Usuario.findAll({
-        where: { idRol: 3 }, 
+        where: { idRol: 3 },
       });
-  
+
       res.status(200).send({ success: true, message: "Profesores encontrados:", profesores });
 
     } catch (error) {
       next(error);
     }
   };
-
 
   logIn = async (req, res, next) => {
     try {
@@ -292,7 +288,6 @@ class UsuarioController {
 
     } catch (error) {
       next(error);
-
     }
   };
 
@@ -406,7 +401,6 @@ class UsuarioController {
   };
 
   getUsersByRol = async (req, res, next) => {
-
     try {
       const { idRol } = req.params;
       const result = await Usuario.findAll({
@@ -447,7 +441,6 @@ class UsuarioController {
   };
 
   patchUserById = async (req, res, next) => {
-
     try {
       const { idUsuario } = req.params;
       const {
@@ -487,7 +480,6 @@ class UsuarioController {
         .status(200)
         .send({ success: true, message: "Usuario modificado con exito" });
     } catch (error) {
-
       next(error)
     }
   };
@@ -511,7 +503,7 @@ class UsuarioController {
           result,
         });
     } catch (error) {
-      res.status(400).send({ success: false, message: error.message });
+      next(error)
     }
   };
 
@@ -547,7 +539,7 @@ class UsuarioController {
             idUsuario,
           },
           attributes: [],
-          include:{ model: Categoria, attributes: ["idCategoria", "nombreCategoria"],as: "CategoriasAsignadas", through:{attributes:[]}}
+          include: { model: Categoria, attributes: ["idCategoria", "nombreCategoria"], as: "CategoriasAsignadas", through: { attributes: [] } }
         });
 
         if (!categorias.categoriasAsignadas || categorias.categoriasAsignadas.length == 0) {
@@ -555,11 +547,11 @@ class UsuarioController {
 
         }
 
-        
+
 
         res
           .status(200)
-          .send({ success: true, message, categorias:categorias.CategoriasAsignadas });
+          .send({ success: true, message, categorias: categorias.CategoriasAsignadas });
 
       } else {
 
@@ -572,64 +564,63 @@ class UsuarioController {
     }
   };
 
-  getDeportesPorCoordinador = async (req, res, next) => {
-    try {
-      const { idUsuario } = req.params;
-      let message = "Deportes encontrados:"
+	getDeportesPorCoordinador = async (req, res, next) => {
+		try {
+			const { idUsuario } = req.params;
 
-      const usuario = await Usuario.findOne({
-        where: {
-          idUsuario,
-        },
-        include: [
-          {
-            model: Rol,
-            attributes: ["tipo"],
-          },
-        ],
-      });
+			const result = await Usuario.findOne({
+				where: {
+					idUsuario,
+				},
+				attributes: [],
+				include: [
+					{
+						model: Deporte,
+						as: 'DeportesAsignados',
+						through: {
+							attributes: []
+						}
+					},
+					{
+						model: Rol
+					}
+				],
+			});
 
-      if (!usuario) {
-        const error = new Error(
-          `El usuario con ID ${idUsuario} no se encuentra en la base de datos`
-        );
-        error.status = 400;
-        throw error;
-      }
+			if (!result) {
+				const error = new Error(
+					`El usuario con ID ${idUsuario} no se encuentra en la base de datos`
+				);
+				error.status = 400;
+				throw error;
+			}
 
-      if (usuario.Rol.tipo === "C") {
-        const idDeportes = await DeportesXUsuario.findAll({
-          where: {
-            idUsuario,
-          },
-          attributes: ["idDeporte"],
-        });
+			let isCoordinador = result.Rol.tipo == "C"
 
-        const deportes = await Deporte.findAll({
-          where: {
-            idDeporte: idDeportes.map((idDeporte) => idDeporte.idDeporte),
-          },
-        });
+			if (!isCoordinador) {
+				const error = new Error("El usuario no es de tipo Coordinador");
+				error.status = 400;
+				throw error;
+			}
 
-        if (!deportes || deportes.length === 0) {
-          message = "No hay deportes asociados a este coordinador.";
-        }
+			if (result.DeportesAsignados.length === 0) {
+				const error = new Error("El Coordinador no tiene Deportes");
+				error.status = 400;
+				throw error;
+			}
 
-        res.status(200).send({ success: true, message, deportes });
-      } else {
-        const error = new Error("El usuario no es de tipo Coordinador");
-        error.status = 400;
-        throw error;
-      }
-    } catch (error) {
-      next(error);
-    }
-  };
+			res
+				.status(200)
+				.send({ success: true, message: 'Deportes encontrados:', result: result.DeportesAsignados });
 
+		} catch (error) {
+			next(error);
+		}
+	};
 
-  async existeProfesorPorId(idUsuario){
+  async existeProfesorPorId(idUsuario) {
     let existe = false;
-    
+
     try {
 
       const result = await Usuario.findOne({
@@ -638,33 +629,26 @@ class UsuarioController {
         },
 
       })
-      console.log("-------------- LLEGUE ACA-----------");
-      if(result) {
-        console.log("El usuario encontrado es: " + result.idUsuario);
+      if (result) {
         existe = true;
       }
-
-      console.log("--------------EXISTE PROFE?:   " + existe + "-----------");
-
       return existe;
 
-    }catch(e){
-
+    } catch (e) {
       throw new Error("Error en la validacion de la existencia de profesor")
-
     }
   }
 
-  async getUsuarioPorId(idUsuario){
+  async getUsuarioPorId(idUsuario) {
 
     try {
 
       const result = await Usuario.findOne({
-        where:{
+        where: {
           idUsuario
         },
         attributes: [
-          "idUsuario","nombre","apellido","dni","email"
+          "idUsuario", "nombre", "apellido", "dni", "email"
         ],
       })
 
@@ -672,13 +656,13 @@ class UsuarioController {
 
       return result
 
-    }catch(e){
+    } catch (e) {
       throw e
     }
 
   }
 
-   async validarTipo(idUsuario, rol){
+  async validarTipo(idUsuario, rol) {
     let esTipoProfesor = false;
 
     try {
@@ -700,12 +684,12 @@ class UsuarioController {
       }
 
       return esTipoProfesor;
-      
-    }catch(e){
+
+    } catch (e) {
       throw e
     }
-    
-   }
+
+  }
 
 }
 export default UsuarioController;

@@ -64,6 +64,30 @@ const seedUsuario = async () => {
                 activo: true,
                 idRol: 3
             },
+            {
+                nombre: `Mumbuto`,
+                apellido: `Uwimana`,
+                fechaNacimiento: '1995-12-12',
+                dni: 42123323,
+                email: 'osas@gmail.com',
+                clave: 'hola6',
+                direccion: 'av falsa 123',
+                telefono:"1234567891",
+                activo: true,
+                idRol: 2
+            },
+            {
+                nombre: `Mumbuto`,
+                apellido: `Uwimana`,
+                fechaNacimiento: '1995-12-12',
+                dni: 42123323,
+                email: 'osas2@gmail.com',
+                clave: 'hola6',
+                direccion: 'av falsa 123',
+                telefono:"1234567891",
+                activo: true,
+                idRol: 3
+            },
 
         ]);
     } catch (error) {

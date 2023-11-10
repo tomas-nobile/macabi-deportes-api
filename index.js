@@ -17,6 +17,8 @@ import seedFecha from './seed/seedFecha.js';
 import seedAsistencia from './seed/seedAsistencia.js';
 import seedContactoEmergencia from './seed/seedContactoEmergencia.js';
 
+import seedCategoriaXUsuario from './seed/seedCategoriaXUsuario.js';
+
 
 const app = express();
 
@@ -64,6 +66,7 @@ connection.sync({ force })
       await seedFecha()
       await seedAsistencia()
       await seedContactoEmergencia()
+      await seedCategoriaXUsuario()
     }
   });
 

@@ -133,4 +133,4 @@ Fecha.belongsToMany(Socio, {
 
 
 
-export { Usuario, infoContacto, Socio, Fecha, Asistencia, Deporte, Rol, Categoria, DeportesXUsuario, SociosXCategorias, ContactoEmergencia };
+export { Usuario, infoContacto, Socio, Fecha, Asistencia, Deporte, Rol, Categoria, DeportesXUsuario, SociosXCategorias, ContactoEmergencia, CategoriasXUsuario };

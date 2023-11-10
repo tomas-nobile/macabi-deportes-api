@@ -13,10 +13,4 @@ SociosXCategoriaRoutes.post("/:idCategoria",sociosXCategoriasController.agregarS
 SociosXCategoriaRoutes.post("/:idCategoria/agregar",sociosXCategoriasController.agregarSociosACategoriasB)
 
 
-
-
-
-
-
-
 export default SociosXCategoriaRoutes;

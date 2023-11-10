@@ -16,6 +16,9 @@ const seedDeporte = async () => {
             {
                 nombre: "Caza de Ballenas Olimpica"
             },
+            {
+                nombre: "Scuba Diving"
+            },
 
         ]);
     } catch (error) {

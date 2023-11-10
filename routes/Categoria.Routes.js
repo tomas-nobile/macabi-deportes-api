@@ -11,14 +11,15 @@ categoriaRoutes.get("/:idCategoria/getProfesores", categoriaController.getAllPro
 categoriaRoutes.get("/:idDeporte/deporte", categoriaController.getCategoriasByIdDeporte);
 categoriaRoutes.get("/:idCategoria/nombreCategoria",categoriaController.getNombreCategoria);
 categoriaRoutes.get("/:idCategoria/nombreDeporte", categoriaController.getNombreDeporte);
-
-categoriaRoutes.delete("/eliminarProfesores/:idCategoria", categoriaController.eliminarProfesoresCategoria)
+categoriaRoutes.get("/:idCategoria/getSociosWithAsistencia", categoriaController.getSociosOfCategoriaWithAsistencia);
+categoriaRoutes.get("/:idCategoria/getFechas", categoriaController.getFechasOfCategoria);
 
 categoriaRoutes.post("/:idCategoria/agregarProfesores",categoriaController.agregarProfesACategoriaExistente)
 categoriaRoutes.post("/", categoriaController.createCategoria);
 
 categoriaRoutes.put("/:idCategoria", categoriaController.updateCategoria);
 
+categoriaRoutes.delete("/eliminarProfesores/:idCategoria", categoriaController.eliminarProfesoresCategoria)
 categoriaRoutes.delete("/:idCategoria/eliminarCategoria", categoriaController.eliminarCategoria)
 
 
