@@ -129,6 +129,12 @@ Socio.init(
 		observaciones: {
 			type: DT.STRING,
 			allowNull: true,
+			validate: {
+				len: {
+					args: [0, 250],
+					msg: "8Las observaciones deben tener un máximo de 250 caracteres"
+				}
+			}
 		}
 	},
 	{

@@ -22,6 +22,7 @@ usuarioRoutes.get("/:idRol/rol", userController.getUsersByRol);
 
 usuarioRoutes.post("/", userController.createUser);  //Comprobar msj de error
 usuarioRoutes.post("/logout", userController.logout);
+usuarioRoutes.post("/updatePassword/:idUsuario", userController.updatePassword);
 
 usuarioRoutes.patch("/:idUsuario", userController.patchUserById);
 usuarioRoutes.delete("/:idUsuario", userController.deleteUserById);  
