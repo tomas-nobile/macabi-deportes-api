@@ -261,6 +261,29 @@ console.log("Entre al if");
       return agregados 
     
   }
+
+  eliminarDeporte = async (req, res,next) => {
+    const {idDeporte} = req.params;
+    try {
+
+      let result =  await Deporte.destroy({
+        where: {
+          idDeporte
+        },
+      });
+
+      if(!result){
+        throw new Error("No existe deporte seleccionado")
+      }
+
+      res
+              .status(200)
+              .send({ success: true, message: "Deporte eliminado con éxito" });
+
+    }catch(e){
+      next(e)
+    }
+  }
 }
 
 export default DeporteController;

@@ -13,6 +13,7 @@ categoriaRoutes.get("/:idCategoria/nombreCategoria",categoriaController.getNombr
 categoriaRoutes.get("/:idCategoria/nombreDeporte", categoriaController.getNombreDeporte);
 
 categoriaRoutes.delete("/eliminarProfesores/:idCategoria", categoriaController.eliminarProfesoresCategoria)
+categoriaRoutes.delete("/:idCategoria/eliminarCategoria", categoriaController.eliminarCategoria)
 
 categoriaRoutes.post("/:idCategoria/agregarProfesores",categoriaController.agregarProfesACategoriaExistente)
 categoriaRoutes.post("/", categoriaController.createCategoria);

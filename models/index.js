@@ -34,7 +34,8 @@ Usuario.belongsToMany(Deporte, {
 Deporte.belongsToMany(Usuario, {
     as: 'CoordinadoresAsignados',
     through: "DeportesXUsuario",
-    foreignKey: "idDeporte", })
+    foreignKey: "idDeporte", 
+    onDelete: 'CASCADE'})
 
     // Relacion usuarios con categorias (N a N) -> Genera tabla intermedia. ->Versión nueva
 Usuario.belongsToMany(Categoria, {
@@ -45,7 +46,8 @@ Usuario.belongsToMany(Categoria, {
 Categoria.belongsToMany(Usuario, {
     as: 'ProfesoresAsignados',
     through: "CategoriasXUsuario",
-    foreignKey: "idCategoria", })
+    foreignKey: "idCategoria", 
+    onDelete: 'CASCADE',})
     
     
 
@@ -54,6 +56,7 @@ Categoria.belongsToMany(Usuario, {
 
 Deporte.hasMany(Categoria, {
     foreignKey:  "idDeporte",
+    onDelete: 'CASCADE',
 })
 
 Categoria.belongsTo(Deporte, {
@@ -105,7 +108,8 @@ Socio.belongsToMany(Categoria, {
 
 Categoria.belongsToMany(Socio, {
     through: "SociosXCategoria",
-    foreignKey: "idCategoria"
+    foreignKey: "idCategoria",
+    onDelete: 'CASCADE'
 })
 
 // Relacion socios con fechas (N a N) -> Genera tabla intermedia.
