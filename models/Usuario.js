@@ -144,6 +144,11 @@ Usuario.init(
   }
 );
 
+Usuario.beforeUpdate(async (user) => {
+  const nuevaContrasenaHash = await bcrypt.hash(user.clave, user.salt);
+  user.clave = nuevaContrasenaHash
+})
+
 Usuario.beforeCreate(async (user) => {
   const salt = await bcrypt.genSalt();
   user.salt = salt;
