@@ -10,10 +10,11 @@ deporteRoutes.get("/:idDeporte/coordinadores", deporteController.getCoordinadore
 deporteRoutes.get("/tablaIntermedia/:idDeporte", deporteController.traerIdCoordinadorTablaIntermedia);
 
 deporteRoutes.post("/", deporteController.createDeporte);
-
-deporteRoutes.put("/:idDeporte", deporteController.updateDeporte);
 deporteRoutes.post("/:idDeporte/agregarCoordinadores",deporteController.agregarCoordinadoresADeporteExistente)
 
+deporteRoutes.put("/:idDeporte", deporteController.updateDeporte);
+
 deporteRoutes.delete("/:idDeporte", deporteController.deleteCoordinadoresXDeporte);
+deporteRoutes.delete("/:idDeporte/eliminarDeporte", deporteController.eliminarDeporte)
 
 export default deporteRoutes

@@ -1,7 +1,6 @@
-import CategoriasXUsuario from "../models/CategoriasXUsuario.js";
 import { Usuario, DeportesXUsuario, Deporte, Categoria, Rol } from "../models/index.js";
-import categoriaRoutes from "../routes/Categoria.Routes.js";
 import { generateToken } from "../utils/tokens.js";
+import bcrypt from "bcrypt";
 
 class UsuarioController {
   constructor() {}
@@ -17,7 +16,7 @@ class UsuarioController {
         telefono,
         direccion,
         activo = true,
-        idRol
+        idRol,
       } = req.body;
       const result = await Usuario.create({
         nombre,
@@ -29,14 +28,14 @@ class UsuarioController {
         direccion,
         telefono,
         activo,
-        idRol
+        idRol,
       });
       if (!result) throw new Error("El usuario no pudo ser creado");
       res
         .status(200)
         .send({ success: true, message: "Usuario creado con exito" });
     } catch (error) {
-      next(error)
+      next(error);
     }
   };
 
@@ -52,7 +51,7 @@ class UsuarioController {
           "fechaNacimiento",
           "telefono",
           "activo",
-          "idRol"
+          "idRol",
         ],
         // include: [
         //   {
@@ -64,7 +63,12 @@ class UsuarioController {
       });
       res
         .status(200)
-        .send({ success: true, message: "Cantidad de usuarios: "+ result.length+" Usuarios encontrados:", result });
+        .send({
+          success: true,
+          message:
+            "Cantidad de usuarios: " + result.length + " Usuarios encontrados:",
+          result,
+        });
     } catch (error) {
       //res.status(400).send({ success: false, message: error.message });
       next(error);
@@ -88,7 +92,7 @@ class UsuarioController {
           "fechaNacimiento",
           "telefono",
           "activo",
-          "idRol"
+          "idRol",
         ],
         // include: [
         //   {
@@ -107,7 +111,6 @@ class UsuarioController {
     }
   };
 
-
   patchUserById = async (req, res, next) => {
     try {
       const { id } = req.params;
@@ -120,7 +123,7 @@ class UsuarioController {
         fechaNacimiento,
         telefono,
         activo,
-        idRol
+        idRol,
       } = req.body;
       const result = await Usuario.update(
         {
@@ -132,7 +135,7 @@ class UsuarioController {
           fechaNacimiento,
           telefono,
           activo,
-          idRol
+          idRol,
         },
         {
           where: {
@@ -159,13 +162,11 @@ class UsuarioController {
         },
       });
       if (!result) throw new Error("No se pudo eliminar el usuario.");
-      res
-        .status(200)
-        .send({
-          success: true,
-          message: "Usuario eliminado con exito.",
-          result,
-        });
+      res.status(200).send({
+        success: true,
+        message: "Usuario eliminado con exito.",
+        result,
+      });
     } catch (error) {
       res.status(400).send({ success: false, message: error.message });
     }
@@ -199,26 +200,28 @@ class UsuarioController {
       res
         .status(200)
         .send({ success: true, message: "usuarios encontrados:", result });
-
-        
     } catch (error) {
       next(error);
     }
   };
 
-   getUserProfesores = async (req, res, next) => {
+  getUserProfesores = async (req, res, next) => {
     try {
       const profesores = await Usuario.findAll({
-        where: { idRol: 3 }, 
+        where: { idRol: 3 },
       });
-  
-      res.status(200).send({ success: true, message: "Profesores encontrados:", profesores });
 
+      res
+        .status(200)
+        .send({
+          success: true,
+          message: "Profesores encontrados:",
+          profesores,
+        });
     } catch (error) {
       next(error);
     }
   };
-
 
   logIn = async (req, res, next) => {
     try {
@@ -228,14 +231,14 @@ class UsuarioController {
         where: {
           email,
         },
-        
+
       });
 
       if (!result) {
         const error = new Error("Mail o clave incorrecta");
         error.status = 400;
         throw error;
-      };
+      }
 
       if(!result.activo) {
         const error = new Error("Error. El usuario se encuentra inactivo. Por favor comunicate con administración.");
@@ -249,7 +252,7 @@ class UsuarioController {
         const error = new Error("Mail o clave incorrecta");
         error.status = 400;
         throw error;
-      };
+      }
 
       //tomamos los datos del usuario que necesitamos para generar el token
       const payload = {
@@ -260,47 +263,39 @@ class UsuarioController {
         idRol: result.idRol,
       };
 
+      //generamos el token
+      const token = generateToken(payload);
 
-      //generamos el token 
-      const token = generateToken(payload)
-
-      res.cookie('tokenMacabi', token)
+      res.cookie("tokenMacabi", token);
 
       res
         .status(200)
-        .send({ success: true, message: "Usuario Logeado Exitosamente", payload });
-
+        .send({
+          success: true,
+          message: "Usuario Logeado Exitosamente",
+          payload,
+        });
     } catch (error) {
-      next(error)
+      next(error);
     }
-
-  }
+  };
 
   logout = async (req, res, next) => {
     try {
-      res.cookie('tokenMacabi', '')
+      res.cookie("tokenMacabi", "");
 
-      res
-        .status(200)
-        .send({ success: true, message: 'Usuario Deslogueado' });
-
+      res.status(200).send({ success: true, message: "Usuario Deslogueado" });
     } catch (error) {
-
       next(error);
     }
   };
 
   me = async (req, res, next) => {
-
     try {
-      const { user } = req
-      res
-        .status(200)
-        .send({ success: true, message: "Usuario", user });
-
+      const { user } = req;
+      res.status(200).send({ success: true, message: "Usuario", user });
     } catch (error) {
       next(error);
-
     }
   };
 
@@ -316,7 +311,7 @@ class UsuarioController {
         telefono,
         direccion,
         activo = true,
-        idRol
+        idRol,
       } = req.body;
       const result = await Usuario.create({
         nombre,
@@ -328,14 +323,14 @@ class UsuarioController {
         direccion,
         telefono,
         activo,
-        idRol
+        idRol,
       });
       if (!result) throw new Error("El usuario no pudo ser creado");
       res
         .status(200)
         .send({ success: true, message: "Usuario creado con exito" });
     } catch (error) {
-      next(error)
+      next(error);
     }
   };
 
@@ -352,7 +347,7 @@ class UsuarioController {
           "fechaNacimiento",
           "telefono",
           "activo",
-          "idRol"
+          "idRol",
         ],
         include: [
           {
@@ -363,7 +358,12 @@ class UsuarioController {
       });
       res
         .status(200)
-        .send({ success: true, message: "Cantidad de usuarios: " + result.length + " Usuarios encontrados:", result });
+        .send({
+          success: true,
+          message:
+            "Cantidad de usuarios: " + result.length + " Usuarios encontrados:",
+          result,
+        });
     } catch (error) {
       next(error);
     }
@@ -407,14 +407,12 @@ class UsuarioController {
       res
         .status(200)
         .send({ success: true, message: "Usuario encontrado:", result });
-
     } catch (error) {
       next(error);
     }
   };
 
   getUsersByRol = async (req, res, next) => {
-
     try {
       const { idRol } = req.params;
       const result = await Usuario.findAll({
@@ -448,7 +446,11 @@ class UsuarioController {
 
       res
         .status(200)
-        .send({ success: true, message: `usuarios con idRol: ${idRol} encontrados:`, result });
+        .send({
+          success: true,
+          message: `usuarios con idRol: ${idRol} encontrados:`,
+          result,
+        });
     } catch (error) {
       next(error);
     }
@@ -512,7 +514,7 @@ class UsuarioController {
         fechaNacimiento,
         telefono,
         activo,
-        idRol
+        idRol,
       } = req.body;
 
       const result = await Usuario.update(
@@ -525,7 +527,7 @@ class UsuarioController {
           fechaNacimiento,
           telefono,
           activo,
-          idRol
+          idRol,
         },
         {
           where: {
@@ -569,14 +571,12 @@ class UsuarioController {
         .status(200)
         .send({ success: true, message: "Usuario modificado con exito" });
     } catch (error) {
-
-      next(error)
+      next(error);
     }
   };
 
   deleteUserById = async (req, res, next) => {
     try {
-
       const { idUsuario } = req.params;
 
       const result = await Usuario.destroy({
@@ -585,13 +585,11 @@ class UsuarioController {
         },
       });
       if (!result) throw new Error("No se pudo eliminar el usuario.");
-      res
-        .status(200)
-        .send({
-          success: true,
-          message: "Usuario eliminado con exito.",
-          result,
-        });
+      res.status(200).send({
+        success: true,
+        message: "Usuario eliminado con exito.",
+        result,
+      });
     } catch (error) {
       res.status(400).send({ success: false, message: error.message });
     }
@@ -600,7 +598,7 @@ class UsuarioController {
   getCategoriasPorProfesor = async (req, res, next) => {
     try {
       const { idUsuario } = req.params;
-      let message = "Categorías encontradas:"
+      let message = "Categorías encontradas:";
 
       const usuario = await Usuario.findOne({
         where: {
@@ -623,28 +621,34 @@ class UsuarioController {
       }
 
       if (usuario.Rol.tipo === "P") {
-
         let categorias = await Usuario.findOne({
           where: {
             idUsuario,
           },
           attributes: [],
-          include:{ model: Categoria, attributes: ["idCategoria", "nombreCategoria"],as: "CategoriasAsignadas", through:{attributes:[]}}
+          include: {
+            model: Categoria,
+            attributes: ["idCategoria", "nombreCategoria"],
+            as: "CategoriasAsignadas",
+            through: { attributes: [] },
+          },
         });
 
-        if (!categorias.categoriasAsignadas || categorias.categoriasAsignadas.length == 0) {
+        if (
+          !categorias.categoriasAsignadas ||
+          categorias.categoriasAsignadas.length == 0
+        ) {
           message = "No hay categorías asociadas a este profesor.";
-
         }
-
-        
 
         res
           .status(200)
-          .send({ success: true, message, categorias:categorias.CategoriasAsignadas });
-
+          .send({
+            success: true,
+            message,
+            categorias: categorias.CategoriasAsignadas,
+          });
       } else {
-
         const error = new Error("El usuario no es de tipo Profesor");
         error.status = 400;
         throw error;
@@ -657,7 +661,7 @@ class UsuarioController {
   getDeportesPorCoordinador = async (req, res, next) => {
     try {
       const { idUsuario } = req.params;
-      let message = "Deportes encontrados:"
+      let message = "Deportes encontrados:";
 
       const usuario = await Usuario.findOne({
         where: {
@@ -708,20 +712,17 @@ class UsuarioController {
     }
   };
 
-
-  async existeProfesorPorId(idUsuario){
+  async existeProfesorPorId(idUsuario) {
     let existe = false;
-    
-    try {
 
+    try {
       const result = await Usuario.findOne({
         where: {
           idUsuario,
         },
-
-      })
+      });
       console.log("-------------- LLEGUE ACA-----------");
-      if(result) {
+      if (result) {
         console.log("El usuario encontrado es: " + result.idUsuario);
         existe = true;
       }
@@ -729,42 +730,32 @@ class UsuarioController {
       console.log("--------------EXISTE PROFE?:   " + existe + "-----------");
 
       return existe;
-
-    }catch(e){
-
-      throw new Error("Error en la validacion de la existencia de profesor")
-
+    } catch (e) {
+      throw new Error("Error en la validacion de la existencia de profesor");
     }
   }
 
-  async getUsuarioPorId(idUsuario){
-
+  async getUsuarioPorId(idUsuario) {
     try {
-
       const result = await Usuario.findOne({
-        where:{
-          idUsuario
+        where: {
+          idUsuario,
         },
-        attributes: [
-          "idUsuario","nombre","apellido","dni","email"
-        ],
-      })
+        attributes: ["idUsuario", "nombre", "apellido", "dni", "email"],
+      });
 
       if (!result) throw new Error("No se encontro usuario con ese id");
 
-      return result
-
-    }catch(e){
-      throw e
+      return result;
+    } catch (e) {
+      throw e;
     }
-
   }
 
-   async validarTipo(idUsuario, rol){
+  async validarTipo(idUsuario, rol) {
     let esTipoProfesor = false;
 
     try {
-
       const usuarioResult = await Usuario.findOne({
         where: {
           idUsuario,
@@ -782,13 +773,86 @@ class UsuarioController {
       }
 
       return esTipoProfesor;
-      
-    }catch(e){
-      throw e
+    } catch (e) {
+      throw e;
     }
-    
-   }
+  }
 
+  updatePassword = async (req, res, next) => {
+    try {
+      let result;
+      const { idUsuario } = req.params;
+      const {
+        oldPass, // CLAVE VIEJA
+        clave, // CLAVE NUEVA
+      } = req.body;
+
+      const usuario = await Usuario.findOne({
+        where: {
+          idUsuario: idUsuario,
+        },
+      });
+
+      if (!usuario) {
+        const error = new Error(
+          `El usuario con ID ${idUsuario} no se encuentra en la base de datos`
+        );
+        error.status = 400;
+        throw error;
+      }
+
+      if (clave == null || clave == "") {
+        const error = new Error(`La nueva clave pasada está vacía o nula`);
+        error.status = 400;
+        throw error;
+      }
+
+      if (oldPass == null || oldPass == "") {
+        const error = new Error(`La clave vieja pasada está vacía o nula`);
+        error.status = 400;
+        throw error;
+      }
+
+      const passwordMatch = await bcrypt.compare(oldPass, usuario.clave);
+
+      console.log("passwordMatch", passwordMatch);
+
+      if (passwordMatch) {
+        if (!/^(?=.*[A-Z])(?=.*\d).{8,}$/.test(clave)) {
+          const error = new Error(
+            `La clave debe tener un mínimo de 8 caracteres, una mayúscula y un número`
+          );
+          error.status = 400;
+          throw error;
+        }
+
+        result = await Usuario.update(
+          { clave: clave },
+          {
+            where: { idUsuario },
+            individualHooks: true,
+          }
+        );
+      } else {
+        res
+          .status(400)
+          .send({ success: false, message: "La clave no es correcta" });
+      }
+
+      if (!result) {
+        throw new Error("No se pudo modificar la contraseña del usuario");
+      }
+
+      res
+        .status(200)
+        .send({
+          success: true,
+          message: "Clave del usuario modificada con éxito",
+        });
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 export default UsuarioController;
 
