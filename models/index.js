@@ -103,6 +103,7 @@ infoContacto.belongsTo(Socio, {
 
 Socio.belongsToMany(Categoria, {
     through: "SociosXCategoria",
+    onDelete: 'CASCADE',
     foreignKey: "idSocio"
 })
 

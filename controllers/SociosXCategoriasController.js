@@ -1,5 +1,8 @@
 import { Categoria, SociosXCategorias } from "../models/index.js";
 import Socio from "../models/Socio.js";
+import AsistenciaController from "./Asistencia.controller.js";
+import CategoriaController from "./CategoriaController.js";
+import FechaController from "./Fecha.controller.js";
 import SocioController from "./Socio.Controller.js";
 
 class SociosXCategoriasController {
@@ -24,7 +27,7 @@ class SociosXCategoriasController {
       console.log("Antes de la consulta");
       const idSociosDatos = await SociosXCategorias.findAll({
         where: { idCategoria: idCategoria },
-        attributes: ["idSocio"],
+        attributes: ["idSocio","fechaRegistro"],
       });
       console.log("Llega aca");
 
@@ -41,6 +44,31 @@ class SociosXCategoriasController {
             .status(404)
             .json({ error: "Socios de la categoría no encontrados" });
         }
+
+        
+        //Metodo para agregar las fechas de regristro a la devolución.
+        sociosDatos.forEach(item => {
+
+          let pos = 0;
+          let encontrado = false;
+          while(pos < idSociosDatos.length && !encontrado) {
+            if(item.idSocio == idSociosDatos[pos].idSocio) {
+              encontrado = true;
+            }else {
+              pos++
+            }
+          }
+
+          if(encontrado){
+            item.dataValues.fechaRegistro = idSociosDatos[pos].fechaRegistro //Agrego al item que devuelvo su fecha de registro
+
+          }
+        });
+
+
+       
+
+
         res.status(200).json({ sociosDatos });
       } catch (e) {
         throw "Error con sociosDatos";
@@ -102,7 +130,7 @@ class SociosXCategoriasController {
                     if(await this.existeSocioEnCategoria(socio.idSocio,idCategoria)) {
                         sociosExistentes.push(socio.idSocio)
                     }else {
-                        nuevosSocios.push({idSocio:socio.idSocio, idCategoria:idCategoria})
+                        nuevosSocios.push({idSocio:socio.idSocio, idCategoria:idCategoria,fechaRegistro: new Date()})
 
                     }
 
@@ -229,6 +257,70 @@ Un bullCreat pero no me voy a enterar xq tuvo error en alguno de los socios
       });
     }
   };
+
+  deleteSocioById = async (req, res, next) => {
+    try {
+
+      const { idSocio, idCategoria } = req.params;
+
+    let  categoriaController = new CategoriaController;
+
+    if(! await categoriaController.existeCategoria(idCategoria)) {
+      throw new Error("No existe la categoria indicada")
+    }
+
+    if(! await this.existeSocioEnCategoria(idSocio,idCategoria)){
+      throw new Error("No existe el socio en la categoria.")
+
+    }
+
+    
+      const result = await SociosXCategorias.destroy({
+        where: {
+          idSocio,idCategoria
+        },
+      });
+      if (!result) throw new Error("Hubo un error al procesar el pedido");
+
+        //Eliminar todas las "ASISTENCIAS FUTURAS de este usuario."
+      await this.eliminarAsistenciasFuturasSocio(idSocio, idCategoria)
+    
+
+
+      res
+        .status(200)
+        .send({
+          success: true,
+          message: "Socio eliminado con exito de la categoria.",
+          result,
+        });
+    } catch (error) {
+      res.status(400).send({ success: false, message: error.message });
+    }
+  };
+
+  eliminarAsistenciasFuturasSocio = async (idSocio,idCategoria) => {
+        
+    let fechaController = new FechaController();
+   
+ let asistenciasPorBorrar = await  fechaController.getFechasDeCategoriaFuturas(idCategoria);
+
+  let asistenciaController = new AsistenciaController();
+
+  if(asistenciasPorBorrar.length > 0){
+    for (const item of asistenciasPorBorrar) {
+      console.log(item, idSocio);
+
+      await asistenciaController.deleteSocioFechaMetodoInterno(item, idSocio)
+    }
+  }
+
+  
+   
+   }
 }
+
+
+
 
 export default SociosXCategoriasController;

@@ -18,7 +18,10 @@ usuarioRoutes.get("/:idUsuario", userController.getUserById);
 usuarioRoutes.get("/:idUsuario/deportes", userController.getDeportesPorCoordinador);
 usuarioRoutes.get("/:idUsuario/categorias", userController.getCategoriasPorProfesor);
 usuarioRoutes.get("/profesores", userController.getUserProfesores)
+
 usuarioRoutes.get("/:idRol/rol", userController.getUsersByRol);
+usuarioRoutes.get("/:idRol/rol/activos", userController.getUsersByRolActivos);
+
 
 usuarioRoutes.post("/", userController.createUser);  //Comprobar msj de error
 usuarioRoutes.post("/logout", userController.logout);

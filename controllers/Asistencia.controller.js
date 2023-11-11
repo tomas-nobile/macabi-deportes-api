@@ -89,6 +89,16 @@ class AsistenciaController {
     }
   }
 
+  deleteSocioFechaMetodoInterno = async (idFecha,idSocio) => {
+    try {
+      await Asistencia.destroy(
+        { where: { idSocio, idFecha } 
+      });
+    } catch (error) {
+      console.error('Error al borrar socio de la fecha:', error);
+    }
+  }
+
   modificarAsistencia = async (req, res) => {
     const { idFecha } = req.params;
     const cambiosAsistencia = req.body;

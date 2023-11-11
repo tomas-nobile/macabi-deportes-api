@@ -1,6 +1,8 @@
 import { Fecha , Categoria} from "../models/index.js";
 import AsistenciaController from "./Asistencia.controller.js";
 import SociosXCategoriasController from "./SociosXCategoriasController.js";
+import Op from "sequelize";
+
 class FechaController {
 
     constructor() { }
@@ -135,6 +137,45 @@ class FechaController {
     console.error('Error al obtener las fechas:', error);
     res.status(500).json({ error: 'Error al obtener las fechas' });
   }
+};
+
+getFechasDeCategoriaFuturas = async (idCategoria) => {
+
+  let fechaDeHoy = new Date();
+
+  
+  try {
+    
+    const result = await Fecha.findAll({
+      where: {
+        idCategoria:idCategoria, 
+      },
+
+    });
+
+    if(result) {
+      //Puede ser mas eficiente si puedo traerme las fechas futuras, pero no me funciona.
+      let fechasFuturas = [];
+
+      for (const fecha of result) {
+        let fechaTipoFecha = new Date(fecha.fechaCalendario);
+
+        if(fechaTipoFecha > fechaDeHoy){
+          fechasFuturas.push(fecha.idFecha)
+        }  
+      }
+
+      return fechasFuturas;
+
+    }
+
+
+
+  } catch (error) {
+    console.error('Error al obtener las fechas:', error);
+  }
+  
+  
 };
  
 
