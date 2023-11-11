@@ -1,6 +1,10 @@
 import { Fecha , Categoria} from "../models/index.js";
 import AsistenciaController from "./Asistencia.controller.js";
 import SociosXCategoriasController from "./SociosXCategoriasController.js";
+import Op, { Sequelize } from "sequelize";
+import QueryTypes from "sequelize";
+
+
 class FechaController {
 
     constructor() { }
@@ -134,6 +138,38 @@ class FechaController {
   } catch (error) {
     console.error('Error al obtener las fechas:', error);
     res.status(500).json({ error: 'Error al obtener las fechas' });
+  }
+};
+
+getFechasDeCategoriaFuturas = async (idCategoria) => {
+
+  let fechaDeHoy = new Date();
+  fechaDeHoy.setDate(fechaDeHoy.getDate());
+  console.log("LA FECHA DE HOY..... " + fechaDeHoy.toISOString().split('T')[0]);
+
+  try {
+    
+     
+
+      
+
+
+const fechas = await sequelize.query('SELECT `idFecha`, `idCategoria`, `fechaCalendario`, `tipo` FROM `Fechas` AS `Fecha` WHERE `Fecha`.`fechaCalendario` > "2023-11-11"', { type: QueryTypes.SELECT });
+    
+    
+      console.log(resultado);
+   
+
+
+
+
+
+    if(result) {
+      console.log(result);
+    }
+
+  } catch (error) {
+    console.error('Error al obtener las fechas:', error);
   }
 };
  

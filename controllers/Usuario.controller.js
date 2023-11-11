@@ -141,6 +141,7 @@ class UsuarioController {
         }
       );
       if (!result) throw new Error("No se pudo modificar el usuario.");
+      console.log("-------------El estado del usuario es:-------- " );
       res
         .status(200)
         .send({ success: true, message: "Usuario modificado con exito" });
@@ -453,7 +454,52 @@ class UsuarioController {
     }
   };
 
+
+  getUsersByRolActivos = async (req, res, next) => {
+
+    try {
+      const { idRol } = req.params;
+      const result = await Usuario.findAll({
+        where: {
+          idRol, activo:true
+        },
+        attributes: [
+          "idUsuario",
+          "nombre",
+          "apellido",
+          "fechaNacimiento",
+          "dni",
+          "email",
+          "telefono",
+          "direccion",
+          "activo",
+        ],
+        include: [
+          {
+            model: Rol,
+            attributes: ["tipo"],
+          },
+        ],
+      });
+
+      if (result.length == 0) {
+        const error = new Error(`no hay usuarios con idRol: ${idRol} aun`);
+        error.status = 400;
+        throw error;
+      }
+
+      res
+        .status(200)
+        .send({ success: true, message: `usuarios con idRol: ${idRol} encontrados:`, result });
+    } catch (error) {
+      next(error);
+    }
+  };
+
   patchUserById = async (req, res, next) => {
+
+    let coordinador = 2;
+    let profesor = 3;
 
     try {
       const { idUsuario } = req.params;
@@ -489,6 +535,35 @@ class UsuarioController {
       );
 
       if (!result) throw new Error("No se pudo modificar el usuario.");
+
+      console.log("---------------------------------------------------" + idRol + "y activo " + activo)
+
+
+      //Tengo q hacer las 2 xq si llega a cambiarme tambien el rol al mismo tiuempo q el estado no borraria las categorias o usuarios.
+      if(activo == "false" && (idRol == coordinador || idRol == profesor)){
+        
+          const result = await DeportesXUsuario.destroy({
+            where: {
+              idUsuario,
+            },
+          });
+               //Eliminar de sus categorias. -> Lo elimina solo si existe. (Es más eficiente q hacer una busqueda antes.)
+          const result2 = await CategoriasXUsuario.destroy({
+            where: {
+              idUsuario,
+            },
+          });
+
+          console.log(result);
+
+    
+
+      }
+
+
+
+
+
 
       res
         .status(200)

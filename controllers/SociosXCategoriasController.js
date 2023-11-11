@@ -1,5 +1,7 @@
 import { Categoria, SociosXCategorias } from "../models/index.js";
 import Socio from "../models/Socio.js";
+import CategoriaController from "./CategoriaController.js";
+import FechaController from "./Fecha.controller.js";
 import SocioController from "./Socio.Controller.js";
 
 class SociosXCategoriasController {
@@ -254,6 +256,58 @@ Un bullCreat pero no me voy a enterar xq tuvo error en alguno de los socios
       });
     }
   };
+
+  deleteSocioById = async (req, res, next) => {
+    try {
+
+      const { idSocio, idCategoria } = req.params;
+
+    let  categoriaController = new CategoriaController;
+
+    if(! await categoriaController.existeCategoria(idCategoria)) {
+      throw new Error("No existe la categoria indicada")
+    }
+
+    if(! await this.existeSocioEnCategoria(idSocio,idCategoria)){
+      throw new Error("No existe el socio en la categoria.")
+
+    }
+
+    /*
+      const result = await SociosXCategorias.destroy({
+        where: {
+          idSocio,idCategoria
+        },
+      });
+      if (!result) throw new Error("Hubo un error al procesar el pedido");
+
+      //Eliminar todas las "ASISTENCIAS FUTURAS de este usuario."
+      this.eliminarAsistenciasFuturasSocio(idSocio, idCategoria)
+   */   
+
+
+      res
+        .status(200)
+        .send({
+          success: true,
+          message: "Socio eliminado con exito de la categoria.",
+          result,
+        });
+    } catch (error) {
+      res.status(400).send({ success: false, message: error.message });
+    }
+  };
+
+  eliminarAsistenciasFuturasSocio = async (idSocio,idCategoria) => {
+        
+    let fechaController = new FechaController();
+   
+  await  fechaController.getFechasDeCategoriaFuturas(idCategoria)
+   
+   }
 }
+
+
+
 
 export default SociosXCategoriasController;
