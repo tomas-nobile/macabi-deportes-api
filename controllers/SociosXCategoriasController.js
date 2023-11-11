@@ -1,5 +1,6 @@
 import { Categoria, SociosXCategorias } from "../models/index.js";
 import Socio from "../models/Socio.js";
+import AsistenciaController from "./Asistencia.controller.js";
 import CategoriaController from "./CategoriaController.js";
 import FechaController from "./Fecha.controller.js";
 import SocioController from "./Socio.Controller.js";
@@ -273,7 +274,7 @@ Un bullCreat pero no me voy a enterar xq tuvo error en alguno de los socios
 
     }
 
-    /*
+    
       const result = await SociosXCategorias.destroy({
         where: {
           idSocio,idCategoria
@@ -281,9 +282,9 @@ Un bullCreat pero no me voy a enterar xq tuvo error en alguno de los socios
       });
       if (!result) throw new Error("Hubo un error al procesar el pedido");
 
-      //Eliminar todas las "ASISTENCIAS FUTURAS de este usuario."
-      this.eliminarAsistenciasFuturasSocio(idSocio, idCategoria)
-   */   
+        //Eliminar todas las "ASISTENCIAS FUTURAS de este usuario."
+      await this.eliminarAsistenciasFuturasSocio(idSocio, idCategoria)
+    
 
 
       res
@@ -302,7 +303,19 @@ Un bullCreat pero no me voy a enterar xq tuvo error en alguno de los socios
         
     let fechaController = new FechaController();
    
-  await  fechaController.getFechasDeCategoriaFuturas(idCategoria)
+ let asistenciasPorBorrar = await  fechaController.getFechasDeCategoriaFuturas(idCategoria);
+
+  let asistenciaController = new AsistenciaController();
+
+  if(asistenciasPorBorrar.length > 0){
+    for (const item of asistenciasPorBorrar) {
+      console.log(item, idSocio);
+
+      await asistenciaController.deleteSocioFechaMetodoInterno(item, idSocio)
+    }
+  }
+
+  
    
    }
 }

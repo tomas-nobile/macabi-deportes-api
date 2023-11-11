@@ -43,7 +43,7 @@ app.use((error, req, res, next) => {
 });
 
 
-let force = false
+let force = true
 
 connection.sync({ force })
   .then(() => {

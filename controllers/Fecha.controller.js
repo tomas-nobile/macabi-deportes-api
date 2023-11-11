@@ -1,9 +1,7 @@
 import { Fecha , Categoria} from "../models/index.js";
 import AsistenciaController from "./Asistencia.controller.js";
 import SociosXCategoriasController from "./SociosXCategoriasController.js";
-import Op, { Sequelize } from "sequelize";
-import QueryTypes from "sequelize";
-
+import Op from "sequelize";
 
 class FechaController {
 
@@ -144,33 +142,40 @@ class FechaController {
 getFechasDeCategoriaFuturas = async (idCategoria) => {
 
   let fechaDeHoy = new Date();
-  fechaDeHoy.setDate(fechaDeHoy.getDate());
-  console.log("LA FECHA DE HOY..... " + fechaDeHoy.toISOString().split('T')[0]);
 
+  
   try {
     
-     
+    const result = await Fecha.findAll({
+      where: {
+        idCategoria:idCategoria, 
+      },
 
-      
-
-
-const fechas = await sequelize.query('SELECT `idFecha`, `idCategoria`, `fechaCalendario`, `tipo` FROM `Fechas` AS `Fecha` WHERE `Fecha`.`fechaCalendario` > "2023-11-11"', { type: QueryTypes.SELECT });
-    
-    
-      console.log(resultado);
-   
-
-
-
-
+    });
 
     if(result) {
-      console.log(result);
+      //Puede ser mas eficiente si puedo traerme las fechas futuras, pero no me funciona.
+      let fechasFuturas = [];
+
+      for (const fecha of result) {
+        let fechaTipoFecha = new Date(fecha.fechaCalendario);
+
+        if(fechaTipoFecha > fechaDeHoy){
+          fechasFuturas.push(fecha.idFecha)
+        }  
+      }
+
+      return fechasFuturas;
+
     }
+
+
 
   } catch (error) {
     console.error('Error al obtener las fechas:', error);
   }
+  
+  
 };
  
 
