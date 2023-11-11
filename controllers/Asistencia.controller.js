@@ -91,7 +91,9 @@ class AsistenciaController {
 
   deleteSocioFechaMetodoInterno = async (idFecha,idSocio) => {
     try {
-      await Asistencia.destroy({ where: { idSocio, idFecha } });
+      await Asistencia.destroy(
+        { where: { idSocio, idFecha } 
+      });
     } catch (error) {
       console.error('Error al borrar socio de la fecha:', error);
     }
