@@ -1,4 +1,5 @@
 import { Usuario, DeportesXUsuario, Deporte, Categoria, Rol } from "../models/index.js";
+import CategoriasXUsuario from "../models/CategoriasXUsuario.js";
 import { generateToken } from "../utils/tokens.js";
 import bcrypt from "bcrypt";
 
@@ -504,69 +505,81 @@ class UsuarioController {
   };
 
   patchUserById = async (req, res, next) => {
-
-    const coordinador = 2;
-    const profesor = 3;
-
-    try {
-      const { idUsuario } = req.params;
-      const {
-        nombre,
-        apellido,
-        email,
-        dni,
-        direccion,
-        fechaNacimiento,
-        telefono,
-        activo,
-        idRol,
-      } = req.body;
-
-      const result = await Usuario.update(
-        {
-          nombre,
-          apellido,
-          email,
-          dni,
-          direccion,
-          fechaNacimiento,
-          telefono,
-          activo,
-          idRol,
-        },
-        {
-          where: {
-            idUsuario,
-          },
+    console.log("-------llego aca---------");
+        let coordinador = 2;
+        let profesor = 3;
+    
+        try {
+          const { idUsuario } = req.params;
+          const {
+            nombre,
+            apellido,
+            email,
+            dni,
+            direccion,
+            fechaNacimiento,
+            telefono,
+            activo,
+            idRol,
+          } = req.body;
+    
+          const result = await Usuario.update(
+            {
+              nombre,
+              apellido,
+              email,
+              dni,
+              direccion,
+              fechaNacimiento,
+              telefono,
+              activo,
+              idRol,
+            },
+            {
+              where: {
+                idUsuario,
+              },
+            }
+          );
+    
+          if (!result) throw new Error("No se pudo modificar el usuario.");
+    
+    
+          //Tengo q hacer las 2 xq si llega a cambiarme tambien el rol al mismo tiuempo q el estado no borraria las categorias o usuarios.
+          if(activo == "false" && (idRol == coordinador || idRol == profesor)){
+    
+              const result = await DeportesXUsuario.destroy({
+                where: {
+                  idUsuario,
+                },
+              });
+    
+                   //Eliminar de sus categorias. -> Lo elimina solo si existe. (Es más eficiente q hacer una busqueda antes.)
+              const result2 = await CategoriasXUsuario.destroy({
+                where: {
+                  idUsuario,
+                },
+              });
+    
+              console.log("--- 2222222222");
+    
+    
+    
+          }
+    
+    
+    
+    
+    
+    
+          res
+            .status(200)
+            .send({ success: true, message: "Usuario modificado con exito" });
+        } catch (error) {
+          next(error);
         }
-      );
-
-      if (!result) throw new Error("No se pudo modificar el usuario.");
-
-      //Tengo q hacer las 2 xq si llega a cambiarme tambien el rol al mismo tiuempo q el estado no borraria las categorias o usuarios.
-      if (activo == "false" && (idRol == coordinador || idRol == profesor)) {
-
-        const result = await DeportesXUsuario.destroy({
-          where: {
-            idUsuario,
-          },
-        });
-
-        //Eliminar de sus categorias. -> Lo elimina solo si existe. (Es más eficiente q hacer una busqueda antes.)
-        const result2 = await CategoriasXUsuario.destroy({
-          where: {
-            idUsuario,
-          },
-        });
-      }
-
-      res
-        .status(200)
-        .send({ success: true, message: "Usuario modificado con exito" });
-    } catch (error) {
-      next(error);
-    }
-  };
+      };
+        
 
   deleteUserById = async (req, res, next) => {
     try {
