@@ -180,11 +180,12 @@ class SocioController {
     }
   };
 
-  updateSocio = async (req, res, next) => {
+  patchSocioByiD = async (req, res, next) => {
     try {
+
       const { idSocio } = req.params;
+
       const {
-        nroSocio,
         nombre,
         apellido,
         dni,
@@ -194,9 +195,9 @@ class SocioController {
         fechaNacimiento,
         observaciones,
       } = req.body;
+
       const result = await Socio.update(
         {
-          nroSocio,
           nombre,
           apellido,
           dni,
@@ -212,10 +213,13 @@ class SocioController {
           },
         }
       );
+
       if (!result) throw new Error("No se pudo modificar el sociop.");
+
       res
         .status(200)
         .send({ success: true, message: "Socio modificado con exito" });
+
     } catch (error) {
       next(error)
     }
