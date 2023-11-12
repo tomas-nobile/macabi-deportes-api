@@ -2,8 +2,8 @@ import Usuario from "./Usuario.js";
 import Deporte from "./Deporte.js"
 import Categoria from "./Categoria.js"
 import infoContacto from "./infoContacto.js";
-import Socio from "./Socio.js";
-import Fecha from "./fecha.js";
+import Socio from "./socio.js";
+import Fecha from "./Fecha.js";
 import Asistencia from "./Asistencia.js";
 import Rol from "./rol.js";
 import DeportesXUsuario from "./DeportesXUsuario.js";
@@ -29,7 +29,8 @@ Usuario.belongsTo(Rol, {
 Usuario.belongsToMany(Deporte, {
     as: 'DeportesAsignados',
     through: "DeportesXUsuario", 
-    foreignKey: "idUsuario", })
+    foreignKey: "idUsuario",
+     })
 
 Deporte.belongsToMany(Usuario, {
     as: 'CoordinadoresAsignados',
@@ -41,13 +42,14 @@ Deporte.belongsToMany(Usuario, {
 Usuario.belongsToMany(Categoria, {
     as: 'CategoriasAsignadas',
     through: "CategoriasXUsuario", 
-    foreignKey: "idUsuario", })
+    foreignKey: "idUsuario"})
 
 Categoria.belongsToMany(Usuario, {
     as: 'ProfesoresAsignados',
     through: "CategoriasXUsuario",
     foreignKey: "idCategoria", 
-    onDelete: 'CASCADE',})
+    onDelete: 'CASCADE',
+})
     
     
 
@@ -56,7 +58,7 @@ Categoria.belongsToMany(Usuario, {
 
 Deporte.hasMany(Categoria, {
     foreignKey:  "idDeporte",
-    onDelete: 'CASCADE',
+    onDelete: 'CASCADE'
 })
 
 Categoria.belongsTo(Deporte, {
@@ -81,6 +83,7 @@ Categoria.belongsTo(Usuario, {
 
 Categoria.hasMany(Fecha, {
     foreignKey: "idCategoria",
+    onDelete: 'CASCADE',
 })
 
 Fecha.belongsTo(Categoria, {
@@ -131,4 +134,4 @@ Fecha.belongsToMany(Socio, {
 
 
 
-export { Usuario, infoContacto, Socio, Fecha, Asistencia, Deporte, Rol, Categoria, DeportesXUsuario, SociosXCategorias, ContactoEmergencia };
+export { Usuario, infoContacto, Socio, Fecha, Asistencia, Deporte, Rol, Categoria, DeportesXUsuario, SociosXCategorias, ContactoEmergencia, CategoriasXUsuario };

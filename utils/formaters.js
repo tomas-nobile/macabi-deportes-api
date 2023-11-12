@@ -1,7 +1,5 @@
 export function formatEmail(email) {
 
-    console.log("asdadasd");
-
     let formatedEmail
 
     if (email.includes("@")) {
@@ -11,8 +9,5 @@ export function formatEmail(email) {
         formatedEmail = email;
     }
 
-
-
     return formatedEmail;
-
 }

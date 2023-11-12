@@ -1,10 +1,10 @@
-import CategoriasXUsuario from "../models/CategoriasXUsuario.js";
 import { Usuario, DeportesXUsuario, Deporte, Categoria, Rol } from "../models/index.js";
 import { generateToken } from "../utils/tokens.js";
 import bcrypt from "bcrypt";
 
 class UsuarioController {
-  constructor() {}
+  constructor() { }
+
   createUser = async (req, res, next) => {
     try {
       const {
@@ -64,14 +64,8 @@ class UsuarioController {
       });
       res
         .status(200)
-        .send({
-          success: true,
-          message:
-            "Cantidad de usuarios: " + result.length + " Usuarios encontrados:",
-          result,
-        });
+        .send({ success: true, message: "Cantidad de usuarios: " + result.length + " Usuarios encontrados:", result });
     } catch (error) {
-      //res.status(400).send({ success: false, message: error.message });
       next(error);
     }
   };
@@ -108,26 +102,15 @@ class UsuarioController {
         .status(200)
         .send({ success: true, message: "Usuario encontrado:", result });
     } catch (error) {
-      res.status(400).send({ success: false, message: error.message });
+      next(error)
     }
   };
-/*
-  patchUserById = async (req, res, next) => {
-    try {
-      const { id } = req.params;
-      const {
-        nombre,
-        apellido,
-        email,
-        dni,
-        direccion,
-        fechaNacimiento,
-        telefono,
-        activo,
-        idRol,
-      } = req.body;
-      const result = await Usuario.update(
-        {
+
+  /*
+    patchUserById = async (req, res, next) => {
+      try {
+        const { id } = req.params;
+        const {
           nombre,
           apellido,
           email,
@@ -137,23 +120,36 @@ class UsuarioController {
           telefono,
           activo,
           idRol,
-        },
-        {
-          where: {
-            idUsuario: id,
+        } = req.body;
+        const result = await Usuario.update(
+          {
+            nombre,
+            apellido,
+            email,
+            dni,
+            direccion,
+            fechaNacimiento,
+            telefono,
+            activo,
+            idRol,
           },
-        }
-      );
-      if (!result) throw new Error("No se pudo modificar el usuario.");
-      console.log("-------------El estado del usuario es:-------- " );
-      res
-        .status(200)
-        .send({ success: true, message: "Usuario modificado con exito" });
-    } catch (error) {
-      res.status(400).send({ success: false, message: error });
-    }
-  };
-*/
+          {
+            where: {
+              idUsuario: id,
+            },
+          }
+        );
+        if (!result) throw new Error("No se pudo modificar el usuario.");
+        console.log("-------------El estado del usuario es:-------- " );
+        res
+          .status(200)
+          .send({ success: true, message: "Usuario modificado con exito" });
+      } catch (error) {
+        next(error)
+      }
+    };
+  */
+
   deleteUserById = async (req, res, next) => {
     try {
       const { id } = req.params;
@@ -169,7 +165,7 @@ class UsuarioController {
         result,
       });
     } catch (error) {
-      res.status(400).send({ success: false, message: error.message });
+      next(error)
     }
   };
 
@@ -201,6 +197,7 @@ class UsuarioController {
       res
         .status(200)
         .send({ success: true, message: "usuarios encontrados:", result });
+
     } catch (error) {
       next(error);
     }
@@ -214,11 +211,7 @@ class UsuarioController {
 
       res
         .status(200)
-        .send({
-          success: true,
-          message: "Profesores encontrados:",
-          profesores,
-        });
+        .send({ success: true, message: "Profesores encontrados:", profesores, });
     } catch (error) {
       next(error);
     }
@@ -227,6 +220,18 @@ class UsuarioController {
   logIn = async (req, res, next) => {
     try {
       const { email, clave } = req.body;
+
+      if (!email) {
+        const error = new Error("Email no Ingresado");
+        error.status = 400;
+        throw error;
+      }
+
+      if (!clave) {
+        const error = new Error("Clave no Ingresado");
+        error.status = 400;
+        throw error;
+      }
 
       const result = await Usuario.findOne({
         where: {
@@ -241,7 +246,7 @@ class UsuarioController {
         throw error;
       }
 
-      if(!result.activo) {
+      if (!result.activo) {
         const error = new Error("Error. El usuario se encuentra inactivo. Por favor comunicate con administración.");
         error.status = 400;
         throw error;
@@ -329,7 +334,7 @@ class UsuarioController {
       if (!result) throw new Error("El usuario no pudo ser creado");
       res
         .status(200)
-        .send({ success: true, message: "Usuario creado con exito" });
+        .send({ success: true, message: "Usuario creado con exito", idUsuario: result.idUsuario });
     } catch (error) {
       next(error);
     }
@@ -457,14 +462,13 @@ class UsuarioController {
     }
   };
 
-
   getUsersByRolActivos = async (req, res, next) => {
 
     try {
       const { idRol } = req.params;
       const result = await Usuario.findAll({
         where: {
-          idRol, activo:true
+          idRol, activo: true
         },
         attributes: [
           "idUsuario",
@@ -500,9 +504,9 @@ class UsuarioController {
   };
 
   patchUserById = async (req, res, next) => {
-console.log("-------llego aca---------");
-    let coordinador = 2;
-    let profesor = 3;
+
+    const coordinador = 2;
+    const profesor = 3;
 
     try {
       const { idUsuario } = req.params;
@@ -539,33 +543,22 @@ console.log("-------llego aca---------");
 
       if (!result) throw new Error("No se pudo modificar el usuario.");
 
-
       //Tengo q hacer las 2 xq si llega a cambiarme tambien el rol al mismo tiuempo q el estado no borraria las categorias o usuarios.
-      if(activo == "false" && (idRol == coordinador || idRol == profesor)){
-        
-          const result = await DeportesXUsuario.destroy({
-            where: {
-              idUsuario,
-            },
-          });
+      if (activo == "false" && (idRol == coordinador || idRol == profesor)) {
 
-               //Eliminar de sus categorias. -> Lo elimina solo si existe. (Es más eficiente q hacer una busqueda antes.)
-          const result2 = await CategoriasXUsuario.destroy({
-            where: {
-              idUsuario,
-            },
-          });
+        const result = await DeportesXUsuario.destroy({
+          where: {
+            idUsuario,
+          },
+        });
 
-          console.log("--- 2222222222");
-
-    
-
+        //Eliminar de sus categorias. -> Lo elimina solo si existe. (Es más eficiente q hacer una busqueda antes.)
+        const result2 = await CategoriasXUsuario.destroy({
+          where: {
+            idUsuario,
+          },
+        });
       }
-
-
-
-
-
 
       res
         .status(200)
@@ -574,6 +567,7 @@ console.log("-------llego aca---------");
       next(error);
     }
   };
+
   deleteUserById = async (req, res, next) => {
     try {
       const { idUsuario } = req.params;
@@ -590,7 +584,7 @@ console.log("-------llego aca---------");
         result,
       });
     } catch (error) {
-      res.status(400).send({ success: false, message: error.message });
+      next(error)
     }
   };
 
@@ -633,20 +627,17 @@ console.log("-------llego aca---------");
           },
         });
 
-        if (
-          !categorias.categoriasAsignadas ||
-          categorias.categoriasAsignadas.length == 0
-        ) {
-          message = "No hay categorías asociadas a este profesor.";
+        if (!categorias.CategoriasAsignadas ||
+          categorias.CategoriasAsignadas.length == 0) {
+          const error = new Error("El Profesor no tiene Categorias");
+          error.status = 400;
+          throw error;
         }
 
         res
           .status(200)
-          .send({
-            success: true,
-            message,
-            categorias: categorias.CategoriasAsignadas,
-          });
+          .send({ success: true, message, categorias: categorias.CategoriasAsignadas });
+
       } else {
         const error = new Error("El usuario no es de tipo Profesor");
         error.status = 400;
@@ -660,21 +651,27 @@ console.log("-------llego aca---------");
   getDeportesPorCoordinador = async (req, res, next) => {
     try {
       const { idUsuario } = req.params;
-      let message = "Deportes encontrados:";
 
-      const usuario = await Usuario.findOne({
+      const result = await Usuario.findOne({
         where: {
           idUsuario,
         },
+        attributes: [],
         include: [
           {
-            model: Rol,
-            attributes: ["tipo"],
+            model: Deporte,
+            as: 'DeportesAsignados',
+            through: {
+              attributes: []
+            }
           },
+          {
+            model: Rol
+          }
         ],
       });
 
-      if (!usuario) {
+      if (!result) {
         const error = new Error(
           `El usuario con ID ${idUsuario} no se encuentra en la base de datos`
         );
@@ -682,100 +679,28 @@ console.log("-------llego aca---------");
         throw error;
       }
 
-      if (usuario.Rol.tipo === "C") {
-        const idDeportes = await DeportesXUsuario.findAll({
-          where: {
-            idUsuario,
-          },
-          attributes: ["idDeporte"],
-        });
+      let isCoordinador = result.Rol.tipo == "C"
 
-        const deportes = await Deporte.findAll({
-          where: {
-            idDeporte: idDeportes.map((idDeporte) => idDeporte.idDeporte),
-          },
-        });
-
-        if (!deportes || deportes.length === 0) {
-          message = "No hay deportes asociados a este coordinador.";
-        }
-
-        res.status(200).send({ success: true, message, deportes });
-      } else {
+      if (!isCoordinador) {
         const error = new Error("El usuario no es de tipo Coordinador");
         error.status = 400;
         throw error;
       }
+
+      if (result.DeportesAsignados.length === 0) {
+        const error = new Error("El Coordinador no tiene Deportes");
+        error.status = 400;
+        throw error;
+      }
+
+      res
+        .status(200)
+        .send({ success: true, message: 'Deportes encontrados:', result: result.DeportesAsignados });
+
     } catch (error) {
       next(error);
     }
   };
-
-  async existeProfesorPorId(idUsuario) {
-    let existe = false;
-
-    try {
-      const result = await Usuario.findOne({
-        where: {
-          idUsuario,
-        },
-      });
-      console.log("-------------- LLEGUE ACA-----------");
-      if (result) {
-        console.log("El usuario encontrado es: " + result.idUsuario);
-        existe = true;
-      }
-
-      console.log("--------------EXISTE PROFE?:   " + existe + "-----------");
-
-      return existe;
-    } catch (e) {
-      throw new Error("Error en la validacion de la existencia de profesor");
-    }
-  }
-
-  async getUsuarioPorId(idUsuario) {
-    try {
-      const result = await Usuario.findOne({
-        where: {
-          idUsuario,
-        },
-        attributes: ["idUsuario", "nombre", "apellido", "dni", "email"],
-      });
-
-      if (!result) throw new Error("No se encontro usuario con ese id");
-
-      return result;
-    } catch (e) {
-      throw e;
-    }
-  }
-
-  async validarTipo(idUsuario, rol) {
-    let esTipoProfesor = false;
-
-    try {
-      const usuarioResult = await Usuario.findOne({
-        where: {
-          idUsuario,
-        },
-        include: [
-          {
-            model: Rol,
-            attributes: ["tipo"],
-          },
-        ],
-      });
-
-      if (usuarioResult && usuarioResult.Rol.tipo === rol) {
-        esTipoProfesor = true;
-      }
-
-      return esTipoProfesor;
-    } catch (e) {
-      throw e;
-    }
-  }
 
   updatePassword = async (req, res, next) => {
     try {
@@ -852,6 +777,73 @@ console.log("-------llego aca---------");
       next(error);
     }
   };
+
+  async existeProfesorPorId(idUsuario) {
+    let existe = false;
+
+    try {
+      const result = await Usuario.findOne({
+        where: {
+          idUsuario,
+        },
+      });
+
+      console.log("-------------- LLEGUE ACA-----------");
+
+      if (result) {
+        console.log("El usuario encontrado es: " + result.idUsuario);
+        existe = true;
+      }
+
+      return existe;
+    } catch (e) {
+      throw new Error("Error en la validacion de la existencia de profesor");
+    }
+  }
+
+  async getUsuarioPorId(idUsuario) {
+    try {
+      const result = await Usuario.findOne({
+        where: {
+          idUsuario,
+        },
+        attributes: ["idUsuario", "nombre", "apellido", "dni", "email"],
+      });
+
+      if (!result) throw new Error("No se encontro usuario con ese id");
+
+      return result;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async validarTipo(idUsuario, rol) {
+    let esTipoProfesor = false;
+
+    try {
+      const usuarioResult = await Usuario.findOne({
+        where: {
+          idUsuario,
+        },
+        include: [
+          {
+            model: Rol,
+            attributes: ["tipo"],
+          },
+        ],
+      });
+
+      if (usuarioResult && usuarioResult.Rol.tipo === rol) {
+        esTipoProfesor = true;
+      }
+
+      return esTipoProfesor;
+    } catch (e) {
+      throw e;
+    }
+  }
 }
+
 export default UsuarioController;
 

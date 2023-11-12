@@ -1,12 +1,12 @@
 import { Categoria, SociosXCategorias } from "../models/index.js";
-import Socio from "../models/Socio.js";
+import { Socio } from "../models/index.js";
 import AsistenciaController from "./Asistencia.controller.js";
 import CategoriaController from "./CategoriaController.js";
 import FechaController from "./Fecha.controller.js";
 import SocioController from "./Socio.Controller.js";
 
 class SociosXCategoriasController {
-  constructor() {}
+  constructor() { }
 
   getSociosByIdCategoria = async (idCategoria) => {
     try {
@@ -27,7 +27,7 @@ class SociosXCategoriasController {
       console.log("Antes de la consulta");
       const idSociosDatos = await SociosXCategorias.findAll({
         where: { idCategoria: idCategoria },
-        attributes: ["idSocio","fechaRegistro"],
+        attributes: ["idSocio", "fechaRegistro"],
       });
       console.log("Llega aca");
 
@@ -45,28 +45,28 @@ class SociosXCategoriasController {
             .json({ error: "Socios de la categoría no encontrados" });
         }
 
-        
+
         //Metodo para agregar las fechas de regristro a la devolución.
         sociosDatos.forEach(item => {
 
           let pos = 0;
           let encontrado = false;
-          while(pos < idSociosDatos.length && !encontrado) {
-            if(item.idSocio == idSociosDatos[pos].idSocio) {
+          while (pos < idSociosDatos.length && !encontrado) {
+            if (item.idSocio == idSociosDatos[pos].idSocio) {
               encontrado = true;
-            }else {
+            } else {
               pos++
             }
           }
 
-          if(encontrado){
+          if (encontrado) {
             item.dataValues.fechaRegistro = idSociosDatos[pos].fechaRegistro //Agrego al item que devuelvo su fecha de registro
 
           }
         });
 
 
-       
+
 
 
         res.status(200).json({ sociosDatos });
@@ -79,148 +79,149 @@ class SociosXCategoriasController {
       });
     }
   };
- 
-    agregarSociosACategorias = async (req,res,next) => {
+
+  agregarSociosACategorias = async (req, res, next) => {
+    try {
+      const { idCategoria } = req.params;
+      const { nuevosSocios } = req.body;
+
+      console.log(nuevosSocios);
+
+      const socios = nuevosSocios.map(socio => ({
+        idSocio: socio,
+        idCategoria: idCategoria
+      }));
+      console.log(socios);
+
+      const result = await SociosXCategorias.bulkCreate(
+        socios
+        , { validate: true })
+
+      if (!result) throw new Error("Error con alguna de la inserciones");
+
+      res
+        .status(200)
+        .send({ success: true, message: "Socios agregados con éxito" });
+
+    } catch (e) {
+      console.log(e);
+      next(e)
+    }
+
+
+
+  }
+
+  agregarSociosACategoriasB = async (req, res, next) => {
+    try {
+      const { socios } = req.body //Aca se recibe [{idSocio:..;nroSocio:..}]
+      const { idCategoria } = req.params
+      console.log("El param que llega:" + idCategoria);
+      console.log(socios);
+      const nuevosSocios = [];
+      const sociosExistentes = [];
+      const SociosInexistentes = [];
+
+
+      for (const socio of socios) {
+        let socioController = new SocioController();
+        if (await socioController.getSocioPorId(socio.idSocio) != null) {
+
+          if (await this.existeSocioEnCategoria(socio.idSocio, idCategoria)) {
+            sociosExistentes.push(socio.idSocio)
+          } else {
+            nuevosSocios.push({ idSocio: socio.idSocio, idCategoria: idCategoria, fechaRegistro: new Date() })
+
+          }
+
+
+        } else {
+          SociosInexistentes.push(socio.idSocio)
+        }
+      }
+
+      if (nuevosSocios.length > 0) {
         try {
-            const {idCategoria} = req.params;
-            const {nuevosSocios} = req.body;
-
-            console.log(nuevosSocios);
-
-            const socios = nuevosSocios.map(socio => ({
-                idSocio: socio,
-                idCategoria: idCategoria
-              }));
-            console.log(socios);
-            
-            const result = await SociosXCategorias.bulkCreate(
-                socios
+          const result = await SociosXCategorias.bulkCreate(
+            nuevosSocios
             , { validate: true })
 
-            if (!result) throw new Error("Error con alguna de la inserciones");
+          if (!result) throw new Error("Error con alguna de la inserciones");
 
-            res
+
+
+          res
             .status(200)
-            .send({ success: true, message: "Socios agregados con éxito" });
+            .send({ success: true, message: "Se agregaron socios a la BD", idSociosYaExistentes: sociosExistentes, idSociosInexistentes: SociosInexistentes });
 
-        }catch(e){
-            console.log(e);
-            next(e)
+
+
+
+        } catch (e) {
+          console.error("Error en la inserción:", e);
         }
-        
+      } else {
+        res.status(400).send({
+          success: false,
+          message: "No hay nuevos socios para asignar a la categoria"
+        });
+      }
 
 
+    } catch (e) {
+      console.log(e);
+      next(e)
     }
+  }
 
-    agregarSociosACategoriasB = async (req,res,next) => {
-        try {
-           const  {socios} = req.body //Aca se recibe [{idSocio:..;nroSocio:..}]
-           const {idCategoria} = req.params
-           console.log("El param que llega:" + idCategoria);
-           console.log(socios);
-            const nuevosSocios = [];
-            const sociosExistentes = [];
-            const SociosInexistentes = [];
+  async existeSocioEnCategoria(idSocio, idCategoria) {
 
+    try {
 
-            for (const socio of socios) {
-                let socioController = new SocioController();
-                if(await socioController.getSocioPorId(socio.idSocio) != null) {
+      let existe = false
+      const result = await SociosXCategorias.findOne({
+        where: {
+          idSocio: idSocio, idCategoria: idCategoria
+        },
+      })
+      if (result) {
+        existe = true
+      }
 
-                    if(await this.existeSocioEnCategoria(socio.idSocio,idCategoria)) {
-                        sociosExistentes.push(socio.idSocio)
-                    }else {
-                        nuevosSocios.push({idSocio:socio.idSocio, idCategoria:idCategoria,fechaRegistro: new Date()})
+      console.log("Existe el socio " + idSocio + " : " + existe);
 
-                    }
-
-
-                }else {
-                    SociosInexistentes.push(socio.idSocio)
-                }
-            }
-
-            if(nuevosSocios.length > 0){
-                try {
-                    const result = await SociosXCategorias.bulkCreate(
-                        nuevosSocios
-                    , { validate: true })
-
-                    if (!result) throw new Error("Error con alguna de la inserciones");
-
-                    
-
-                    res
-                    .status(200)
-                    .send({ success: true, message: "Se agregaron socios a la BD", idSociosYaExistentes:sociosExistentes, idSociosInexistentes:SociosInexistentes });
-
-
-                    
-
-                }catch(e){
-                    console.error("Error en la inserción:", e);
-                }
-            }else {
-                res.status(400).send({
-                    success: false,
-                    message: "No hay nuevos socios para asignar a la categoria"
-                });
-            }
-
-
-        }catch(e){
-            console.log(e);
-            next(e)
-        }
+      return existe
+    } catch (e) {
+      throw new Error('Error al verificar la existencia del socio en la categoría');
     }
+  }
 
-    async existeSocioEnCategoria (idSocio,idCategoria){
-       
-        try {
-            
-            let existe = false
-            const result = await SociosXCategorias.findOne({
-                 where: {
-                    idSocio:idSocio,idCategoria:idCategoria
-                 },
-            })
-            if(result){
-                existe = true
-            }
+  async existeAlMenos1Socio(idCategoria) {
+    try {
 
-            console.log("Existe el socio " + idSocio + " : " + existe) ;
-
-            return existe
-        }catch(e){
-            throw new Error('Error al verificar la existencia del socio en la categoría'); }
+      let existe = false
+      const result = await SociosXCategorias.findOne({
+        where: {
+          idCategoria: idCategoria
+        },
+      })
+      if (result) {
+        existe = true
+      }
+      return existe
+    } catch (e) {
+      throw new Error('Error al verificar la existencia de socios en la categoria');
     }
-
-    async existeAlMenos1Socio(idCategoria){
-        try {
-            
-            let existe = false
-            const result = await SociosXCategorias.findOne({
-                 where: {
-                    idCategoria:idCategoria
-                 },
-            })
-            if(result){
-                existe = true
-            }
-            return existe
-    }catch(e){
-        throw new Error('Error al verificar la existencia de socios en la categoria'); 
-    }
-}
+  }
 
 
 
 
 
-    //Puedo hacerlo de varias formas:
-    /*
+  //Puedo hacerlo de varias formas:
+  /*
 Un bullCreat pero no me voy a enterar xq tuvo error en alguno de los socios
-    */
+  */
 
   getCategoriasByIdSocio = async (req, res, next) => {
     try {
@@ -263,28 +264,28 @@ Un bullCreat pero no me voy a enterar xq tuvo error en alguno de los socios
 
       const { idSocio, idCategoria } = req.params;
 
-    let  categoriaController = new CategoriaController;
+      let categoriaController = new CategoriaController;
 
-    if(! await categoriaController.existeCategoria(idCategoria)) {
-      throw new Error("No existe la categoria indicada")
-    }
+      if (! await categoriaController.existeCategoria(idCategoria)) {
+        throw new Error("No existe la categoria indicada")
+      }
 
-    if(! await this.existeSocioEnCategoria(idSocio,idCategoria)){
-      throw new Error("No existe el socio en la categoria.")
+      if (! await this.existeSocioEnCategoria(idSocio, idCategoria)) {
+        throw new Error("No existe el socio en la categoria.")
 
-    }
+      }
 
-    
+
       const result = await SociosXCategorias.destroy({
         where: {
-          idSocio,idCategoria
+          idSocio, idCategoria
         },
       });
       if (!result) throw new Error("Hubo un error al procesar el pedido");
 
-        //Eliminar todas las "ASISTENCIAS FUTURAS de este usuario."
+      //Eliminar todas las "ASISTENCIAS FUTURAS de este usuario."
       await this.eliminarAsistenciasFuturasSocio(idSocio, idCategoria)
-    
+
 
 
       res
@@ -299,28 +300,22 @@ Un bullCreat pero no me voy a enterar xq tuvo error en alguno de los socios
     }
   };
 
-  eliminarAsistenciasFuturasSocio = async (idSocio,idCategoria) => {
-        
+  eliminarAsistenciasFuturasSocio = async (idSocio, idCategoria) => {
+
     let fechaController = new FechaController();
-   
- let asistenciasPorBorrar = await  fechaController.getFechasDeCategoriaFuturas(idCategoria);
 
-  let asistenciaController = new AsistenciaController();
+    let asistenciasPorBorrar = await fechaController.getFechasDeCategoriaFuturas(idCategoria);
 
-  if(asistenciasPorBorrar.length > 0){
-    for (const item of asistenciasPorBorrar) {
-      console.log(item, idSocio);
+    let asistenciaController = new AsistenciaController();
 
-      await asistenciaController.deleteSocioFechaMetodoInterno(item, idSocio)
+    if (asistenciasPorBorrar.length > 0) {
+      for (const item of asistenciasPorBorrar) {
+        console.log(item, idSocio);
+
+        await asistenciaController.deleteSocioFechaMetodoInterno(item, idSocio)
+      }
     }
   }
-
-  
-   
-   }
 }
-
-
-
 
 export default SociosXCategoriasController;

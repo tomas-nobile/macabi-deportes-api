@@ -1,5 +1,5 @@
 import CategoriasXUsuario from "../models/CategoriasXUsuario.js";
-import { Categoria, Usuario } from "../models/index.js"
+import { Categoria, Deporte, Socio, Fecha } from "../models/index.js"
 import DeporteController from "./deporteController.js";
 import UsuarioController from "./Usuario.controller.js";
 class CategoriaController {
@@ -7,32 +7,32 @@ class CategoriaController {
 
   createCategoria = async (req, res, next) => {
     try {
-      const { nombreCategoria, idDeporte, idUsuarios /*, idUsuario */} = req.body;
+      const { nombreCategoria, idDeporte, idUsuarios /*, idUsuario */ } = req.body;
       const result = await Categoria.create({
         nombreCategoria,
         idDeporte,
-       /* idUsuario,*/
+        /* idUsuario,*/
       });
       if (!result) {
         throw new Error("La categoria no pudo ser creada");
-      } 
-
-       const profesAgregados = await this.agregarProfesCategoriaNueva(idUsuarios, result.idCategoria)
-      
-
-      if(profesAgregados) {
-        res
-        .status(200)
-        .send({ success: true, message: "Categoria creada con exito" });
-      }else {
-        res
-        .status(200)
-        .send({ success: true, message: "Categoria creada con exito. No se agrgaron los profesores. No se ingresaron profesores, no existen o ingresaste usuarios con un rol distinto a profesor" });
       }
 
-      
+      const profesAgregados = await this.agregarProfesCategoriaNueva(idUsuarios, result.idCategoria)
+
+
+      if (profesAgregados) {
+        res
+          .status(200)
+          .send({ success: true, message: "Categoria creada con exito" });
+      } else {
+        res
+          .status(200)
+          .send({ success: true, message: "Categoria creada con exito. No se agrgaron los profesores. No se ingresaron profesores, no existen o ingresaste usuarios con un rol distinto a profesor" });
+      }
+
+
     } catch (error) {
-      res.status(400).send({ success: false, message: error.message });
+      next(error)
     }
   };
 
@@ -43,13 +43,12 @@ class CategoriaController {
           "idCategoria",
           "nombreCategoria",
           "idDeporte",
-        /*  "idUsuario",*/
         ],
       });
 
       if (result.length == 0) {
         const error = new Error(
-          "no hay categorias con el idDeporte:" + idDeporte
+          "No hay categorias cargadas en la base de datos"
         );
         error.status = 400;
         throw error;
@@ -58,8 +57,8 @@ class CategoriaController {
       res
         .status(200)
         .json({ succes: true, message: "Categorias encontradas:", result });
-    } catch (e) {
-      result.status(400).send({ success: false, message: e.message });
+    } catch (error) {
+      next(error)
     }
   };
 
@@ -75,8 +74,11 @@ class CategoriaController {
           "idCategoria",
           "nombreCategoria",
           "idDeporte",
-        /*  "idUsuario", */
         ],
+        include: {
+          model: Deporte,
+          attributes: ['nombre'],
+        }
       });
 
       if (!result) {
@@ -100,19 +102,20 @@ class CategoriaController {
       const {
         idCategoria
       } = req.params;
+
       const result = await Categoria.findOne({
         attributes: ["nombreCategoria"],
         where: {
           idCategoria
         },
       });
+
       if (!result) throw new Error("Error en la busqueda de categoria");
       res
         .status(200)
         .json({ nombreCategoria: result.nombreCategoria });
-    } catch (e) {
-      res.status(400).send({ success: false, message: e.message });
-
+    } catch (error) {
+      next(error)
     }
 
   }
@@ -136,9 +139,8 @@ class CategoriaController {
       let deporte1 = new DeporteController();
       const nombreDeporte = await deporte1.getNombreDeporteById(result.dataValues.idDeporte)
       res.status(200).json({ nombreDeporte: nombreDeporte });
-    } catch (e) {
-      console.error("Error en getNombreDeporte:", e);
-      next(e)
+    } catch (error) {
+      next(error)
     }
   }
 
@@ -150,7 +152,7 @@ class CategoriaController {
         attributes: [
           "idCategoria",
           "nombreCategoria",
-         /* "idUsuario",*/
+          /* "idUsuario",*/
         ],
         where: {
           idDeporte: idDeporte,
@@ -173,129 +175,105 @@ class CategoriaController {
     }
   };
 
-  updateCategoria = async (req, res, next) => {
+  getSociosOfCategoriaWithAsistencia = async (req, res, next) => {
     try {
       const { idCategoria } = req.params;
-      const { nombreCategoria, idDeporte /*, idUsuario */} = req.body;
 
-      const result = await Categoria.update(
-        {
+      let message = "Socios de la categoria:"
+
+      const result = await Categoria.findOne({
+        attributes: [],
+        where: {
           idCategoria,
-          nombreCategoria,
-          idDeporte,
-         /* idUsuario,*/
         },
-        {
-          where: {
-            idCategoria: idCategoria,
+        include: [
+          {
+            model: Socio,
+            attributes: ['idSocio', 'nroSocio', 'nombre', 'apellido', 'dni', 'email', 'fechaNacimiento'],
+            through: {
+              attributes: []
+            },
+            include: {
+              model: Fecha,
+              required: false,
+              attributes: ['idFecha', 'fechaCalendario', 'tipo'],
+              through: {
+                attributes: ['estado']
+              },
+              where: {
+                idCategoria,
+              },
+            }
           },
-        }
-      );
-      if (!result) throw new Error("La categoria no pudo ser modificada");
+        ]
+      });
+
+      if (!result) {
+        const error = new Error(`La categoria con ID ${idCategoria} no se encuentra en la base de datos`);
+        error.status = 400;
+        throw error;
+      }
+
+      if (result.Socios.length == 0) {
+        const error = new Error(`La categoria con ID ${idCategoria} no tiene socios`);
+        error.status = 400;
+        throw error;
+      }
+
       res
         .status(200)
-        .send({ success: true, message: "Categoria modificada con exito" });
+        .send({ success: true, message, result: result.Socios });
+
     } catch (error) {
-      res.status(400).send({ success: false, message: error.message });
+      next(error);
+    }
+  }
+
+  getFechasOfCategoria = async (req, res, next) => {
+    try {
+      const { idCategoria } = req.params;
+
+      const result = await Categoria.findOne({
+        where: { idCategoria },
+        attributes: ['nombreCategoria'],
+        include: [
+          {
+            model: Fecha,
+            as: "Fechas",
+            attributes: ['idFecha', 'idCategoria', 'fechaCalendario', 'tipo'],
+
+          },
+        ],
+      });
+
+      if (!result) {
+        const error = new Error(`La categoria con ID ${idCategoria} no se encuentra en la base de datos`);
+        error.status = 400;
+        throw error;
+      }
+
+
+      if (result.Fechas.length == 0) throw new Error("No hay fechas en la base de datos para esta categoría");
+
+      res
+        .status(200)
+        .send({ success: true, message: 'Fechas encontradas:', result });
+
+    } catch (error) {
+      next(error);
     }
   };
 
-  async existeCategoria(idCategoria){
-    let existe = false
-    try {
-      const result = await Categoria.findOne({
-        where: {
-          idCategoria: idCategoria,
-        },
-      })
-      if(result){
-        existe = true
-      }
-
-      return existe
-    }catch(e){
-      throw new Error("Error validando la categoria")
-    }
-  }
-
-  async agregarProfesCategoriaNueva(idProfesores,idCategoria){
-    let agregados = false;
-    const usuarioController = new UsuarioController();
-
-    let profesExistentes = [] 
-    for (const profe of idProfesores) {
-      if (await usuarioController.existeProfesorPorId(profe) && await usuarioController.validarTipo(profe, 'P')) {
-        profesExistentes.push(profe);
-      }
-    }
-
-    console.log("Profes existentes y tipo profe: " + profesExistentes.length[0]);
-
-    if(profesExistentes.length > 0){
-console.log("Entre al if");
-      const idProfes = profesExistentes.map(profe => ({
-        idUsuario: profe,
-        idCategoria: idCategoria
-      }));
-  
-
-      try {
-        const result = await CategoriasXUsuario.bulkCreate(
-          idProfes
-        )
-        if (!result) throw new Error("Error con alguna de la inserciones");
-  
-        agregados = true
-
-      
-      }catch(e){
-        throw (e)
-  
-      }
-
-    }
-
-      return agregados 
-    
-  }
-
-  agregarProfesACategoriaExistente = async (req, res, next) => {
-    
-    const {idUsuarios} = req.body;
-    const {idCategoria} = req.params;
-
-    console.log(idUsuarios);
-
-    try {
-      let prueba = await this.agregarProfesCategoriaNueva(idUsuarios,idCategoria)
-      console.log("se agregaron: " + prueba);
-     if(!prueba) {
-      throw new Error ("No se pasaron profesores o ninguno es de tipo profesor");
-     }
-
-            res
-            .status(200)
-            .send({ success: true, message: "Profesores agregados con éxito" });
-
-    }catch(e){
-
-      next(e)
-
-    }
-
-
-
-  }
-
   getAllProfesoresCategoria = async (req, res, next) => {
-    const {idCategoria} = req.params;
+    const { idCategoria } = req.params;
     try {
 
-      if(!await this.existeCategoria(idCategoria) ){
+      if (!await this.existeCategoria(idCategoria)) {
         throw new Error("No existe la categoria buscada")
       }
+
       const result = await CategoriasXUsuario.findAll({
-        where:{
+        where: {
           idCategoria
         },
         attributes: [
@@ -310,29 +288,81 @@ console.log("Entre al if");
         error.status = 400;
         throw error;
       }
-     let  usuarioController = new UsuarioController();
+      let usuarioController = new UsuarioController();
 
-     let usuariosList = [];
+      let usuariosList = [];
 
-     for (const profesor of result) {     
-     usuariosList.push(await usuarioController.getUsuarioPorId(profesor.idUsuario))     
-     }
-
-
+      for (const profesor of result) {
+        usuariosList.push(await usuarioController.getUsuarioPorId(profesor.idUsuario))
+      }
 
       //estaba "result cambio a res"
+
       res
         .status(200)
         .json({ succes: true, message: "Profesores encontradas:", usuariosList });
-    } catch (e) {
-      res.status(400).send({ success: false, message: e.message });
+
+    } catch (error) {
+      next(error)
     }
   };
 
-   eliminarProfesoresCategoria = async (req, res, next) => {
-    const {idCategoria} = req.params;
+  updateCategoria = async (req, res, next) => {
     try {
-      
+      const { idCategoria } = req.params;
+      const { nombreCategoria, idDeporte /*, idUsuario */ } = req.body;
+
+      const result = await Categoria.update(
+        {
+          idCategoria,
+          nombreCategoria,
+          idDeporte,
+          /* idUsuario,*/
+        },
+        {
+          where: {
+            idCategoria: idCategoria,
+          },
+        }
+      );
+
+      if (!result) throw new Error("La categoria no pudo ser modificada");
+
+      res
+        .status(200)
+        .send({ success: true, message: "Categoria modificada con exito" });
+    } catch (error) {
+      next(error)
+    }
+  };
+
+  agregarProfesACategoriaExistente = async (req, res, next) => {
+
+    const { idCategoria } = req.params;
+    const { idUsuarios } = req.body;
+
+    console.log(idUsuarios);
+
+    try {
+      let prueba = await this.agregarProfesCategoriaNueva(idUsuarios, idCategoria)
+      console.log("se agregaron: " + prueba);
+      if (!prueba) {
+        throw new Error("No se pasaron profesores o ninguno es de tipo profesor");
+      }
+
+      res
+        .status(200)
+        .send({ success: true, message: "Profesores agregados con éxito" });
+
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  eliminarProfesoresCategoria = async (req, res, next) => {
+    const { idCategoria } = req.params;
+    try {
+
       const result = await CategoriasXUsuario.destroy({
         where: {
           idCategoria
@@ -343,32 +373,89 @@ console.log("Entre al if");
         .status(200)
         .send({ success: true, message: "Profesores borrados con éxito" });
 
-    }catch(e){
-      next(e)
+    } catch (error) {
+      next(error)
     }
-   }
+  }
 
-   eliminarCategoria = async (req, res,next) => {
-    const {idCategoria} = req.params;
+  eliminarCategoria = async (req, res, next) => {
+    const { idCategoria } = req.params;
     try {
 
-      let result =  await Categoria.destroy({
+      let result = await Categoria.destroy({
         where: {
           idCategoria
         },
       });
+      if (!result) {
 
-      if(!result){
         throw new Error("No existe la categoria seleccionada")
       }
 
       res
-              .status(200)
-              .send({ success: true, message: "Categoria eliminada con éxito" });
+        .status(200)
+        .send({ success: true, message: "Categoria eliminada con éxito" });
 
-    }catch(e){
-      next(e)
+    } catch (error) {
+      next(error)
     }
+  }
+
+  async existeCategoria(idCategoria) {
+    let existe = false
+    try {
+      const result = await Categoria.findOne({
+        where: {
+          idCategoria: idCategoria,
+        },
+      })
+      if (result) {
+        existe = true
+      }
+
+      return existe
+    } catch (e) {
+      throw new Error("Error validando la categoria")
+    }
+  }
+
+  async agregarProfesCategoriaNueva(idProfesores, idCategoria) {
+
+    // igna: valida que idProfesores sea un array
+    if (!Array.isArray(idProfesores)) throw new Error("Los IDs de Usuarios estan en un formato Incorrecto");
+
+    let agregados = false;
+
+    const usuarioController = new UsuarioController();
+
+    let profesExistentes = []
+    for (const profe of idProfesores) {
+      if (await usuarioController.existeProfesorPorId(profe) && await usuarioController.validarTipo(profe, 'P')) {
+        profesExistentes.push(profe);
+      }
+    }
+
+    if (profesExistentes.length > 0) {
+
+      const idProfes = profesExistentes.map(profe => ({
+        idUsuario: profe,
+        idCategoria: idCategoria
+      }));
+
+      try {
+        const result = await CategoriasXUsuario.bulkCreate(
+          idProfes
+        )
+        if (!result) throw new Error("Error con alguna de la inserciones");
+
+        agregados = true
+
+      } catch (e) {
+        throw (e)
+      }
+    }
+
+    return agregados
   }
 }
 export default CategoriaController;

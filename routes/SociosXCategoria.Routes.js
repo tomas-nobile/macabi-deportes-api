@@ -13,10 +13,4 @@ SociosXCategoriaRoutes.post("/:idCategoria",sociosXCategoriasController.agregarS
 SociosXCategoriaRoutes.post("/:idCategoria/agregar",sociosXCategoriasController.agregarSociosACategoriasB)
 SociosXCategoriaRoutes.delete("/:idCategoria/:idSocio/eliminarDeCategoria", sociosXCategoriasController.deleteSocioById)
 
-
-
-
-
-
-
 export default SociosXCategoriaRoutes;

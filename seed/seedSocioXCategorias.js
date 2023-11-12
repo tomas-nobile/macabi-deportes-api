@@ -5,6 +5,14 @@ const seedSociosXCategorias = async () => {
 
         await SociosXCategorias.bulkCreate([
             {
+                idSocio:1,
+                idCategoria:1,
+            },
+            {
+                idSocio:2,
+                idCategoria:1,
+            },
+            {
                 idSocio:3,
                 idCategoria:1,
             },

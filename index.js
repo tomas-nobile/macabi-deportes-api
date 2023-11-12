@@ -4,7 +4,7 @@ import cookieParser from 'cookie-parser';
 
 import indexRoutes from "./routes/indexRoutes.js"
 import connection from "./connection/connection.js";
-import { serverPort } from "./config/config.js"
+import { serverPort,corsOrigin } from "./config/config.js"
 
 import seedRol from "./seed/seedRol.js";
 import seedUsuario from "./seed/seedUsuario.js";
@@ -17,10 +17,12 @@ import seedFecha from './seed/seedFecha.js';
 import seedAsistencia from './seed/seedAsistencia.js';
 import seedContactoEmergencia from './seed/seedContactoEmergencia.js';
 
+import seedCategoriaXUsuario from './seed/seedCategoriaXUsuario.js';
+
 
 const app = express();
 
-const corsOptions = { credentials: true, origin: 'http://localhost:5173' }
+const corsOptions = { credentials: true, origin: corsOrigin }
 
 //middleweres
 app.use(cors(corsOptions))
@@ -43,13 +45,14 @@ app.use((error, req, res, next) => {
 });
 
 
-let force = false
+let force = true 
+const port = parseInt(serverPort) || 8080;
 
 connection.sync({ force })
   .then(() => {
-    app.listen(serverPort, () => {
+    app.listen(port, () => {
       //console.clear()
-      console.log("server OK http://localhost:" + serverPort);
+      console.log("server OK http://localhost:" + port);
     })
   })
   .then(async () => {
@@ -64,6 +67,7 @@ connection.sync({ force })
       await seedFecha()
       await seedAsistencia()
       await seedContactoEmergencia()
+      await seedCategoriaXUsuario()
     }
   });
 
