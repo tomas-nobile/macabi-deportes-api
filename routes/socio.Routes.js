@@ -16,5 +16,6 @@ socioRoutes.post("/", socioController.crearSocio);
 socioRoutes.post("/noNroSocio", socioController.createSocioAutoNroSocio);
 
 socioRoutes.put("/:idSocio", socioController.updateSocio);
+socioRoutes.delete("/:idSocio", socioController.deleteSocioById);  
 
 export default socioRoutes

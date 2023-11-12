@@ -45,8 +45,10 @@ app.use((error, req, res, next) => {
 });
 
 
-let force = false
+let force = true 
+
 const port = parseInt(serverPort) || 8080;
+
 connection.sync({ force })
   .then(() => {
     app.listen(port, () => {

@@ -350,7 +350,29 @@ class SocioController {
 
   }
 
-  
+  deleteSocioById = async (req, res, next) => {
+    try {
+
+      const { idSocio } = req.params;
+
+      const result = await Socio.destroy({
+        where: {
+          idSocio,
+        },
+      });
+
+      if (!result) throw new Error("No se pudo eliminar el usuario.");
+
+      res
+        .status(200)
+        .send({ success: true, message: "Usuario eliminado con exito.",
+        });
+    } catch (error) {
+      next(error)
+    }
+  };
+
+
 
   async getSocioPorId(idSocio) {
     try {
