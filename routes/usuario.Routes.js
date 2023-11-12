@@ -20,12 +20,11 @@ usuarioRoutes.get("/:idUsuario/categorias", userController.getCategoriasPorProfe
 usuarioRoutes.get("/profesores", userController.getUserProfesores)
 
 usuarioRoutes.get("/:idRol/rol", userController.getUsersByRol);
-usuarioRoutes.get("/:idRol/rol/activos", userController.getUsersByRolActivos);
+usuarioRoutes.get("/:idRol/rol/activos", userController.getUsersByRolActivos); //Solo te trae los activos.
 
 
 usuarioRoutes.post("/", userController.createUser);  //Comprobar msj de error
 usuarioRoutes.post("/logout", userController.logout);
-usuarioRoutes.post("/updatePassword/:idUsuario", userController.updatePassword);
 
 usuarioRoutes.patch("/:idUsuario", userController.patchUserById);
 usuarioRoutes.delete("/:idUsuario", userController.deleteUserById);  

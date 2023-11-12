@@ -1,3 +1,4 @@
+import CategoriasXUsuario from "../models/CategoriasXUsuario.js";
 import { Usuario, DeportesXUsuario, Deporte, Categoria, Rol } from "../models/index.js";
 import { generateToken } from "../utils/tokens.js";
 import bcrypt from "bcrypt";
@@ -110,7 +111,7 @@ class UsuarioController {
       res.status(400).send({ success: false, message: error.message });
     }
   };
-
+/*
   patchUserById = async (req, res, next) => {
     try {
       const { id } = req.params;
@@ -152,7 +153,7 @@ class UsuarioController {
       res.status(400).send({ success: false, message: error });
     }
   };
-
+*/
   deleteUserById = async (req, res, next) => {
     try {
       const { id } = req.params;
@@ -499,7 +500,7 @@ class UsuarioController {
   };
 
   patchUserById = async (req, res, next) => {
-
+console.log("-------llego aca---------");
     let coordinador = 2;
     let profesor = 3;
 
@@ -538,8 +539,6 @@ class UsuarioController {
 
       if (!result) throw new Error("No se pudo modificar el usuario.");
 
-      console.log("---------------------------------------------------" + idRol + "y activo " + activo)
-
 
       //Tengo q hacer las 2 xq si llega a cambiarme tambien el rol al mismo tiuempo q el estado no borraria las categorias o usuarios.
       if(activo == "false" && (idRol == coordinador || idRol == profesor)){
@@ -549,6 +548,7 @@ class UsuarioController {
               idUsuario,
             },
           });
+
                //Eliminar de sus categorias. -> Lo elimina solo si existe. (Es más eficiente q hacer una busqueda antes.)
           const result2 = await CategoriasXUsuario.destroy({
             where: {
@@ -556,7 +556,7 @@ class UsuarioController {
             },
           });
 
-          console.log(result);
+          console.log("--- 2222222222");
 
     
 
@@ -574,7 +574,6 @@ class UsuarioController {
       next(error);
     }
   };
-
   deleteUserById = async (req, res, next) => {
     try {
       const { idUsuario } = req.params;
