@@ -637,6 +637,11 @@ class UsuarioController {
             attributes: ["idCategoria", "nombreCategoria"],
             as: "CategoriasAsignadas",
             through: { attributes: [] },
+            include: {
+              model:Deporte,
+              attributes: ["nombre"],
+
+            }
           },
         });
 
