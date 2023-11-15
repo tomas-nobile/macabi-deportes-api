@@ -522,6 +522,9 @@ class UsuarioController {
             activo,
             idRol,
           } = req.body;
+
+          let mismoRol = await this.mismoRol(idUsuario, idRol)
+          console.log(mismoRol);
     
           const result = await Usuario.update(
             {
@@ -546,7 +549,7 @@ class UsuarioController {
     
     
           //Tengo q hacer las 2 xq si llega a cambiarme tambien el rol al mismo tiuempo q el estado no borraria las categorias o usuarios.
-          if(activo == "false" && (idRol == coordinador || idRol == profesor)){
+          if(activo == "false" && (idRol == coordinador || idRol == profesor) || !mismoRol){
     
               const result = await DeportesXUsuario.destroy({
                 where: {
@@ -561,7 +564,6 @@ class UsuarioController {
                 },
               });
     
-              console.log("--- 2222222222");
     
     
     
@@ -579,6 +581,39 @@ class UsuarioController {
           next(error);
         }
       };
+
+      
+  async mismoRol(idUsuario,idRol) {
+   
+
+      let mismoUsuario = false
+      const result = await Usuario.findOne({
+        where: {
+          idUsuario: idUsuario
+        }, attributes: ["idRol"],
+      })
+
+      if(!result) {
+        throw new Error('No existe el usuario informado');
+      }else {
+
+        if(result.idRol == idRol){
+          mismoUsuario = true
+        }
+
+      }
+      return mismoUsuario
+
+
+      
+  }
+
+
+
+  
+
+
+     
         
 
   deleteUserById = async (req, res, next) => {
