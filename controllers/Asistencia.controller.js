@@ -126,6 +126,7 @@ class AsistenciaController {
       res.status(500).send({ success: false, message: "Error en el servidor" });
     }
   };
+  
 }
   
 

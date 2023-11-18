@@ -2,6 +2,9 @@ import { Usuario, DeportesXUsuario, Deporte, Categoria, Rol } from "../models/in
 import CategoriasXUsuario from "../models/CategoriasXUsuario.js";
 import { generateToken } from "../utils/tokens.js";
 import bcrypt from "bcrypt";
+import FechaController from "./Fecha.controller.js";
+import AsistenciaController from "./Asistencia.controller.js";
+import CategoriaController from "./CategoriaController.js";
 
 class UsuarioController {
   constructor() { }
@@ -896,6 +899,233 @@ class UsuarioController {
       throw e;
     }
   }
+
+
+  //Métodos para validar permisos de usuarios:
+
+  categoriaPermitidaProfesor = async (req, res, next) => { 
+
+   const {idUsuario,idCategoria} = req.params;
+   let permitido = false;
+   let mensaje = 'Usuario permitido:'
+
+   try {
+
+    console.log("Lllega antes de la consulta");
+    permitido = await this.profeAsignadoACategoria(idUsuario,idCategoria)
+    console.log("ACA LLEGA DESPUES DE LA CONSULTA:" + permitido );
+    
+    if(!permitido) {
+      console.log("dENTRO DEL IF");
+      mensaje = "Acceso denegado"
+    }
+
+
+    console.log("FUERA DEL IF");
+
+
+    res
+    .status(200)
+    .send({ success: true, message: mensaje, result:permitido});
+
+   }catch(e){
+    console.error('Error en categoriaPermitidaProfesor:', e);
+
+    next(e)
+
+   }
+
+
+  }
+
+
+  FechaPermitidaProfesor = async (req, res, next) => { 
+
+    const {idUsuario,idFecha} = req.params;
+    let permitido = false;
+    let mensaje = 'Usuario permitido:'
+ 
+    try {
+      
+      let fechaController = new FechaController();
+
+    let idCategoria = await  fechaController.getCategoriaFecha(idFecha);
+
+     
+     permitido = await this.profeAsignadoACategoria(idUsuario,idCategoria.idCategoria)
+     
+     
+     if(!permitido) {
+       mensaje = "Acceso denegado"
+     }
+ 
+  
+ 
+     res
+     .status(200)
+     .send({ success: true, message: mensaje, result:permitido});
+ 
+    }catch(e){
+     console.error('Error en FechaPermitidaProfesor:', e);
+ 
+     next(e)
+ 
+    }
+ 
+ 
+   }
+
+
+
+
+  profeAsignadoACategoria = async(idUsuario, idCategoria) => {
+    let asignado = false;
+
+    let result = await CategoriasXUsuario.findOne({
+      where:{
+        idUsuario,idCategoria
+      }
+    })
+
+    if (result) {
+      console.log("result es: " + result);
+      asignado = true;
+    }
+
+    return asignado
+
+
+  }
+
+  fechaPermitidaCoordinador = async (req, res, next) => { 
+
+    const {idUsuario,idFecha} = req.params;
+    let permitido = false;
+    let mensaje = 'Usuario permitido:'
+ 
+    try {
+
+    let fechaController = new FechaController();
+
+    let idCategoria = await  fechaController.getCategoriaFecha(idFecha);
+
+    let categoriaController = new CategoriaController();
+    let idDeporteCAtegoria = await categoriaController.getIdDeporteByIdCategoria(idCategoria.idCategoria);
+ 
+     permitido = await this.CoordinadorAsignadoADeporte(idUsuario,idDeporteCAtegoria)
+     
+     if(!permitido) {
+       mensaje = "Acceso denegado"
+     }
+ 
+ 
+     console.log("FUERA DEL IF");
+ 
+ 
+     res
+     .status(200)
+     .send({ success: true, message: mensaje, result:permitido});
+ 
+    }catch(e){
+     console.error('Error en categoriaPermitidaProfesor:', e);
+ 
+     next(e)
+ 
+    }
+ 
+ 
+   }
+
+   DeportePermitidaCoordinador = async (req, res, next) => { 
+
+    const {idUsuario,idDeporte} = req.params;
+    let permitido = false;
+    let mensaje = 'Usuario permitido:'
+ 
+    try {
+     permitido = await this.CoordinadorAsignadoADeporte(idUsuario,idDeporte)
+     
+     if(!permitido) {
+       mensaje = "Acceso denegado"
+     }
+ 
+ 
+     console.log("FUERA DEL IF");
+ 
+ 
+     res
+     .status(200)
+     .send({ success: true, message: mensaje, result:permitido});
+ 
+    }catch(e){
+     console.error('Error en categoriaPermitidaProfesor:', e);
+ 
+     next(e)
+ 
+    }
+ 
+ 
+   }
+
+   categoriaPermitidaCoordinador = async (req, res, next) => { 
+
+    const {idUsuario,idCategoria} = req.params;
+    let permitido = false;
+    let mensaje = 'Usuario permitido:'
+ 
+    try {
+
+    let categoriaController = new CategoriaController();
+    let idDeporteCAtegoria = await categoriaController.getIdDeporteByIdCategoria(idCategoria);
+ 
+     permitido = await this.CoordinadorAsignadoADeporte(idUsuario,idDeporteCAtegoria)
+     
+     if(!permitido) {
+       mensaje = "Acceso denegado"
+     }
+ 
+ 
+     console.log("FUERA DEL IF");
+ 
+ 
+     res
+     .status(200)
+     .send({ success: true, message: mensaje, result:permitido});
+ 
+    }catch(e){
+     console.error('Error en categoriaPermitidaProfesor:', e);
+ 
+     next(e)
+ 
+    }
+ 
+ 
+   }
+
+   CoordinadorAsignadoADeporte = async(idUsuario, idDeporte) => {
+    let asignado = false;
+
+    let result = await DeportesXUsuario.findOne({
+      where:{
+        idUsuario,idDeporte
+      }
+    })
+
+    if (result) {
+      asignado = true;
+    }
+
+    return asignado
+
+
+  }
+
+  
+
+
+
+
+
 }
 
 export default UsuarioController;

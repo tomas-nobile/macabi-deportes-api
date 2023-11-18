@@ -457,5 +457,21 @@ class CategoriaController {
 
     return agregados
   }
+
+  getIdDeporteByIdCategoria = async(idCategoria) => {
+
+    let result = await Categoria.findOne({
+      where:{
+        idCategoria:idCategoria
+      },attributes:["idDeporte"]
+    })
+
+    if(!result){
+      throw new Error("No existe la categoria indicada")
+    }
+
+    return result.idDeporte
+
+  }
 }
 export default CategoriaController;
