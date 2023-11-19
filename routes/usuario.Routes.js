@@ -30,6 +30,8 @@ usuarioRoutes.post("/updatePassword/:idUsuario", userController.updatePassword);
 usuarioRoutes.patch("/:idUsuario", userController.patchUserById);
 usuarioRoutes.delete("/:idUsuario", userController.deleteUserById);  
 
+//Permisos profesor
+
 usuarioRoutes.get("/:idUsuario/:idCategoria/validarPermisoProfesor", userController.categoriaPermitidaProfesor);
 usuarioRoutes.get("/:idUsuario/:idFecha/validarFechaPermisoProfesor", userController.FechaPermitidaProfesor);
 
