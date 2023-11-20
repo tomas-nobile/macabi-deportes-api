@@ -677,7 +677,7 @@ class UsuarioController {
             through: { attributes: [] },
             include: {
               model:Deporte,
-              attributes: ["nombre"],
+              attributes: ["idDeporte","nombre"],
 
             }
           },

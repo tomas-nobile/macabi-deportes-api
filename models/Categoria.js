@@ -51,7 +51,7 @@ Categoria.init(
         });
     
         if (existingCategory && existingCategory.idCategoria != this.idCategoria) {
-          throw new Error(`la categoria '${this.nombreCategoria}' ya existe en el deporte con id ${this.idDeporte}`);
+          throw new Error(`la categoria '${this.nombreCategoria}' ya existe esta categoria dentro de este deporte`);
         }
       },
     }
