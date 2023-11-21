@@ -30,13 +30,27 @@ usuarioRoutes.post("/updatePassword/:idUsuario", userController.updatePassword);
 usuarioRoutes.patch("/:idUsuario", userController.patchUserById);
 usuarioRoutes.delete("/:idUsuario", userController.deleteUserById);  
 
+//Permisos profesor
+
+usuarioRoutes.get("/:idUsuario/:idCategoria/validarPermisoProfesor", userController.categoriaPermitidaProfesor);
+usuarioRoutes.get("/:idUsuario/:idFecha/validarFechaPermisoProfesor", userController.FechaPermitidaProfesor);
+
+//Coordinador:
+usuarioRoutes.get("/:idUsuario/:idCategoria/validarPermisoCoordinador", userController.categoriaPermitidaCoordinador);
+usuarioRoutes.get("/:idUsuario/:idFecha/validarFechaPermisoCoordinador", userController.fechaPermitidaCoordinador);
+usuarioRoutes.get("/:idUsuario/:idDeporte/validarDeportePermisoCoordinador", userController.DeportePermitidaCoordinador);
+
+
+
+
+
+
+
+
+
 
 
 
 export default usuarioRoutes;
 
 
-
-
-
-            

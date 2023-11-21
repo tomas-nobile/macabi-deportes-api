@@ -16,19 +16,25 @@ class CategoriaController {
       if (!result) {
         throw new Error("La categoria no pudo ser creada");
       }
-
+      console.log("llegue aca 1");
+      /*
       const profesAgregados = await this.agregarProfesCategoriaNueva(idUsuarios, result.idCategoria)
 
+      console.log("llegue aca 2");
 
       if (profesAgregados) {
+        console.log("llegue aca 3");
+
         res
           .status(200)
           .send({ success: true, message: "Categoria creada con exito" });
       } else {
+        console.log("llegue aca 4");
+*/
         res
           .status(200)
           .send({ success: true, message: "Categoria creada con exito. No se agrgaron los profesores. No se ingresaron profesores, no existen o ingresaste usuarios con un rol distinto a profesor" });
-      }
+      
 
 
     } catch (error) {
@@ -456,6 +462,22 @@ class CategoriaController {
     }
 
     return agregados
+  }
+
+  getIdDeporteByIdCategoria = async(idCategoria) => {
+
+    let result = await Categoria.findOne({
+      where:{
+        idCategoria:idCategoria
+      },attributes:["idDeporte"]
+    })
+
+    if(!result){
+      throw new Error("No existe la categoria indicada")
+    }
+
+    return result.idDeporte
+
   }
 }
 export default CategoriaController;

@@ -271,6 +271,23 @@ getFechasDeCategoriaFuturas = async (idCategoria) => {
 
   }
 
+  getCategoriaFecha = async (idFecha) => {
+    
+   let result = await Fecha.findOne({
+      where:{
+        idFecha:idFecha
+      },
+      attributes:["idCategoria"]
+    })
+
+    if(!result){
+      throw new Error("No existe la fecha indicada")
+    }
+
+    return result;
+
+  }
+
 }
 
 export default FechaController

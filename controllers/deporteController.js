@@ -284,6 +284,8 @@ console.log("Entre al if");
       next(e)
     }
   }
+
+ 
 }
 
 export default DeporteController;

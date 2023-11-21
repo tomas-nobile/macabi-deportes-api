@@ -2,6 +2,9 @@ import { Usuario, DeportesXUsuario, Deporte, Categoria, Rol } from "../models/in
 import CategoriasXUsuario from "../models/CategoriasXUsuario.js";
 import { generateToken } from "../utils/tokens.js";
 import bcrypt from "bcrypt";
+import FechaController from "./Fecha.controller.js";
+import AsistenciaController from "./Asistencia.controller.js";
+import CategoriaController from "./CategoriaController.js";
 
 class UsuarioController {
   constructor() { }
@@ -463,79 +466,116 @@ class UsuarioController {
 
   patchUserById = async (req, res, next) => {
     console.log("-------llego aca---------");
-    let coordinador = 2;
-    let profesor = 3;
 
-    try {
-      const { idUsuario } = req.params;
-      const {
-        nombre,
-        apellido,
-        email,
-        dni,
-        direccion,
-        fechaNacimiento,
-        telefono,
-        activo,
-        idRol,
-      } = req.body;
+        let coordinador = 2;
+        let profesor = 3;
+    
+        try {
+          const { idUsuario } = req.params;
+          const {
+            nombre,
+            apellido,
+            email,
+            dni,
+            direccion,
+            fechaNacimiento,
+            telefono,
+            activo,
+            idRol,
+          } = req.body;
 
-      const result = await Usuario.update(
-        {
-          nombre,
-          apellido,
-          email,
-          dni,
-          direccion,
-          fechaNacimiento,
-          telefono,
-          activo,
-          idRol,
-        },
-        {
-          where: {
-            idUsuario,
-          },
+          let mismoRol = await this.mismoRol(idUsuario, idRol)
+          console.log(mismoRol);
+    
+          const result = await Usuario.update(
+            {
+              nombre,
+              apellido,
+              email,
+              dni,
+              direccion,
+              fechaNacimiento,
+              telefono,
+              activo,
+              idRol,
+            },
+            {
+              where: {
+                idUsuario,
+              },
+            }
+          );
+    
+          if (!result) throw new Error("No se pudo modificar el usuario.");
+    
+    
+          //Tengo q hacer las 2 xq si llega a cambiarme tambien el rol al mismo tiuempo q el estado no borraria las categorias o usuarios.
+          if(activo == "false" && (idRol == coordinador || idRol == profesor) || !mismoRol){
+    
+              const result = await DeportesXUsuario.destroy({
+                where: {
+                  idUsuario,
+                },
+              });
+    
+                   //Eliminar de sus categorias. -> Lo elimina solo si existe. (Es más eficiente q hacer una busqueda antes.)
+              const result2 = await CategoriasXUsuario.destroy({
+                where: {
+                  idUsuario,
+                },
+              });
+    
+    
+    
+    
+          }
+    
+    
+    
+    
+    
+    
+          res
+            .status(200)
+            .send({ success: true, message: "Usuario modificado con exito" });
+        } catch (error) {
+          next(error);
         }
-      );
+      };
 
-      if (!result) throw new Error("No se pudo modificar el usuario.");
+      
+  async mismoRol(idUsuario,idRol) {
+   
 
+      let mismoUsuario = false
+      const result = await Usuario.findOne({
+        where: {
+          idUsuario: idUsuario
+        }, attributes: ["idRol"],
+      })
 
-      //Tengo q hacer las 2 xq si llega a cambiarme tambien el rol al mismo tiuempo q el estado no borraria las categorias o usuarios.
-      if (activo == "false" && (idRol == coordinador || idRol == profesor)) {
+      if(!result) {
+        throw new Error('No existe el usuario informado');
+      }else {
 
-        const result = await DeportesXUsuario.destroy({
-          where: {
-            idUsuario,
-          },
-        });
-
-        //Eliminar de sus categorias. -> Lo elimina solo si existe. (Es más eficiente q hacer una busqueda antes.)
-        const result2 = await CategoriasXUsuario.destroy({
-          where: {
-            idUsuario,
-          },
-        });
-
-        console.log("--- 2222222222");
-
-
+        if(result.idRol == idRol){
+          mismoUsuario = true
+        }
 
       }
+      return mismoUsuario
+
+
+      
+  }
 
 
 
+  
 
 
-
-      res
-        .status(200)
-        .send({ success: true, message: "Usuario modificado con exito" });
-    } catch (error) {
-      next(error);
-    }
-  };
+     
+        
 
   deleteUserById = async (req, res, next) => {
     try {
@@ -593,6 +633,11 @@ class UsuarioController {
             attributes: ["idCategoria", "nombreCategoria"],
             as: "CategoriasAsignadas",
             through: { attributes: [] },
+            include: {
+              model:Deporte,
+              attributes: ["idDeporte","nombre"],
+
+            }
           },
         });
 
@@ -812,6 +857,233 @@ class UsuarioController {
       throw e;
     }
   }
+
+
+  //Métodos para validar permisos de usuarios:
+
+  categoriaPermitidaProfesor = async (req, res, next) => { 
+
+   const {idUsuario,idCategoria} = req.params;
+   let permitido = false;
+   let mensaje = 'Usuario permitido:'
+
+   try {
+
+    console.log("Lllega antes de la consulta");
+    permitido = await this.profeAsignadoACategoria(idUsuario,idCategoria)
+    console.log("ACA LLEGA DESPUES DE LA CONSULTA:" + permitido );
+    
+    if(!permitido) {
+      console.log("dENTRO DEL IF");
+      mensaje = "Acceso denegado"
+    }
+
+
+    console.log("FUERA DEL IF");
+
+
+    res
+    .status(200)
+    .send({ success: true, message: mensaje, result:permitido});
+
+   }catch(e){
+    console.error('Error en categoriaPermitidaProfesor:', e);
+
+    next(e)
+
+   }
+
+
+  }
+
+
+  FechaPermitidaProfesor = async (req, res, next) => { 
+
+    const {idUsuario,idFecha} = req.params;
+    let permitido = false;
+    let mensaje = 'Usuario permitido:'
+ 
+    try {
+      
+      let fechaController = new FechaController();
+
+    let idCategoria = await  fechaController.getCategoriaFecha(idFecha);
+
+     
+     permitido = await this.profeAsignadoACategoria(idUsuario,idCategoria.idCategoria)
+     
+     
+     if(!permitido) {
+       mensaje = "Acceso denegado"
+     }
+ 
+  
+ 
+     res
+     .status(200)
+     .send({ success: true, message: mensaje, result:permitido});
+ 
+    }catch(e){
+     console.error('Error en FechaPermitidaProfesor:', e);
+ 
+     next(e)
+ 
+    }
+ 
+ 
+   }
+
+
+
+
+  profeAsignadoACategoria = async(idUsuario, idCategoria) => {
+    let asignado = false;
+
+    let result = await CategoriasXUsuario.findOne({
+      where:{
+        idUsuario,idCategoria
+      }
+    })
+
+    if (result) {
+      console.log("result es: " + result);
+      asignado = true;
+    }
+
+    return asignado
+
+
+  }
+
+  fechaPermitidaCoordinador = async (req, res, next) => { 
+
+    const {idUsuario,idFecha} = req.params;
+    let permitido = false;
+    let mensaje = 'Usuario permitido:'
+ 
+    try {
+
+    let fechaController = new FechaController();
+
+    let idCategoria = await  fechaController.getCategoriaFecha(idFecha);
+
+    let categoriaController = new CategoriaController();
+    let idDeporteCAtegoria = await categoriaController.getIdDeporteByIdCategoria(idCategoria.idCategoria);
+ 
+     permitido = await this.CoordinadorAsignadoADeporte(idUsuario,idDeporteCAtegoria)
+     
+     if(!permitido) {
+       mensaje = "Acceso denegado"
+     }
+ 
+ 
+     console.log("FUERA DEL IF");
+ 
+ 
+     res
+     .status(200)
+     .send({ success: true, message: mensaje, result:permitido});
+ 
+    }catch(e){
+     console.error('Error en categoriaPermitidaProfesor:', e);
+ 
+     next(e)
+ 
+    }
+ 
+ 
+   }
+
+   DeportePermitidaCoordinador = async (req, res, next) => { 
+
+    const {idUsuario,idDeporte} = req.params;
+    let permitido = false;
+    let mensaje = 'Usuario permitido:'
+ 
+    try {
+     permitido = await this.CoordinadorAsignadoADeporte(idUsuario,idDeporte)
+     
+     if(!permitido) {
+       mensaje = "Acceso denegado"
+     }
+ 
+ 
+     console.log("FUERA DEL IF");
+ 
+ 
+     res
+     .status(200)
+     .send({ success: true, message: mensaje, result:permitido});
+ 
+    }catch(e){
+     console.error('Error en categoriaPermitidaProfesor:', e);
+ 
+     next(e)
+ 
+    }
+ 
+ 
+   }
+
+   categoriaPermitidaCoordinador = async (req, res, next) => { 
+
+    const {idUsuario,idCategoria} = req.params;
+    let permitido = false;
+    let mensaje = 'Usuario permitido:'
+ 
+    try {
+
+    let categoriaController = new CategoriaController();
+    let idDeporteCAtegoria = await categoriaController.getIdDeporteByIdCategoria(idCategoria);
+ 
+     permitido = await this.CoordinadorAsignadoADeporte(idUsuario,idDeporteCAtegoria)
+     
+     if(!permitido) {
+       mensaje = "Acceso denegado"
+     }
+ 
+ 
+     console.log("FUERA DEL IF");
+ 
+ 
+     res
+     .status(200)
+     .send({ success: true, message: mensaje, result:permitido});
+ 
+    }catch(e){
+     console.error('Error en categoriaPermitidaProfesor:', e);
+ 
+     next(e)
+ 
+    }
+ 
+ 
+   }
+
+   CoordinadorAsignadoADeporte = async(idUsuario, idDeporte) => {
+    let asignado = false;
+
+    let result = await DeportesXUsuario.findOne({
+      where:{
+        idUsuario,idDeporte
+      }
+    })
+
+    if (result) {
+      asignado = true;
+    }
+
+    return asignado
+
+
+  }
+
+  
+
+
+
+
+
 }
 
 export default UsuarioController;
