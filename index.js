@@ -39,9 +39,17 @@ app.use(indexRoutes);
 
 // Error Handler
 app.use((error, req, res, next) => {
+  const additionalData = error.additionalData || {};
+  
+  const responseData = {
+    success: false,
+    message: error.message,
+    ...additionalData,
+  };
+
   res
     .status(error.status || 500)
-    .send({ success: false, message: error.message });
+    .send(responseData);
 });
 
 

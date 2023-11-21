@@ -10,6 +10,7 @@ import DeportesXUsuario from "./DeportesXUsuario.js";
 import SociosXCategorias from "./SociosXCategorias.js";
 import ContactoEmergencia from "./ContactoEmergencia.js";
 import CategoriasXUsuario from "./CategoriasXUsuario.js";
+import RecoverPasswordToken from "./RecoverPasswordToken.js";
 
 
 
@@ -21,6 +22,13 @@ Rol.hasMany(Usuario, {
 
 Usuario.belongsTo(Rol, {
     foreignKey: "idRol",
+})
+
+Usuario.hasMany(RecoverPasswordToken, {
+    foreignKey: "idUsuario",
+})
+RecoverPasswordToken.belongsTo(Usuario, {
+    foreignKey: "idUsuario",
 })
 
 
@@ -134,4 +142,4 @@ Fecha.belongsToMany(Socio, {
 
 
 
-export { Usuario, infoContacto, Socio, Fecha, Asistencia, Deporte, Rol, Categoria, DeportesXUsuario, SociosXCategorias, ContactoEmergencia, CategoriasXUsuario };
+export { Usuario, infoContacto, Socio, Fecha, Asistencia, Deporte, Rol, Categoria, DeportesXUsuario, SociosXCategorias, ContactoEmergencia, CategoriasXUsuario, RecoverPasswordToken };
