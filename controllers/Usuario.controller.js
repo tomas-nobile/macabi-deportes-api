@@ -233,12 +233,17 @@ class UsuarioController {
       //generamos el token
       const token = generateToken(payload);
 
+      res.cookie("tokenMacabi", token,{
+        sameSite: "None",
+        secure: process.env.NODE_ENV == "production", // Include this if your app is served over HTTPS
+      });
+
       res
         .status(200)
         .send({
           success: true,
           message: "Usuario Logeado Exitosamente",
-          usuario:{payload,token},
+          payload,
         });
     } catch (error) {
       next(error);
