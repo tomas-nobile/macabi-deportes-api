@@ -110,49 +110,6 @@ class UsuarioController {
     }
   };
 
-  /*
-    patchUserById = async (req, res, next) => {
-      try {
-        const { id } = req.params;
-        const {
-          nombre,
-          apellido,
-          email,
-          dni,
-          direccion,
-          fechaNacimiento,
-          telefono,
-          activo,
-          idRol,
-        } = req.body;
-        const result = await Usuario.update(
-          {
-            nombre,
-            apellido,
-            email,
-            dni,
-            direccion,
-            fechaNacimiento,
-            telefono,
-            activo,
-            idRol,
-          },
-          {
-            where: {
-              idUsuario: id,
-            },
-          }
-        );
-        if (!result) throw new Error("No se pudo modificar el usuario.");
-        console.log("-------------El estado del usuario es:-------- " );
-        res
-          .status(200)
-          .send({ success: true, message: "Usuario modificado con exito" });
-      } catch (error) {
-        next(error)
-      }
-    };
-  */
 
   deleteUserById = async (req, res, next) => {
     try {
@@ -509,6 +466,7 @@ class UsuarioController {
 
   patchUserById = async (req, res, next) => {
     console.log("-------llego aca---------");
+
         let coordinador = 2;
         let profesor = 3;
     

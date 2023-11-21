@@ -15,3 +15,12 @@ export const generateToken = (payload) => {
 export const verifyToken = (token) => {
     return jwt.verify(token, secret);
 }
+
+export const generateRecoverToken = (num) => {
+    return [...Array(num)].map(() => {
+        const randomNum = ~~(Math.random() *36)
+        return randomNum.toString(36)
+    })
+    .join('')
+    .toUpperCase()
+};

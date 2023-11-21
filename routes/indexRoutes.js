@@ -10,6 +10,7 @@ import categoriaRoutes from "./Categoria.Routes.js";
 import SociosXCategoriaRoutes from "./SociosXCategoria.Routes.js";
 import infoContactoRoutes from "./infoContacto.routes.js";
 import contactoEmergenciaRoutes from "./ContactoEmergencia.Routes.js";
+import recoverPasswordRoutes from "./RecoverPassword.Routes.js";
 
 const indexRoutes = Router()
 
@@ -23,9 +24,7 @@ indexRoutes.use("/categoria",categoriaRoutes)
 indexRoutes.use("/sociosXCategoria", SociosXCategoriaRoutes)
 indexRoutes.use("/contacto", infoContactoRoutes)
 indexRoutes.use("/contactoEmergencia", contactoEmergenciaRoutes)
-
-
-
+indexRoutes.use("/recoverPassword",recoverPasswordRoutes)
 
 
 export default indexRoutes
