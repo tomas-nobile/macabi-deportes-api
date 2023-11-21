@@ -233,14 +233,12 @@ class UsuarioController {
       //generamos el token
       const token = generateToken(payload);
 
-      res.cookie("tokenMacabi", token);
-
       res
         .status(200)
         .send({
           success: true,
           message: "Usuario Logeado Exitosamente",
-          payload,
+          usuario:{payload,token},
         });
     } catch (error) {
       next(error);
