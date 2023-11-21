@@ -234,8 +234,9 @@ class UsuarioController {
       const token = generateToken(payload);
 
       res.cookie("tokenMacabi", token,{
+        httpOnly: true,
         sameSite: "None",
-        secure: process.env.NODE_ENV == "production", // Include this if your app is served over HTTPS
+        secure: process.env.NODE_ENV == "production",
       });
 
       res
