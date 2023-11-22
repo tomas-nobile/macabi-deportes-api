@@ -217,9 +217,8 @@ getFechasDeCategoriaFuturas = async (idCategoria) => {
   };
 
   eliminarFecha = async (req, res, next) => {
-    const { idFecha } = req.params;
-
     try {
+      const { idFecha } = req.params;
 
       let result = await Fecha.destroy({
         where: {
@@ -259,6 +258,24 @@ getFechasDeCategoriaFuturas = async (idCategoria) => {
       console.log(e);
     }
 
+  }
+
+  existeCitacion = async (req, res, next) =>{
+    try {
+      const { idCategoria, fechaCalendario} = req.body;
+
+      const existe = await this.existeFecha(idCategoria,fechaCalendario)
+
+      if(existe) {
+        throw new Error("La fecha no puede ser creada porque ya existe esta fecha en esta categoria")
+      }
+
+      res
+        .status(200)
+        .send({ success: true, message: "Fecha disponible" });
+    } catch (e){
+      next(e)
+    }
   }
 
   existeFechaModificar = async (idCategoria, fechaCalendario, idFecha) => {

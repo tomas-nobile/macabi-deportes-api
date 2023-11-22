@@ -11,6 +11,7 @@ fechaRoutes.get("/:idCategoria/mostrarFechas", fechaController.getFechasDeCatego
 fechaRoutes.get("/fechas/:idFecha", fechaController.getDatosFecha)
 
 fechaRoutes.post("/",fechaController.createFecha);
+fechaRoutes.post("/citacionDisponible", fechaController.existeCitacion)
 
 fechaRoutes.patch("/:idFecha", fechaController.patchFechaById)
 
