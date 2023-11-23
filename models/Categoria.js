@@ -15,7 +15,6 @@ Categoria.init(
     nombreCategoria: {
       type: DT.STRING,
       allowNull: false,
-  
     },
 
     idDeporte: {
@@ -51,7 +50,7 @@ Categoria.init(
         });
     
         if (existingCategory && existingCategory.idCategoria != this.idCategoria) {
-          throw new Error(`la categoria '${this.nombreCategoria}' ya existe esta categoria dentro de este deporte`);
+          throw new Error(`la categoria '${this.nombreCategoria}' ya existe dentro de este deporte`);
         }
       },
     }
